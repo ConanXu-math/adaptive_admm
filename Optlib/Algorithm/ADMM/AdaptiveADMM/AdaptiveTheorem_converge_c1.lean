@@ -1,9 +1,9 @@
 import Optlib.Function.Proximal
 import Mathlib.Topology.MetricSpace.Sequences
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas_c1
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme_c1
 import Optlib.Convex.ImageSubgradientClosed
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveInv_bounded
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveInv_bounded_c1
 
 noncomputable section
 
