@@ -1,8 +1,8 @@
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveLemmas
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveScheme
 import Optlib.Convex.ImageSubgradientClosed
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveInv_bounded
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveCondition1
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveInv_bounded
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveCondition1
 noncomputable section
 
 open Set InnerProductSpace Topology Filter Bornology Metric Real

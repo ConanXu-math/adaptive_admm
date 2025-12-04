@@ -1,6 +1,6 @@
 import Mathlib.Topology.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveScheme
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.NatInt
 import Mathlib.Topology.Algebra.Order.Field

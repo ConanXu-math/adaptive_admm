@@ -1,5 +1,5 @@
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveScheme
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveLemmas
 import Mathlib.Data.Real.Basic
 
 noncomputable section
