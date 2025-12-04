@@ -1,10 +1,8 @@
-import Optlib.Function.Proximal
-import Mathlib.Topology.MetricSpace.Sequences
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas_c1
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme_c1
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveLemmas
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveScheme
 import Optlib.Convex.ImageSubgradientClosed
-import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveInv_bounded_c1
-
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveInv_bounded
+import Optlib.Algorithm.ADMM.AdaptiveADMM.AdaptiveCondition1
 noncomputable section
 
 open Set InnerProductSpace Topology Filter Bornology Metric Real
@@ -111,21 +109,21 @@ lemma nonneg₃ [Setting E₁ E₂ F admm admm_kkt]: max (1 - τ) (1 - 1 / τ) �
       rw [max_eq_right hb];apply sub_nonneg_of_le
       rw [one_div];apply inv_le_one_of_one_le₀; linarith
 
-lemma g_is_nonneg [Condition_C1 admm admm_kkt]: ∀ n : ℕ , g n ≥ 0 := by
-   intro n
-   have h:  0 ≤ ‖ey n‖^2 := by exact sq_nonneg ‖ey n‖
-   have := sq_nonneg ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖
-   have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' n) this
-   have h2:= admm.htau.1
-   have h3:= sq_pos_of_pos (admm.hρₙ_pos n)
-   have h4 : 0 ≤  τ * ρₙ n^2 := by linarith[mul_pos h2 h3]
-   have h5 := sq_nonneg ‖A₂ (e₂ n)‖
-   have h6 : 0 ≤ τ * ρₙ n^2  * ‖A₂ (e₂ n)‖^2 := by exact mul_nonneg h4 h5
-   simp [g]
-   linarith
+-- lemma g_is_nonneg [Condition_C1 admm admm_kkt]: ∀ n : ℕ , g n ≥ 0 := by
+--    intro n
+--    have h:  0 ≤ ‖ey n‖^2 := by exact sq_nonneg ‖ey n‖
+--    have := sq_nonneg ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖
+--    have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' n) this
+--    have h2:= admm.htau.1
+--    have h3:= sq_pos_of_pos (admm.hρₙ_pos n)
+--    have h4 : 0 ≤  τ * ρₙ n^2 := by linarith[mul_pos h2 h3]
+--    have h5 := sq_nonneg ‖A₂ (e₂ n)‖
+--    have h6 : 0 ≤ τ * ρₙ n^2  * ‖A₂ (e₂ n)‖^2 := by exact mul_nonneg h4 h5
+--    simp [g]
+--    linarith
 
 
-lemma g_bd_above [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C : ℝ, ∀ n : ℕ, g n < C := by
+lemma g1_bd_above [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C : ℝ, ∀ n : ℕ, g1 n < C := by
    have := HWY_ineq_53_nat
    rcases this with ⟨C, hC_pos, hC⟩
    use C + 1
@@ -133,19 +131,19 @@ lemma g_bd_above [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C : ℝ,
    have h := hC n
    linarith
 
-lemma g_isBounded' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]: ∃ (r : ℝ), (range g) ⊆ ball 0 r := by
-   rcases g_bd_above with ⟨C,bd⟩
+lemma g1_isBounded' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]: ∃ (r : ℝ), (range g1) ⊆ ball 0 r := by
+   rcases g1_bd_above with ⟨C,bd⟩
    use C; intro x hx; simp; rw [range] at hx; simp at hx
    rcases hx with ⟨n,eq⟩; rw [← eq, abs_eq_self.2]; exact bd n
-   apply g_is_nonneg
+   apply g1_nonneg
 
-lemma g_isBounded [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: IsBounded (range g) := (isBounded_iff_subset_ball 0).2  g_isBounded'
--- def g [Condition_C1 admm admm_kkt] (n : ℕ) := (‖ey n‖^2 + τ * ρₙ n^2  * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2)
+lemma g1_isBounded [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: IsBounded (range g1) := (isBounded_iff_subset_ball 0).2  g1_isBounded'
+
 lemma ey_isBounded' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ (r : ℝ), (range ey) ⊆ ball 0 r := by
-   rcases g_bd_above with ⟨r, g_isBounded⟩;
+   rcases g1_bd_above with ⟨r, g1_isBounded⟩;
    use √r; intro x hx; simp; rw [range] at hx; simp at hx
    rcases hx with ⟨n, eq⟩; rw [← eq]
-   have h7 := g_is_nonneg n
+   have h7 := g1_nonneg n
    have h:  0 ≤ ‖ey n‖^2 := by exact sq_nonneg ‖ey n‖
    have := sq_nonneg ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖
    have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' n) this
@@ -154,15 +152,15 @@ lemma ey_isBounded' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ (r : 
    have h4 : 0 ≤  τ * ρₙ n^2 := by linarith[mul_pos h2 h3]
    have h5 := sq_nonneg ‖A₂ (e₂ n)‖
    have h6 : 0 ≤ τ * ρₙ n^2  * ‖A₂ (e₂ n)‖^2 := by exact mul_nonneg h4 h5
-   have h8 := g_isBounded n
-   simp [g] at h7 h8
-   have h9: ‖ey n‖^2 ≤ g n := by
-      simp [g]
+   have h8 := g1_isBounded n
+   simp [g1] at h7 h8
+   have h9: ‖ey n‖^2 ≤ g1 n := by
+      simp [g1]
       linarith [h6, h1]
    have h10: ‖ey n‖ < √r := by
       have h11: ‖ey n‖ ^ 2 < r := by
-         have h12: ‖ey n‖ ^ 2 ≤ g n := by exact h9
-         have h13: g n < r := by exact h8
+         have h12: ‖ey n‖ ^ 2 ≤ g1 n := by exact h9
+         have h13: g1 n < r := by exact h8
          linarith
       have h14: √(‖ey n‖ ^ 2) = ‖ey n‖ := by rw [pow_two]; apply Real.sqrt_mul_self; apply norm_nonneg
       rw [← h14]
@@ -177,11 +175,11 @@ lemma ey_isBounded [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: IsBounded 
 
 
 lemma A₂e₂_isBounded' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ (r : ℝ), (range (A₂ ∘ e₂) ) ⊆ ball 0 r := by
-   rcases g_bd_above with ⟨r, g_isBounded⟩;
+   rcases g1_bd_above with ⟨r, g1_isBounded⟩;
    rcases admm.rho_lower_bound with ⟨BL, hBL⟩;
    use √(r/(τ * BL^2)); intro x hx; simp; rw [range] at hx; simp at hx
    rcases hx with ⟨n, eq⟩; rw [← eq]
-   have h7 := g_is_nonneg n
+   have h7 := g1_nonneg n
    have h:  0 ≤ ‖ey n‖^2 := by exact sq_nonneg ‖ey n‖
    have := sq_nonneg ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖
    have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' n) this
@@ -195,10 +193,10 @@ lemma A₂e₂_isBounded' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃
                have h2''': BL ≤ ρₙ n := by exact hBL.2 n
                gcongr
          gcongr
-   have h9 : τ * BL^2 * ‖A₂ (e₂ n)‖ ^ 2 ≤ g n := by
-      simp [g]
+   have h9 : τ * BL^2 * ‖A₂ (e₂ n)‖ ^ 2 ≤ g1 n := by
+      simp [g1]
       linarith
-   have h10 := g_isBounded n
+   have h10 := g1_isBounded n
    have h11 : τ * BL^2 * ‖A₂ (e₂ n)‖ ^ 2 ≤ r := by
       linarith
    have h13 : 0 < τ * BL^2 := by
@@ -237,7 +235,7 @@ lemma A₁e₁_A₂e₂_equation [Condition_C1 admm admm_kkt][IsOrderedMonoid �
    rw [this]
 
 lemma A₁e₁_A₂e₂_isBounded'[Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ] : ∃ (r : ℝ), (range (A₁ ∘ e₁ + A₂ ∘ e₂) ) ⊆ ball 0 r := by
-   rcases g_bd_above with ⟨r, g_isBounded⟩;
+   rcases g1_bd_above with ⟨r, g1_isBounded⟩;
    rcases admm.rho_lower_bound with ⟨BL, hBL⟩;
    use √(r/(τ * (T_HWY - τ) * BL^2)); intro x hx; simp; rw [range] at hx; simp at hx
    rcases hx with ⟨n, eq⟩; rw [← eq]
@@ -257,9 +255,9 @@ lemma A₁e₁_A₂e₂_isBounded'[Condition_C1 admm admm_kkt][IsOrderedMonoid �
    have h16: τ * (T_HWY - τ) * BL^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by
       gcongr
       linarith [hBL.2 n]
-   have h8 := g_isBounded n
-   have h7: τ * (T_HWY - τ) * BL^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 ≤ g n := by
-      simp [g]
+   have h8 := g1_isBounded n
+   have h7: τ * (T_HWY - τ) * BL^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 ≤ g1 n := by
+      simp [g1]
       linarith
    have h9: τ * (T_HWY - τ) * BL^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 ≤ r := by
       linarith
@@ -982,13 +980,11 @@ lemma Q_seq_converges [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting 
    ·  exact hP
 
 
+def g1_hat [Setting E₁ E₂ F admm admm_kkt]: ℕ → ℝ := fun n => g1 n / Q_seq n
 
-
-def g_hat [Setting E₁ E₂ F admm admm_kkt]: ℕ → ℝ := fun n => g n / Q_seq n
-
-lemma g_hat_is_monotone [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+, g_hat (n+1) ≤ g_hat n := by
+lemma g1_hat_is_monotone [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+, g1_hat (n+1) ≤ g1_hat n := by
    intro n
-   dsimp [g_hat]
+   dsimp [g1_hat]
    have h_Q_pos : 0 < Q_seq n := by
       apply Finset.prod_pos; intro i _; linarith [sq_nonneg (η_k i)]
    have h_Q_succ_pos : 0 < Q_seq (n+1) := by
@@ -997,19 +993,19 @@ lemma g_hat_is_monotone [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+, g_hat
    rw [div_le_div_iff₀ h_Q_succ_pos h_Q_pos]
    simp [Q_seq]
    rw [Finset.prod_range_succ]
-   have h : g (n+1) ≤ (1 + (η_k n)^2) * g n := by
-      unfold g
+   have h : g1 (n+1) ≤ (1 + (η_k n)^2) * g1 n := by
+      unfold g1
       have := HWY_ineq_52_0 n
       linarith
-   have :g (n+1) * Q_seq n
-      ≤ ((1 + (η_k n)^2) * g n) * Q_seq n := mul_le_mul_of_nonneg_right h (by apply Finset.prod_nonneg; intro i _; linarith [sq_nonneg (η_k i)])
+   have :g1 (n+1) * Q_seq n
+      ≤ ((1 + (η_k n)^2) * g1 n) * Q_seq n := mul_le_mul_of_nonneg_right h (by apply Finset.prod_nonneg; intro i _; linarith [sq_nonneg (η_k i)])
    simp [Q_seq] at this
    linarith
 
--- 证明 g(φ n) → 0
-lemma g_subseq_converge_zero
+-- 证明 g1(φ n) → 0
+lemma g1_subseq_converge_zero
       [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))] :
-      Tendsto (fun n => g (φ n)) atTop (nhds 0) := by
+      Tendsto (fun n => g1 (φ n)) atTop (nhds 0) := by
    obtain ⟨BU, hBU_pos, hBU⟩ := admm.rho_upper_bound
    have h_rho_sq : ∀ n, ρₙ n ^ 2 ≤ BU ^ 2 := fun n => sq_le_sq' (by linarith [admm.hρₙ_pos n]) (hBU n)
    have h_rho_sq_nonneg : ∀ n, 0 ≤ ρₙ n ^ 2 := fun n => sq_nonneg (ρₙ n)
@@ -1049,7 +1045,7 @@ lemma g_subseq_converge_zero
         simp
         gcongr
         exact hBU (φ n)
-   unfold g
+   unfold g1
    have h_add : Tendsto (fun x => ‖ey (φ x)‖^2 + τ * ρₙ (φ x)^2 * ‖A₂ (e₂ (φ x))‖^2) atTop (𝓝 (0 + 0)) := by
       apply Tendsto.add h1 h2
    have h_add' : Tendsto (fun x => ‖ey (φ x)‖^2 + τ * ρₙ (φ x)^2 * ‖A₂ (e₂ (φ x))‖^2 + τ * (T_HWY - τ) * ρₙ (φ x)^2 * ‖A₁ (x₁ (φ x)) + A₂ (x₂ (φ x)) - b‖^2) atTop (𝓝 (0 + 0 + 0)) := by
@@ -1057,62 +1053,62 @@ lemma g_subseq_converge_zero
    simp at h_add'
    exact h_add'
 
-lemma g_hat_antitone [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt] : Antitone g_hat := by
+-- lemma g_hat_antitone [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt] : Antitone g_hat := by
+--    apply antitone_nat_of_succ_le
+--    intro n
+--    dsimp [g_hat]
+--    have h_Q_pos : 0 < Q_seq n := by
+--       apply Finset.prod_pos; intro i _; linarith [sq_nonneg (η_k i)]
+--    have h_Q_succ_pos : 0 < Q_seq (n+1) := by
+--       apply Finset.prod_pos; intro i _; linarith [sq_nonneg (η_k i)]
+--    rw [div_le_div_iff₀ h_Q_succ_pos h_Q_pos]
+--    simp [Q_seq]
+--    rw [Finset.prod_range_succ]
+--    have h_recur := HWY_ineq_52_0 (n.toPNat')
+--    have h_step : g (n+1) ≤ (1 + (η_k n)^2) * g n := by
+--       unfold g
+--       have := HWY_ineq_52_0_nat n
+--       linarith
+--    calc g (n+1) * Q_seq n
+--       ≤ ((1 + (η_k n)^2) * g n) * Q_seq n := mul_le_mul_of_nonneg_right h_step (by apply Finset.prod_nonneg; intro i _; linarith [sq_nonneg (η_k i)])
+--    _ = g n * (Q_seq n * (1 + (η_k n)^2)) := by ring
+
+lemma g1_hat_isMono [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+      Antitone (fun n ↦  g1_hat (n + 1)) := by
    apply antitone_nat_of_succ_le
    intro n
-   dsimp [g_hat]
-   have h_Q_pos : 0 < Q_seq n := by
-      apply Finset.prod_pos; intro i _; linarith [sq_nonneg (η_k i)]
-   have h_Q_succ_pos : 0 < Q_seq (n+1) := by
-      apply Finset.prod_pos; intro i _; linarith [sq_nonneg (η_k i)]
-   rw [div_le_div_iff₀ h_Q_succ_pos h_Q_pos]
-   simp [Q_seq]
-   rw [Finset.prod_range_succ]
-   have h_recur := HWY_ineq_52_0 (n.toPNat')
-   have h_step : g (n+1) ≤ (1 + (η_k n)^2) * g n := by
-      unfold g
-      have := HWY_ineq_52_0_nat n
-      linarith
-   calc g (n+1) * Q_seq n
-      ≤ ((1 + (η_k n)^2) * g n) * Q_seq n := mul_le_mul_of_nonneg_right h_step (by apply Finset.prod_nonneg; intro i _; linarith [sq_nonneg (η_k i)])
-   _ = g n * (Q_seq n * (1 + (η_k n)^2)) := by ring
+   apply g1_hat_is_monotone (n+1).toPNat'
 
-lemma g_hat_isMono [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      Antitone (fun n ↦  g_hat (n + 1)) := by
-   apply antitone_nat_of_succ_le
+lemma g1_hat_is_nonneg [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ , g1_hat n ≥ 0 := by
    intro n
-   apply g_hat_is_monotone (n+1).toPNat'
-
-lemma g_hat_is_nonneg [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ , g_hat n ≥ 0 := by
-   intro n
-   dsimp [g_hat]
+   dsimp [g1_hat]
    have h_Q_pos : 0 < Q_seq n := by
       apply Finset.prod_pos; intro i _;have h : 0 < 1 + (η_k i)^2 := by
          linarith [sq_nonneg (η_k i)]
       exact h
-   have h_g_nonneg : 0 ≤ g n := by
-      apply g_nonneg n
+   have h_g_nonneg : 0 ≤ g1 n := by
+      apply g1_nonneg n
    exact div_nonneg h_g_nonneg (by linarith [h_Q_pos])
 
-lemma g_hat_bddbelow [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      BddBelow (range (fun n ↦ g_hat (n + 1))) := by
+lemma g1_hat_bddbelow [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+      BddBelow (range (fun n ↦ g1_hat (n + 1))) := by
    simp [BddBelow , lowerBounds]
    use 0
    simp only [mem_setOf_eq]
    intro a
-   apply g_hat_is_nonneg (a+1)
+   apply g1_hat_is_nonneg (a+1)
 
-lemma g_hat_ge [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      ∀ n , 0 ≤ (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g_hat (n + 1)) i)) n := by
+lemma g1_hat_ge [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+      ∀ n , 0 ≤ (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g1_hat (n + 1)) i)) n := by
    intro n
    simp only
-   apply Real.iInf_nonneg (f := (fun n ↦ g_hat (n + 1)))
+   apply Real.iInf_nonneg (f := (fun n ↦ g1_hat (n + 1)))
    intro i
-   apply g_hat_is_nonneg (i+1)
+   apply g1_hat_is_nonneg (i+1)
 
-lemma g_hat_le [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:∀ n : ℕ , (⨅ i, (fun n ↦ g_hat (n + 1)) i) ≤ g_hat (φ n.succ) := by
+lemma g1_hat_le [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:∀ n : ℕ , (⨅ i, (fun n ↦ g1_hat (n + 1)) i) ≤ g1_hat (φ n.succ) := by
    intro n
-   have := ciInf_le (g_hat_bddbelow fullrank₁ fullrank₂) ((φ n.succ)-1)
+   have := ciInf_le (g1_hat_bddbelow fullrank₁ fullrank₂) ((φ n.succ)-1)
    have h : φ n.succ > 0:= by
       calc _
          _ ≥ n + 1  := StrictMono.id_le (hphi_StrictMono fullrank₁ fullrank₂) (n + 1)
@@ -1122,59 +1118,59 @@ lemma g_hat_le [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E�
    rw[h1] at this
    exact this
 
-lemma g_hat_subseq_converge_zero
+lemma g1_hat_subseq_converge_zero
       [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))] :
-      Tendsto (fun n => g_hat (φ n)) atTop (𝓝 0) := by
-  simp only [g_hat]
+      Tendsto (fun n => g1_hat (φ n)) atTop (𝓝 0) := by
+  simp only [g1_hat]
   obtain ⟨P, hP_pos, hQ_conv⟩ := Q_seq_converges fullrank₁ fullrank₂
   have hQ_sub : Tendsto (fun n => Q_seq (φ n)) atTop (𝓝 P) :=
     hQ_conv.comp (hphi_StrictMono fullrank₁ fullrank₂).tendsto_atTop
-  have hg_sub : Tendsto (fun n => g (φ n)) atTop (𝓝 0) :=
-    g_subseq_converge_zero fullrank₁ fullrank₂
+  have hg_sub : Tendsto (fun n => g1 (φ n)) atTop (𝓝 0) :=
+    g1_subseq_converge_zero fullrank₁ fullrank₂
   have h_lim := Tendsto.div hg_sub hQ_sub (ne_of_gt hP_pos)
   rw [zero_div] at h_lim
   -- 使用 convert 解决 (f / g) 与 (fun n => f n / g n) 的句法差异
   convert h_lim using 2
 
-lemma g_hat_converge_zero''' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
- Tendsto (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g_hat (n + 1)) i)) atTop (𝓝 0) := by
+lemma g1_hat_converge_zero''' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+ Tendsto (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g1_hat (n + 1)) i)) atTop (𝓝 0) := by
    apply squeeze_zero
-   apply g_hat_ge
-   apply g_hat_le
-   have :=g_hat_subseq_converge_zero fullrank₁ fullrank₂
+   apply g1_hat_ge
+   apply g1_hat_le
+   have :=g1_hat_subseq_converge_zero fullrank₁ fullrank₂
    rw[← tendsto_add_atTop_iff_nat 1] at this
    exact this
 
-lemma g_hat_converge_zero'' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
- Tendsto (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g_hat (n + 1)) i)) atTop (𝓝 (⨅ i, (fun n ↦ g_hat (n + 1)) i)) := by
+lemma g1_hat_converge_zero'' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+ Tendsto (fun _ : ℕ ↦ (⨅ i, (fun n ↦ g1_hat (n + 1)) i)) atTop (𝓝 (⨅ i, (fun n ↦ g1_hat (n + 1)) i)) := by
  apply tendsto_const_nhds
 
-lemma g_hat_converge_zero' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      (⨅ i, (fun n ↦ g_hat (n + 1)) i) = 0  := by
-   apply tendsto_nhds_unique (g_hat_converge_zero'' fullrank₁ fullrank₂)
-   apply g_hat_converge_zero'''
+lemma g1_hat_converge_zero' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+      (⨅ i, (fun n ↦ g1_hat (n + 1)) i) = 0  := by
+   apply tendsto_nhds_unique (g1_hat_converge_zero'' fullrank₁ fullrank₂)
+   apply g1_hat_converge_zero'''
 
-lemma g_hat_converge_zero [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      Tendsto g_hat atTop (𝓝 0) := by
+lemma g1_hat_converge_zero [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
+      Tendsto g1_hat atTop (𝓝 0) := by
    rw[← tendsto_add_atTop_iff_nat 1]
-   have := tendsto_atTop_ciInf (g_hat_isMono fullrank₁ fullrank₂) (g_hat_bddbelow fullrank₁ fullrank₂)
-   rwa[← g_hat_converge_zero']
+   have := tendsto_atTop_ciInf (g1_hat_isMono fullrank₁ fullrank₂) (g1_hat_bddbelow fullrank₁ fullrank₂)
+   rwa[← g1_hat_converge_zero']
 
 
 -- 证明 g 全序列收敛到 0
 -- 这是 Robbins-Siegmund 构造的最终结论
-lemma g_tendsto_zero
+lemma g1_tendsto_zero
       [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
       (fullrank₁: Function.Injective admm.A₁) (fullrank₂: Function.Injective admm.A₂)
       [s : Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂)] :
-      Tendsto (fun n => g n) atTop (nhds 0) := by
-  have h_ghat_zero := g_hat_converge_zero fullrank₁ fullrank₂
+      Tendsto (fun n => g1 n) atTop (nhds 0) := by
+  have h_ghat_zero := g1_hat_converge_zero fullrank₁ fullrank₂
   obtain ⟨P, hP⟩ := Q_seq_converges fullrank₁ fullrank₂
   have h_lim_mul := Tendsto.mul h_ghat_zero (hP.2)
   rw [zero_mul] at h_lim_mul
-  have h_eq : (fun n => g n) = (fun n => g_hat n * Q_seq n) := by
+  have h_eq : (fun n => g1 n) = (fun n => g1_hat n * Q_seq n) := by
     funext n
-    dsimp [g_hat]
+    dsimp [g1_hat]
     have h_Q_pos : Q_seq n ≠ 0 := by
         apply ne_of_gt
         dsimp [Q_seq]
@@ -1185,16 +1181,16 @@ lemma g_tendsto_zero
   rw [h_eq]
   exact h_lim_mul
 
-lemma A₂e₂_le_g (n : ℕ) [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
+lemma A₂e₂_le_g1 (n : ℕ) [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
       [Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
-      ‖A₂ (e₂ n)‖ ^ 2 ≤ (1 / (τ * (ρₙ n)^2)) * g n := by
+      ‖A₂ (e₂ n)‖ ^ 2 ≤ (1 / (τ * (ρₙ n)^2)) * g1 n := by
    have hτ : 0 < τ := admm.htau.1
    have hρ : 0 < ρₙ n := admm.hρₙ_pos n
    have h_coeff : 0 < τ * (ρₙ n)^2 := mul_pos hτ (sq_pos_of_pos hρ)
-   rw [mul_comm (1 / (τ * (ρₙ n)^2)) (g n)]
+   rw [mul_comm (1 / (τ * (ρₙ n)^2)) (g1 n)]
    field_simp
    rw [le_div_iff₀ h_coeff]
-   dsimp [g]
+   dsimp [g1]
    have h_ey_nonneg : 0 ≤ ‖ey n‖^2 := sq_nonneg _
    have h_res_nonneg : 0 ≤ τ * (T_HWY - τ) * ρₙ n ^ 2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ ^ 2 := by
       apply mul_nonneg
@@ -1205,11 +1201,11 @@ lemma A₂e₂_le_g (n : ℕ) [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
       · apply sq_nonneg
    linarith [h_ey_nonneg, h_res_nonneg]
 
-lemma A₂e₂_le_g' [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
+lemma A₂e₂_le_g1' [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
       [Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))] :
-      ∀ n : ℕ, ‖A₂ (e₂ n)‖ ^ 2 ≤ (1 / (τ * (ρₙ n)^2)) * g n := by
+      ∀ n : ℕ, ‖A₂ (e₂ n)‖ ^ 2 ≤ (1 / (τ * (ρₙ n)^2)) * g1 n := by
    intro n
-   apply A₂e₂_le_g
+   apply A₂e₂_le_g1
 
 lemma A₂e₂_pow_converge_zero
       [IsOrderedMonoid ℝ] [Condition_C1 admm admm_kkt]
@@ -1222,8 +1218,8 @@ lemma A₂e₂_pow_converge_zero
       apply mul_pos admm.htau.1 (sq_pos_of_pos hBL_pos)
    apply squeeze_zero_norm
    intro n
-   have h_bound : τ * BL^2 * ‖A₂ (e₂ n)‖^2 ≤ g n := by
-      dsimp [g]
+   have h_bound : τ * BL^2 * ‖A₂ (e₂ n)‖^2 ≤ g1 n := by
+      dsimp [g1]
       have h_rho : BL^2 ≤ ρₙ n ^ 2 := by
          apply sq_le_sq'
          have h_rho_pos : 0 < ρₙ n := admm.hρₙ_pos n
@@ -1240,7 +1236,7 @@ lemma A₂e₂_pow_converge_zero
          exact sq_nonneg _
       linarith
    have h_coeff_pos : 0 < τ * BL^2 := mul_pos admm.htau.1 (sq_pos_of_pos hBL_pos)
-   have h_bound' : ‖A₂ (e₂ n)‖^2 ≤ C * g n := by
+   have h_bound' : ‖A₂ (e₂ n)‖^2 ≤ C * g1 n := by
       have h_mul_comm : τ * BL^2 * ‖A₂ (e₂ n)‖^2 = ‖A₂ (e₂ n)‖^2 * (τ * BL^2) := by ring
       rw [h_mul_comm] at h_bound
       rw [← le_div_iff₀ h_coeff_pos] at h_bound
@@ -1250,13 +1246,13 @@ lemma A₂e₂_pow_converge_zero
       exact h_bound
    simp
    -- Convert to ‖A₂e₂‖^2 ≤ C * g n
-   let f := fun n => C * g n
+   let f := fun n => C * g1 n
    have h_f_bound : ‖A₂ (e₂ n)‖^2 ≤ f n := by
       exact h_bound'
    convert h_f_bound
    · rw [← mul_zero C]
      apply Filter.Tendsto.const_mul
-     exact g_tendsto_zero fullrank₁ fullrank₂
+     exact g1_tendsto_zero fullrank₁ fullrank₂
 
 lemma A₂e₂_converge_zero [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
       Tendsto (fun n => ‖A₂ (e₂ n)‖) atTop (𝓝 0) := by
@@ -1345,8 +1341,8 @@ lemma ey_sq_le_g
       (fullrank₁: Function.Injective admm.A₁) (fullrank₂: Function.Injective admm.A₂)
       [s : Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂)]
       (n : ℕ) :
-      ‖ey n‖ ^ 2 ≤ g n := by
-   dsimp [g]
+      ‖ey n‖ ^ 2 ≤ g1 n := by
+   dsimp [g1]
    have h_A2_nonneg : 0 ≤ τ * (ρₙ n)^2 * ‖A₂ (e₂ n)‖^2 := by
       apply mul_nonneg
       · apply mul_nonneg (le_of_lt admm.htau.1) (sq_nonneg _)
@@ -1363,8 +1359,8 @@ lemma ey_sq_le_g
 lemma ey_sqnrm_converge_zero [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
       Tendsto (fun n => ‖ey n‖^2)  atTop (𝓝 0) := by
    apply squeeze_zero_norm
-   have (n : ℕ) : ‖‖ey n‖ ^ 2‖ ≤ g n := by simp [ey_sq_le_g]
-   apply this; apply g_tendsto_zero fullrank₁ fullrank₂
+   have (n : ℕ) : ‖‖ey n‖ ^ 2‖ ≤ g1 n := by simp [ey_sq_le_g]
+   apply this; apply g1_tendsto_zero fullrank₁ fullrank₂
 
 lemma ey_nrm_converge_zero [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
       Tendsto (fun n => ‖ey n‖)  atTop (𝓝 0) := by
@@ -1400,7 +1396,7 @@ lemma y_converge [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ 
    rw[this , tendsto_sub_nhds_zero_iff] at h
    exact h
 
---Adaptive ADMM收敛定理
+--Adaptive ADMM of condition C1 convergence theorem
 theorem adaptive_admm_convergence [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm (admm_kkt₁ fullrank₁ fullrank₂ (admm_kkt := admm_kkt) (_s := ⟨⟩))]:
       ∃ ( _x₁   : E₁) ( _x₂ : E₂) ( _y : F) , Convex_KKT _x₁ _x₂ _y admm.toOptProblem
       ∧ ( Tendsto x₁ atTop (𝓝 _x₁)∧ Tendsto x₂ atTop (𝓝 _x₂)∧ Tendsto y atTop (𝓝 _y)) :=

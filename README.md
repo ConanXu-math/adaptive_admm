@@ -1,255 +1,323 @@
-# optlib
+# 自适应ADMM框架
 
-We aim to formalize the broad area of **mathematical optimization** including convex analysis, convex optimization, nonlinear programming, integer programming and etc in Lean4. Related topics include but are not limited to the definition and properties of convex and nonconvex functions, optimality conditions, convergence of various algorithms.
+## 概述
 
-More topics related to computational mathematics such as numerical linear algebra and numerical analysis will be included in the future.
+本框架提供了自适应ADMM算法的完整形式化，支持：
+- **C1和C2条件的完整形式化**：分别处理参数增长和减小的情况
+- **Strategy1收敛性证明**：验证特定自适应策略的收敛性
+- **LLM代码生成接口**：允许LLM搜索论文并自动生成符合框架的Lean4代码
 
-Our GitHub web page corresponding to this work can be found at [here](https://optsuite.github.io/optlib/) .
+## 文件结构
 
-## Lean4 Toolchain Installation
-
-- A comprehensive installation guide in Chinese:
-  [http://faculty.bicmr.pku.edu.cn/~wenzw/formal/index.html](http://faculty.bicmr.pku.edu.cn/~wenzw/formal/index.html)
-
-- Download guide provided by the official Lean team:
-  https://leanprover-community.github.io/get_started.html
-
-- For Lean 4 users in China, the [glean](https://github.com/alissa-tung/glean) tool is recommended for using the [Shanghai Jiao Tong University mirror service](https://mirror.sjtu.edu.cn/).
-
-## How to use the code in this repository
-
-If anything goes wrong, please feel free to contact Chenyi Li through email (lichenyi@stu.pku.edu.cn).
-
-The version of Lean4 that used by this repository can be checked [here](https://github.com/optsuite/optlib/blob/main/lean-toolchain).
-
-### Use the `Optlib` library as a Lean4 project dependency
-
-In a Lean4 project, add these lines to your `lakefile.lean`:
-
-```lean4
-require optlib from git
-  "https://github.com/optsuite/optlib"
+```
+AdaptiveADMM/
+├── 核心文件（共享）
+│   ├── AdaptiveScheme.lean              # ADMM基础定义（OptProblem, ADMM类等）
+│   ├── AdaptiveLemmas.lean              # 共享引理和定义
+│   │   ├── Setting类                    # 基础设置
+│   │   ├── g1函数                       # C1条件的Lyapunov函数
+│   │   ├── g2函数                       # C2条件的Lyapunov函数
+│   │   ├── T_HWY, e₁, e₂, ey等辅助定义
+│   │   └── 基础引理（u_inthesubgradient, v_inthesubgradient等）
+│   └── AdaptiveInv_bounded.lean        # 有界性引理（共享）
+│
+├── C1条件相关
+│   ├── AdaptiveCondition1.lean          # C1条件定义和相关引理
+│   │   ├── Condition_C1类定义
+│   │   ├── η_k序列定义
+│   │   ├── h1函数（基于g1）
+│   │   └── C1相关的收敛引理
+│   └── AdaptiveTheorem_converge_c1.lean # C1收敛定理
+│
+├── C2条件相关
+│   ├── AdaptiveCondition2.lean          # C2条件定义和相关引理
+│   │   ├── Condition_C2类定义
+│   │   ├── θ_k序列定义
+│   │   ├── h2函数（基于g2，待实现）
+│   │   └── C2相关的收敛引理
+│   └── AdaptiveTheorem_converge_c2.lean # C2收敛定理（待实现）
+│
+├── Strategies/
+│   ├── Strategy1_Convergence.lean      # Strategy1收敛性证明
+│   └── Strategy_Template.lean          # 策略模板（供LLM使用）
+│
+├── LLM_Interface/
+│   ├── LLM_CodeGeneration.lean         # LLM代码生成接口
+│   └── Condition_Checker.lean          # 条件检查器
+│
+├── ParameterAdaptation.lean            # 参数自适应策略定义
+├── HWY_FORMALIZATION_GUIDE.md          # HWY论文形式化指南
+├── FRAMEWORK_DESIGN.md                 # 框架设计文档
+├── FRAMEWORK_SUMMARY.md                # 框架总结
+└── README.md                           # 本文件
 ```
 
-or in new `lakefile.lean` Lake DSL:
+## 核心概念
 
-```lean4
-require "optsuite" / "optlib" @ "git#master"
+### g1 和 g2 函数
+
+框架中定义了两个关键的Lyapunov函数，分别用于不同的收敛条件：
+
+#### g1 - 用于C1条件（参数增长情况）
+
+```lean
+g1 n = ‖ey n‖² + τ * ρₙ n² * ‖A₂ (e₂ n)‖² 
+       + τ * (T_HWY - τ) * ρₙ n² * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖²
 ```
 
-The optlib library uses mathlib4 as a dependency, command `lake exe cache get` can be used to fetch mathlib4 cache.
+**特点**：
+- 系数中包含 `ρₙ n²`，适合参数增长的情况
+- 当 `ρₙ` 增大时，各项的权重相应增大
+- 用于证明参数增长时的收敛性
 
-### Contribute to the `Optlib` library
+#### g2 - 用于C2条件（参数减小情况）
 
-The command
-
-```sh
-git clone https://github.com/optsuite/optlib.git && cd optlib && code .
+```lean
+g2 n = 1 / ρₙ n² * ‖ey n‖² + τ * ‖A₂ (e₂ n)‖² 
+       + τ * (T_HWY - τ) * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖²
 ```
 
-will download the source of the optlib library. After editing those files, you can fork this project on GitHub and file a pull request.
+**特点**：
+- 第一项系数为 `1 / ρₙ n²`，当 `ρₙ` 减小时，该项权重增大
+- 后两项不依赖 `ρₙ`，保持稳定
+- 用于证明参数减小时的收敛性
 
-## Code Explanations
+### h1 和 h2 函数
 
-### Differential
-
-- [`Basic.lean`](https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Analysis/Calculus/Gradient/Basic.lean): (now `Mathlib/Analysis/Calculus/Gradient/Basic.lean`) the definition and basic properties of the gradient of a function. (**This file has been merged into mathlib4**, see https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Analysis/Calculus/Gradient/Basic.lean)
-- [`Calculation.lean`](Optlib/Differential/Calculation.lean): the properties of the gradient of a function, including the chain rule, the product rule.
-- [`GradientDiv.lean`](Optlib/Differential/GradientDiv.lean): the quotient rule of the gradient.
-- [`Lemmas.lean`](Optlib/Differential/Lemmas.lean): useful lemmas such as the mean-value theorem and the taylor's expansion.
-- [`Subdifferential.lean`](Optlib/Differential/Subdifferential.lean): the basic definitions and properties of subdifferentials for general nonsmooth functions.
-
-### Convex
-
-- [`ConvexFunction.lean`](Optlib/Convex/ConvexFunction.lean): the properties of convex functions.
-- [`QuasiConvexFirstOrder.lean`](Optlib/Convex/QuasiConvexFirstOrder.lean): first order conditions for quasi-convex functions.
-- [`StronglyConvex.lean`](Optlib/Convex/StronglyConvex.lean): the properties of strongly convex functions. (Part of this has been merged into mathlib) (see https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Analysis/Convex/Strong.lean)
-- [`Subgradient.lean`](Optlib/Convex/Subgradient.lean): the basic definitions and the properties of subgradient.
-- [`BanachSubgradient.lean`](Optlib/Function/BanachSubgradient.lean): the basic definitions of subgradient on a banach space.
-- [`FiniteDimensionalConvexFunctionsLocallyLipschitz.lean`](Optlib/Function/FiniteDimensionalConvexFunctionsLocallyLipschitz.lean): the proof of the the contuity of convex functions on finite dimensional space
-- [`ConicCaratheodory.lean`](Optlib/Convex/ConicCaratheodory.lean): the proof of the conic Caratheodory lemma
-- [`Farkas.lean`](Optlib/Convex/Farkas.lean): the proof of the Farkas Lemma
-
-### Function
-
-- [`ClosedFunction.lean`](https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Semicontinuous.lean): (now `Mathlib/Topology/Semicontinuous.lean`) the basic definitions and the properties of closed functions. (This file has been merged into mathlib4, see https://github.com/leanprover-community/mathlib4/blob/master/Mathlib/Topology/Semicontinuous.lean)
-- [`Lsmooth.lean`](Optlib/Function/Lsmooth.lean): the properties of L-smooth functions.
-- [`MinimaClosedFunction.lean`](Optlib/Function/MinimaClosedFunction.lean): Weierstrass theorem for closed functions.
-- [`Proximal.lean`](Optlib/Function/Proximal.lean): the basic definitions and the properties of proximal operator
-- [`KL.lean`](Optlib/Function/KL.lean): KL properties and uniform KL properties
-
-### Optimality
-
-- [`OptimalityConditionOfUnconstrainedProblem.lean`](Optlib/Optimality/OptimalityConditionOfUnconstrainedProblem.lean): first order optimality conditions for unconstrained optimization problems.
-- [`Constrained_Problem.lean`](Optlib/Optimality/Constrained_Problem.lean): the basic definitions of constrained optimization problems and the proof the KKT conditions under LICQ and linear constraint qualification
-- [`Weak_Duality.lean`](Optlib/Optimality/Weak_Duality.lean): the formalization of the dual problem and the proof of the weak duality property
-
-### Algorithm
-
-- [`GradientDescent.lean`](Optlib/Algorithm/GD/GradientDescent.lean): convergence rate of gradient descent algorithm for smooth convex functions.
-- [`GradientDescentStronglyConvex.lean`](Optlib/Algorithm/GD/GradientDescentStronglyConvex.lean): convergence rate of gradient descent algorithm for smooth strongly convex functions.
-- [`NesterovSmooth.lean`](Optlib/Algorithm/Nesterov/NesterovSmooth.lean): convergence rate of Nesterov accelerated gradient descent algorithm for smooth convex functions.
-- [`SubgradientMethod.lean`](Optlib/Algorithm/SubgradientMethod.lean): convergence rate of subgradient method with different choices of stepsize for nonsmooth convex functions.
-- [`ProximalGradient.lean`](Optlib/Algorithm/ProximalGradient.lean): convergence rate of the proximal gradient method for composite optimization problems.
-- [`NesterovAccelerationFirst.lean`](Optlib/Algorithm/Nesterov/NesterovAccelerationFirst.lean): convergence rate of the first version of Nesterov acceleration method for composite optimization problems.
-- [`NesterovAccelerationSecond.lean`](Optlib/Algorithm/Nesterov//NesterovAccelerationSecond.lean): convergence rate of the second version of Nesterov acceleration method for composite optimization problems.
-- [`LASSO.lean`](Optlib/Algorithm/LASSO.lean): convergence rate of the LASSO algorithm for L1-regularized least squares problem.
-- [`the BCD method`](Optlib/Algorithm/BCD/Convergence.lean): convergence analysis of the block coordinate descent method.
-- [`the ADMM method`](Optlib/Algorithm/ADMM/Theroem_converge.lean): convergence analysis of the alternating direction method of multipliers.
-
-## What we have done
-
-### Convex Analysis
-
-- First and Second Order Conditions for Convex Functions
-- Definition and Properties of Strongly Convex Functions
-- Definition and Properties of L-smooth Functions
-- Definition and Properties of Proper Functions and Conjugate Functions 
-- ......
-
-### Optimality Conditions
-   
-- First and Second Order Conditions for Constrained and Unconstrained Problems
-- KKT Conditions for Constrained Problems under constraint qualifications 
-- Slater Condition and KKT Conditions for convex optimization problems (Ongoing)
-- ......
-
-### Convergence of Optimization Algorithms
-
-- Gradient Descent for Convex and Strongly Convex Functions 
-- Proximal Gradient Method and Nesterov's Acceleration
-- Block Coordinate Descent Method
-- Alternating Direction Method of Multipliers
-- ......
-
-
-## Mathematics Textbook Formalization Project
-
-### Objectives
-The project aims to systematically formalize core areas of mathematics, including convex analysis, numerical linear algebra, and high-dimensional probability using Lean. By formalizing classical textbooks and building a machine-readable, verifiable knowledge network, the initiative will bridge traditional human-written mathematics with AI-assisted reasoning and scientific computing. The ultimate goal is to create a replicable paradigm for textbook formalization, foster integration between mathematics and artificial intelligence, and establish a foundation for next-generation mathematical infrastructure.
-
-### Recruitment
-The project will build a collaborative research team centered on Lean-based formalization. We welcome outstanding undergraduate seniors, master’s students, and PhD students with strong mathematical backgrounds and programming skills. Team members will be organized into groups under the guidance of group leaders, focusing respectively on convex optimization, numerical algebra, and high-dimensional probability. 
-
-### Compensation and Benefits
-
-- Group Members: Base stipend of RMB 1,000 per month, rising up to RMB 3,000 depending on the number and quality of formalized theorems.
-
-- Group Leaders: Base stipend of RMB 1,500 per month, rising up to RMB 4,000 depending on individual and team contributions.
-
-### Topics
-#### Convex Analysis
-
-We mainly follow the book [Convex Analysis (R. T. Rockafellar)](https://press.princeton.edu/books/paperback/9780691015866/convex-analysis).
-- Topological Properties
-- Duality Correspondences
-- Representation and Inequalities
-- Differential Theory
-- ...
-
-#### Nonlinear Programming 
-
-We mainly follow the books [Numerical Optimization (Jorge Nocedal, Stephen J. Wright)](https://link.springer.com/book/10.1007/978-0-387-40065-5) and [Optimization: Modeling, Algorithm and Theory](http://faculty.bicmr.pku.edu.cn/~wenzw/optbook.html)
-- Line Search Methods
-- Quasi-Newton Methods
-- Theory of Constrained Optimization
-- ...
-
-#### Integer Programming
-
-We mainly follow the book [Integer Programming (Michele Conforti, Gérard Cornuéjols, and Giacomo Zambelli)](https://link.springer.com/book/10.1007/978-3-319-11008-0).
-- Linear Inequlities and Polyhedra
-- Perfect Formulations
-- Intersection Cuts and Corner Polyhedra
-- ...
-
-#### Numerical Linear Algebra
-
-We mainly follow the book [Matrix Computations (Golub & Van Loan)](https://epubs.siam.org/doi/abs/10.1137/1.9781421407944).
-- Matrix Factorizations (LU/Cholesky, QR, Schur, SVD; Jordan canonical form)
-- Matrix Functions
-- Matrix Differential Calculus
-- ...
+- **h1**: 用于C1条件的递推关系
+  ```lean
+  h1 n = -g1(n+1) + (1 + (η_k n)²) * g1 n
+  ```
   
-#### High Dimensional Probability
+- **h2**: 用于C2条件的递推关系（待实现）
+  ```lean
+  h2 n = -g2(n+1) + (1 + (θ_k n)²) * g2 n
+  ```
 
-We mainly follow the book [High-Dimensional Probability (Roman Vershynin)](https://www.math.uci.edu/~rvershyn/teaching/hdp/hdp.html).
-- Concentration Inequalities
-- Random Vectors
-- Random Matrices
-- Random Processes
-- ...
+### C1和C2条件
 
-### Sponsor
+#### C1条件（参数增长情况）
+- **文件**: `AdaptiveCondition1.lean`
+- **控制序列**: `η_k` - 控制参数增长速率
+- **定义**: 当 `ρₙ(n+1) > ρₙ(n)` 时，`η_k n = sqrt((ρₙ(n+1)/ρₙ(n))² - 1)`，否则为0
+- **条件**: 
+  - `Σ ηₖ² < ∞` (η平方和有限)
+  - `∏(1 + ηₖ²) < ∞` (乘积有界)
+- **Lyapunov函数**: 使用 `g1`
+- **递推关系**: 使用 `h1`
+- **适用场景**: 当 `ρₙ(n+1) ≥ ρₙ(n)` 时
 
-- Beijing International Center for Mathematical Research, Peking University
-- Sino-Russian Mathematics Center
-- Great Bay University
-- National Natural Science Foundation of China
+#### C2条件（参数减小情况）
+- **文件**: `AdaptiveCondition2.lean`
+- **控制序列**: `θ_k` - 控制参数减小速率
+- **定义**: 当 `ρₙ(n+1) < ρₙ(n)` 时，`θ_k n = sqrt(1 - (ρₙ(n)/ρₙ(n+1))²)`，否则为0
+- **条件**: 
+  - `Σ θₖ² < ∞` (θ平方和有限)
+  - `∏(1 + θₖ²) < ∞` (乘积有界)
+- **Lyapunov函数**: 使用 `g2`
+- **递推关系**: 使用 `h2`（待实现）
+- **适用场景**: 当 `ρₙ(n+1) ≤ ρₙ(n)` 时
 
-## Publications
+## 快速开始
 
-### Formalization of Optimization
+### 1. 理解文件组织
 
-- [Chenyi Li, Ziyu Wang, Wanyi He, Yuxuan Wu, Shengyang Xu, Zaiwen Wen. Formalization of Complexity Analysis of the First-order Optimization Algorithms](https://arxiv.org/abs/2403.11437)
-- [Chenyi Li, Zichen Wang, Yifan Bai, Yunxi Duan, Yuqing Gao, Pengfei Hao, Zaiwen Wen, Formalization of Algorithms for Optimization with Block Structures](http://arxiv.org/abs/2503.18806)
-- [Chenyi Li, Shengyang Xu, Chumin Sun, Li Zhou, Zaiwen Wen, Formalization of Optimality Conditions for Smooth Constrained Optimization Problems](https://arxiv.org/abs/2503.18821)
-- [Chenyi Li, Zaiwen Wen, An Introduction to Mathematics Formalization Based on Lean (in Chinese)](http://faculty.bicmr.pku.edu.cn/~wenzw/paper/OptLean.pdf)
+#### 共享定义（AdaptiveLemmas.lean）
+- `Setting`: 基础设置类，包含所有共享的notation和定义
+- `g1`, `g2`: 两个Lyapunov函数
+- `T_HWY`, `e₁`, `e₂`, `ey`: 辅助变量
+- `u`, `v`: subgradient相关的辅助函数
+- 基础引理：`u_inthesubgradient`, `v_inthesubgradient`等
 
-### Autoformalization and Automatic Theorem Proving
+#### C1条件（AdaptiveCondition1.lean）
+- `Condition_C1`: C1条件类
+- `η_k`: 控制序列
+- `h1`: 递推关系
+- C1相关的收敛引理
 
-- Ziyu Wang, Bowen Yang, Shihao Zhou, Chenyi Li, Yuan Zhang, Bin Dong, Zaiwen Wen, Translating Informal Proofs into Formal Proofs Using  a Chain of States
-- Chenyi Li, Wanli Ma, Zichen Wang, Zaiwen Wen, SITA: A Framework for Structure-to-Instance  Theorem Autoformalization
+#### C2条件（AdaptiveCondition2.lean）
+- `Condition_C2`: C2条件类
+- `θ_k`: 控制序列
+- `h2`: 递推关系（待实现）
+- C2相关的收敛引理（待完善）
 
-### Premise Selection
+### 2. 形式化新策略
 
-- Zichen Wang, Anjie Dong, Zaiwen Wen, Tree-Based Premise Selection for Lean4
+使用 `Strategies/Strategy_Template.lean` 作为模板：
 
-## References
+```lean
+-- 1. 定义策略类
+class YourStrategy where
+  -- 策略参数和更新规则
 
-- [H. Liu, J. Hu, Y. Li, Z. Wen, Optimization: Modeling, Algorithm and Theory (in Chinese)](http://faculty.bicmr.pku.edu.cn/~wenzw/optbook.html)
-- [Rockafellar, R. Tyrrell, and Roger J-B. Wets. Variational analysis. Vol. 317. Springer Science & Business Media, 2009.](https://link.springer.com/book/10.1007/978-3-642-02431-3)
-- [Nocedal, Jorge, and Stephen J. Wright, eds. Numerical optimization. New York, NY: Springer New York, 1999.](https://link.springer.com/chapter/10.1007/0-387-22742-3_18)
-- [Nesterov, Yurii. Lectures on convex optimization. Vol. 137. Berlin: Springer, 2018.](https://link.springer.com/book/10.1007/978-3-319-91578-4)
-- [Convex Analysis, Vol. 28 of Princeton Math. Series, Princeton Univ. Press, 1970](https://press.princeton.edu/books/paperback/9780691015866/convex-analysis)
-- [Bolte, J., Sabach, S. & Teboulle, M. Proximal alternating linearized minimization for nonconvex and nonsmooth problems. Math. Program. 146, 459–494 (2014).](https://link.springer.com/article/10.1007/s10107-013-0701-9)
-- [Maryam Fazel, Ting Kei Pong, Defeng Sun, and Paul Tseng. Hankel matrix rank minimization with applications to system identification and realization. SIAM Journal on Matrix Analysis and Applications, 34(3):946–977, 2013](https://epubs.siam.org/doi/abs/10.1137/110853996)
-- ...
+-- 2. 判断策略类型（C1或C2）
+-- 如果参数可能增长，使用C1和g1
+-- 如果参数可能减小，使用C2和g2
 
-## Training Sessions
-There will be a weekly online session on formalization every Wednesday from 6:15 p.m. to 7:15 p.m throughout the Fall semester of 2025. Join via Tencent Meeting (ID: 892-7680-9007).
+-- 3. 证明满足C1或C2条件
+instance your_strategy_satisfies_C1 : Condition_C1 ... where
+  -- 定义η_k并证明条件
+  -- 使用g1进行证明
 
-## The Team
+-- 4. 应用收敛定理
+theorem your_strategy_converges [Condition_C1 ...] : ...
+```
 
-We are a group of scholars and students with a keen interest in mathematical formalization.
+### 3. 使用LLM生成代码
 
-### Members
+参考 `LLM_Interface/LLM_CodeGeneration.lean`：
 
-- Zaiwen Wen, Beijing International Center for Mathematical Research, Peking University, CHINA (wenzw@pku.edu.cn)
-- Chenyi Li, School of Mathematical Sciences, Peking University, CHINA (lichenyi@stu.pku.edu.cn)
-- Zichen Wang, School of Mathematics and Statistics, Xi’an Jiaotong University, CHINA (princhernwang@gmail.com)
-- Ziyu Wang, School of Mathematical Sciences, Peking University, CHINA (wangziyu-edu@stu.pku.edu.cn)
+```lean
+-- 1. 创建策略描述
+let desc := StrategyDescription.mk 
+  "StrategyName"
+  ConditionType.C1  -- 或 ConditionType.C2
+  "ρ_{k+1} = ..."
+  "Paper Reference"
 
-### Other Contributors
+-- 2. 生成代码（自动选择g1或g2）
+let code := generate_complete_file desc
 
-- Undergraduate students from Peking University:
+-- 3. 验证
+if validate_consistency desc code then
+  -- 代码有效
+```
 
-  Hongjia Chen, Wanyi He, Yuxuan Wu, Shengyang Xu, Junda Ying, Penghao Yu, ...
+## 当前状态
 
-- Undergraduate students from Summer Seminar on Mathematical Formalization and Theorem Proving, BICMR, Peking University, 2023:
+### ✅ 已完成
 
-  Zhipeng Cao, Yiyuan Chen, Heying Wang, Zuokai Wen, Mingquan Zhang, Ruichong Zhang, ...
+- [x] ADMM基础定义 (`AdaptiveScheme.lean`)
+- [x] 共享引理和定义 (`AdaptiveLemmas.lean`)
+  - [x] `g1` 和 `g2` 的定义
+  - [x] `Setting` 类
+  - [x] 基础引理（u_inthesubgradient, v_inthesubgradient等）
+- [x] C1条件的完整形式化 (`AdaptiveCondition1.lean`)
+  - [x] `Condition_C1` 类定义
+  - [x] `η_k` 序列定义
+  - [x] `h1` 函数定义
+  - [x] C1相关的收敛引理
+- [x] C1收敛定理 (`AdaptiveTheorem_converge_c1.lean`)
+- [x] C2条件的基础定义 (`AdaptiveCondition2.lean`)
+  - [x] `Condition_C2` 类定义
+  - [x] `θ_k` 序列定义
+- [x] Strategy1收敛性证明框架
+- [x] LLM代码生成接口
+- [x] 策略模板
+- [x] 框架设计文档
 
-- Undergraduate and graduate students from Summer Seminar on Mathematical Formalization and Theorem Proving, BICMR, Peking University, 2024:
+### 🚧 进行中
 
-  Yifan Bai, Yunxi Duan, Anqing Shen, Yuqing Gao, Pengfei Hao
+- [ ] C2条件的完整实现
+  - [ ] `h2` 函数的实现
+  - [ ] C2相关的收敛引理
+  - [ ] C2收敛定理 (`AdaptiveTheorem_converge_c2.lean`)
+- [ ] Strategy1的完整证明
+- [ ] Strategy2的实现
 
-- Other collaborators:
+### 📋 待实现
 
-  Anjie Dong, ...
+- [ ] C2相关的有界性引理
+- [ ] `Strategy_Validator.lean`
+- [ ] 更多策略的收敛性证明
 
-## Copyright
+## 使用指南
 
-Copyright (c) 2025 Chenyi Li, Zichen Wang, Ziyu Wang, Zaiwen Wen. All rights reserved.
+### 对于研究人员
 
-Released under Apache 2.0 license as described in the file LICENSE.
+1. **形式化新策略**：
+   - 复制 `Strategy_Template.lean`
+   - 填写策略定义
+   - **关键**：确定使用 `g1`（C1，参数增长）还是 `g2`（C2，参数减小）
+   - 证明满足相应的收敛条件
+   - 应用收敛定理
+
+2. **验证现有策略**：
+   - 使用 `Condition_Checker.lean` 中的工具
+   - 检查策略是否满足收敛条件
+   - 确认使用了正确的Lyapunov函数（g1或g2）
+
+### 对于LLM/AI Agent
+
+1. **搜索论文**：
+   - 识别自适应参数更新规则
+   - 提取数学公式
+   - **判断策略类型**：
+     - 如果参数单调递增或可能增长 → 使用C1和g1
+     - 如果参数单调递减或可能减小 → 使用C2和g2
+
+2. **生成代码**：
+   - 使用 `LLM_CodeGeneration.lean` 接口
+   - 遵循 `Strategy_Template.lean` 模板
+   - **根据策略类型自动选择**：
+     - C1策略 → 使用 `g1` 和 `h1`
+     - C2策略 → 使用 `g2` 和 `h2`
+
+3. **验证收敛性**：
+   - 使用 `Condition_Checker.lean` 验证
+   - 确保满足C1或C2条件
+   - 确保使用了正确的Lyapunov函数
+
+## 关键定义说明
+
+### η_k 和 θ_k
+
+- **η_k**: C1条件的控制序列
+  - 当 `ρₙ(n+1) > ρₙ(n)` 时：`η_k n = sqrt((ρₙ(n+1)/ρₙ(n))² - 1)`
+  - 否则：`η_k n = 0`
+  - 用于控制参数增长速率
+
+- **θ_k**: C2条件的控制序列
+  - 当 `ρₙ(n+1) < ρₙ(n)` 时：`θ_k n = sqrt(1 - (ρₙ(n)/ρₙ(n+1))²)`
+  - 否则：`θ_k n = 0`
+  - 用于控制参数减小速率
+
+### 如何选择 g1 还是 g2？
+
+**使用 g1 (C1条件)** 当：
+- 策略中参数 `ρₙ` 可能增长
+- 参数更新规则如：`ρ_{k+1} = min(α * ρ_k, ρ_max)` 其中 `α > 1`
+- 参数单调递增
+
+**使用 g2 (C2条件)** 当：
+- 策略中参数 `ρₙ` 可能减小
+- 参数更新规则如：`ρ_{k+1} = max(β * ρ_k, ρ_min)` 其中 `0 < β < 1`
+- 参数单调递减
+
+**同时满足C1和C2**：
+- 如果策略可能增长也可能减小，需要同时满足两个条件
+
+## 文件依赖关系
+
+```
+AdaptiveScheme.lean
+    ↓
+AdaptiveLemmas.lean (导入AdaptiveScheme)
+    ↓
+    ├──→ AdaptiveCondition1.lean (导入AdaptiveLemmas)
+    │       ↓
+    │   AdaptiveTheorem_converge_c1.lean (导入AdaptiveCondition1)
+    │
+    └──→ AdaptiveCondition2.lean (导入AdaptiveLemmas)
+            ↓
+        AdaptiveTheorem_converge_c2.lean (待实现)
+```
+
+## 参考文献
+
+1. He, B. S., Yang, H., & Wang, S. L. (2000). Alternating direction method with self-adaptive penalty parameters for monotone variational inequalities. *Journal of Optimization Theory and Applications*, 106(2), 337-356.
+
+2. 其他相关自适应ADMM论文
+
+## 贡献指南
+
+1. 新策略应遵循 `Strategy_Template.lean` 的结构
+2. 所有证明应完整（避免使用 `sorry`）
+3. 添加适当的文档和注释
+4. 更新本README和相关文档
+5. **重要**：根据策略类型正确使用 `g1` 或 `g2`
+6. 确保导入关系正确（通过 `AdaptiveLemmas.lean` 访问共享定义）
+
+## 联系方式
+
+如有问题或建议，请参考 `FRAMEWORK_DESIGN.md` 和 `FRAMEWORK_SUMMARY.md` 获取更多详细信息。
