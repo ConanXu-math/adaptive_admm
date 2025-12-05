@@ -443,19 +443,6 @@ lemma HWY_ineq_53 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C > 0, 
       rw [h_sub] at h1
       have h2 := hC n
       linarith
-   -- intro n
-   -- have h1 := HWY_ineq_52 (n - 1)
-   -- have h_sub : (↑n : ℕ) - 1 + 1 = (↑n : ℕ) := PNat.natPred_add_one n
-   -- obtain ⟨P, hP_pos, hP⟩ := h1
-   -- use P * (‖ey 1‖^2 + τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) + 1
-   -- rw [h_sub] at hP
-   -- constructor
-   -- ·  apply add_pos_of_nonneg_of_pos
-   --    exact mul_nonneg (le_of_lt hP_pos) HWY_ineq_52_4
-   --    norm_num
-   -- ·  calc ‖ey n‖^2 + τ * ρₙ n^2 * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ ^ 2 ≤ P * (‖ey 1‖^2 + τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) + 1 := by linarith
-
--- 扩展到自然数（包括0）
 
 lemma HWY_ineq_53_nat [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C > 0, ∀ n : ℕ,
 g1 n ≤ C := by
@@ -481,26 +468,6 @@ g1 n ≤ C := by
         ≤ C := hC ⟨n, n_pos⟩
         _ ≤ max C C₀ := le_max_left C C₀
         _ ≤ max C C₀ + 1 := by linarith
-
-
-lemma g1_nonneg [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) : 0 ≤ g1 n := by
-   unfold g1
-   apply add_nonneg
-   apply add_nonneg
-   apply sq_nonneg ‖ey (n)‖
-   apply mul_nonneg
-   apply mul_nonneg
-   apply le_of_lt admm.htau.1
-   apply sq_nonneg (ρₙ (n))
-   apply sq_nonneg ‖A₂ (e₂ (n))‖
-   apply mul_nonneg
-   apply mul_nonneg
-   have : 0 ≤ T_HWY - τ := by linarith [T_minus_tau_positive]
-   apply mul_nonneg
-   apply le_of_lt admm.htau.1
-   exact this
-   apply sq_nonneg (ρₙ (n))
-   apply sq_nonneg ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖
 
 theorem summable_of_nonneg_of_le {β : Type*} {f : β → ℝ} {g : β → ℝ}
 (hg : ∀ (n : β), 0 ≤ g n) (hgf : ∀ (n : β), g n ≤ f n) (hf : Summable f) :

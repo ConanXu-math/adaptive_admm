@@ -64,27 +64,6 @@ class Condition_C1 {E₁ E₂ F : outParam Type*}
   one_eta_square_multipliable : Multipliable (f := fun n :ℕ  => (1 + (η_k n)^2))
 
 
--- Condition C2: 减小情况下的收敛条件
-class Condition_C2 {E₁ E₂ F : outParam Type*}
-    [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
-    [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F]
-    (admm : outParam (ADMM E₁ E₂ F)) (admm_kkt : outParam (Existance_of_kkt admm))
-    extends Setting E₁ E₂ F admm admm_kkt where
-  -- Σ θₖ² < ∞ (θ平方和有限)
-  theta_square_summable : ∃ S, ∑' n : ℕ+, (θ_k n)^2 ≤ S
-
-
-lemma HWY_thm4_1_ineq [Setting E₁ E₂ F admm admm_kkt] :T_HWY - τ >0 := by
-   rw[eq4']
-   have hpos : 0 < (τ^2 - 3*τ + 3 : ℝ) := by
-      have : (τ^2 - 3*τ + 3 : ℝ) = (τ - (3/2))^2 + (3/4) := by ring
-      have hsq : 0 ≤ (τ - (3/2))^2 := by exact sq_nonneg _
-      have h34 : 0 < (3/4 : ℝ) := by norm_num
-      have h:= add_pos_of_nonneg_of_pos hsq h34
-      rw [this]
-      exact h
-   linarith
 lemma HWY_thm4_1_ineq'[Setting E₁ E₂ F admm admm_kkt] :∀ n : ℕ,τ * (T_HWY - τ) * ρₙ n^2  ≥ 0 := by
    intro n
    have h1:= admm.htau.1
@@ -334,7 +313,6 @@ lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
          linarith
          -- exact le_trans h2 h4 --为什么linarith 不行？？？？？？？？？？？ 还得是Claude 解我心头之患 --后续 绷不住 原来是版本问题.。。。
 
--- def Cp [Condition_C1 admm admm_kkt] : ℝ :=  ∏' n : ℕ, (1 + (η_k n )^2)
 lemma HWY_ineq_52_ [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]: ∀ n : ℕ,
   ∏ k ∈  Finset.range (n+1), (1 + (η_k k)^2) ≤ ∏' k : ℕ, (1 + (η_k k)^2) := by
    intro n
@@ -510,8 +488,6 @@ Summable g:=by
   apply NNReal.summable_of_le this
   rw[← NNReal.summable_coe]
   exact hf; grind
-
-
 
 lemma HWY_ineq_54_0 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : ℕ+,
     (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
