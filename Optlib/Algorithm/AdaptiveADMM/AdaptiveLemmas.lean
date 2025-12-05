@@ -1816,9 +1816,6 @@ lemma thm3_1_ineq3 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
 --         intro n
 --         linarith [thm3_1_ineq1]
 
-
-
-
 theorem HWY_Theorem_3_1 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
 ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
 + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
@@ -1838,7 +1835,16 @@ theorem HWY_Theorem_3_1 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
          (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2):= by
         linarith [thm3_1_ineq3 n]
 
-
+lemma HWY_thm4_1_ineq [Setting E₁ E₂ F admm admm_kkt] :T_HWY - τ >0 := by
+   rw[eq4']
+   have hpos : 0 < (τ^2 - 3*τ + 3 : ℝ) := by
+      have : (τ^2 - 3*τ + 3 : ℝ) = (τ - (3/2))^2 + (3/4) := by ring
+      have hsq : 0 ≤ (τ - (3/2))^2 := by exact sq_nonneg _
+      have h34 : 0 < (3/4 : ℝ) := by norm_num
+      have h:= add_pos_of_nonneg_of_pos hsq h34
+      rw [this]
+      exact h
+   linarith
 -- lemma rho_change_term [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
 --       ρₙ n * ‖A₂ (e₂ n)‖^2 - ρₙ (n+1) * ‖A₂ (e₂ (n+1))‖^2
 --       ≤ ρₙ (n+1) * (‖A₂ (e₂ n)‖^2 - ‖A₂ (e₂ (n+1))‖^2)
