@@ -307,4 +307,4 @@ theorem strategyX_converges ... := by
 
 
 
-## ![](https://cdn.nlark.com/yuque/0/2025/png/52044665/1765886784945-5e98f9f5-7dfc-48c4-b959-36c6cf792dfe.png)
+## ![](fig/image.png)
