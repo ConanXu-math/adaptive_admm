@@ -20,6 +20,7 @@ variable (admm_kkt : Existance_of_kkt admm)
 
 /-
 ## Strategy 3 定义
+说明：Strategy3 只关心 ρ 的三态更新（乘/除/保持）与 tau 的可和性。
 -/
 class Strategy3 [Setting E₁ E₂ F admm admm_kkt][IsOrderedMonoid ℝ] where
   tau_seq : ℕ → ℝ
@@ -41,6 +42,7 @@ local notation "h_tau_summable" => s3.h_tau_summable
 local notation "h_tau_nonneg" => s3.h_tau_nonneg
 /-
 ### 辅助引理
+用于把 tau 的可和性转换成 C1 需要的界与可乘性。
 -/
 lemma bound_summable :Summable (fun n => 2 * τ n + (τ n)^2) := by
   apply Summable.add
@@ -65,6 +67,7 @@ lemma bound_summable :Summable (fun n => 2 * τ n + (τ n)^2) := by
     exact mul_le_of_le_one_left h_le (le_of_lt h_lt)
 /-
 ### 1. 证明 Strategy3 满足 Condition C1
+核心是把 ρ 的三态更新转成 η_k 的可和/可乘条件。
 -/
 
 lemma eta_sq_bound_s3 (n : ℕ) : (η_k (admm := admm) n)^2 ≤ 2 * τ n + (τ n)^2 := by
@@ -164,6 +167,7 @@ instance strategy3_satisfies_C1 [Setting E₁ E₂ F admm admm_kkt] [s3 : Strate
       linarith
 /-
 ### 3. Strategy3 收敛性定理
+满足 C1 后直接套用通用收敛定理。
 -/
 omit s3 in
 theorem strategy3_converges
@@ -180,6 +184,7 @@ theorem strategy3_converges
   apply adaptive_admm_convergence_c1
 end Strategy3
 
+-- 更“工程化”的策略接口：只给出 update_fun 与证明其等价于三态更新
 structure AdaptableStrategy
     [Setting E₁ E₂ F admm admm_kkt]
     [IsOrderedMonoid ℝ] where
@@ -195,8 +200,10 @@ structure AdaptableStrategy
 
 /-
 ## AdaptableStrategy → Strategy3
+把可适配策略包装成 Strategy3，复用现成收敛证明。
 -/
-noncomputable def Strategy3.ofAdaptableStrategy
+noncomputable
+def Strategy3.ofAdaptableStrategy
     [Setting E₁ E₂ F admm admm_kkt]
     [IsOrderedMonoid ℝ]
     (s : AdaptableStrategy (admm := admm) (admm_kkt := admm_kkt))
@@ -218,3 +225,23 @@ noncomputable def Strategy3.ofAdaptableStrategy
     · right; right
       simpa [hρ] using h
 }
+
+namespace Strategy3
+
+-- 对外桥接定理：给出 AdaptableStrategy 与 hρ 即可得到收敛
+theorem converges_from_adaptable_strategy
+    [Setting E₁ E₂ F admm admm_kkt]
+    [IsOrderedMonoid ℝ]
+    (s : AdaptableStrategy (admm := admm) (admm_kkt := admm_kkt))
+    (hρ : ∀ n, admm.ρₙ (n+1) = s.update_fun n (admm.ρₙ n))
+    (fullrank₁ : Function.Injective admm.A₁)
+    (fullrank₂ : Function.Injective admm.A₂) :
+    ∃ (x₁_star : E₁) (x₂_star : E₂) (y_star : F),
+      Convex_KKT x₁_star x₂_star y_star admm.toOptProblem ∧
+      (Tendsto admm.x₁ atTop (𝓝 x₁_star) ∧
+       Tendsto admm.x₂ atTop (𝓝 x₂_star) ∧
+       Tendsto admm.y atTop (𝓝 y_star)) := by
+  haveI : Strategy3 admm admm_kkt := Strategy3.ofAdaptableStrategy (admm := admm) (admm_kkt := admm_kkt) s hρ
+  apply Strategy3.strategy3_converges (admm := admm) (admm_kkt := admm_kkt) fullrank₁ fullrank₂
+
+end Strategy3

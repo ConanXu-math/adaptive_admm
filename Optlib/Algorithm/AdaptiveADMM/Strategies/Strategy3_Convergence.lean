@@ -131,6 +131,7 @@ lemma multipliable_one_eta_sq : Multipliable (fun n => 1 + (η_k (admm := admm) 
 -- 实例化 Condition_C1
 instance strategy3_satisfies_C1 [Setting E₁ E₂ F admm admm_kkt] [s3 : Strategy3 admm admm_kkt] : Condition_C1 admm admm_kkt where
   eta_square_summable' := summable_eta_sq admm admm_kkt
+
   eta_square_summable := by
     obtain ⟨S, hS⟩ := summable_eta_sq admm admm_kkt
     use S + 1

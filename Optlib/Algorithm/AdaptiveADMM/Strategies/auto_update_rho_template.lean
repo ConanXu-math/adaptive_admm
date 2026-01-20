@@ -5,8 +5,8 @@ import Optlib.Algorithm.AdaptiveADMM.Strategies.VerificationLib
 noncomputable section
 
 open Topology Filter
-open AdaptiveADMM_Convergence_Proof
 open AdaptiveADMM_Verification
+open AdaptiveADMM_Convergence_Proof
 
 variable {E₁ E₂ F : Type*}
 [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
@@ -15,10 +15,13 @@ variable {E₁ E₂ F : Type*}
 
 variable (admm : ADMM E₁ E₂ F)
 
-def tau_seq (c p : ℝ) (n : ℕ) : ℝ := c / Real.rpow ((n : ℝ) + 1) p
+def tau_seq (c p : ℝ) (n : ℕ) : ℝ :=
+  c / Real.rpow ((n : ℝ) + 1) p
+
 
 theorem h_tau_summable (c p : ℝ) (hp : 1 < p) : Summable (tau_seq c p) := by
   exact p_series_summable_template c p hp
+
 
 def r_ratio (r_norm_seq s_norm_seq : ℕ → ℝ) (eps : ℝ) (n : ℕ) : ℝ :=
   r_norm_seq n / max (s_norm_seq n) eps

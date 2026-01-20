@@ -155,7 +155,9 @@ lemma A₂e₂_isBounded'_c1 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: 
 lemma A₂e₂_isBounded_c1 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: IsBounded (range (A₂ ∘ e₂) ) :=
    (isBounded_iff_subset_ball 0).2 A₂e₂_isBounded'_c1
 
-lemma A₁e₁_A₂e₂_equation_c1 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ] : ∀ n : ℕ, ‖A₁ (e₁ n) + A₂ (e₂ n)‖ = ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ := by
+
+lemma A₁e₁_A₂e₂_equation_c1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :
+  ∀ n : ℕ, ‖A₁ (e₁ n) + A₂ (e₂ n)‖ = ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ := by
    intro n
    have : A₁ (e₁ n) + A₂ (e₂ n) = A₁ (x₁ n) + A₂ (x₂ n) - b := by
       rw [e₁, e₂]; simp
@@ -165,6 +167,8 @@ lemma A₁e₁_A₂e₂_equation_c1 [Condition_C1 admm admm_kkt][IsOrderedMonoid
          _ = A₁ (x₁ n) + A₂ (x₂ n) - b := by
             rw [admm_kkt.h.eq]; simp
    rw [this]
+
+
 
 lemma A₁e₁_A₂e₂_isBounded'_c1[Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ] : ∃ (r : ℝ), (range (A₁ ∘ e₁ + A₂ ∘ e₂) ) ⊆ ball 0 r := by
    rcases g1_bd_above_c1 with ⟨r, g1_isBounded⟩;

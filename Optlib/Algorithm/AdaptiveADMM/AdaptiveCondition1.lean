@@ -790,3 +790,59 @@ theorem HWY_Convergence_1_increment [Condition_C1 admm admm_kkt] [IsOrderedMonoi
 
 
 end AdaptiveADMM_Convergence_Proof
+
+
+
+
+
+-- theorem algebra_528788 (a b c : ℝ) (ha : |a| < 1) (hb : |b| < 1) (hc : |c| < 1) :
+--     a * b + b * c + c * a + 1 > 0 := by
+--   -- 将原式转化为两个正数的和的一半
+--   have h : a * b + b * c + c * a + 1 = ((1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c)) / 2 := by
+--     -- 展开右边的表达式并简化
+--     ring_nf
+--   -- 证明每个因子均为正数
+--   have h1 : 1 + a > 0 := by sorry
+--   have h2 : 1 + b > 0 := by sorry
+--   have h3 : 1 + c > 0 := by sorry
+--   have h4 : 1 - a > 0 := by sorry
+--   have h5 : 1 - b > 0 := by sorry
+--   have h6 : 1 - c > 0 := by sorry
+--   -- 两个乘积均为正数
+--   have h7 : (1 + a) * (1 + b) * (1 + c) > 0 := by positivity
+--   have h8 : (1 - a) * (1 - b) * (1 - c) > 0 := by positivity
+--   -- 两个正数的和仍为正数
+--   have h9 : (1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c) > 0 := by linarith [h7, h8]
+--   -- 原式等于正数除以2，故为正
+--   rw [h]
+--   apply div_pos
+--   · exact h9
+--   · positivity
+
+
+
+
+-- theorem algebra_528788 (a b c : ℝ) (ha : |a| < 1) (hb : |b| < 1) (hc : |c| < 1) :
+--     a * b + b * c + c * a + 1 > 0 := by
+--   -- 将原式转化为两个正数的和的一半
+--   have h : a * b + b * c + c * a + 1 = ((1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c)) / 2 := by
+--     -- 展开右边的表达式并简化
+--     ring_nf
+--     ring
+--   -- 证明每个因子均为正数
+--   have h1 : 1 + a > 0 := by linarith [ha]
+--   have h2 : 1 + b > 0 := by linarith [hb]
+--   have h3 : 1 + c > 0 := by linarith [hc]
+--   have h4 : 1 - a > 0 := by linarith [ha]
+--   have h5 : 1 - b > 0 := by linarith [hb]
+--   have h6 : 1 - c > 0 := by linarith [hc]
+--   -- 两个乘积均为正数
+--   have h7 : (1 + a) * (1 + b) * (1 + c) > 0 := by positivity
+--   have h8 : (1 - a) * (1 - b) * (1 - c) > 0 := by positivity
+--   -- 两个正数的和仍为正数
+--   have h9 : (1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c) > 0 := by linarith [h7, h8]
+--   -- 原式等于正数除以2，故为正
+--   rw [h]
+--   apply div_pos
+--   · exact h9
+--   · positivity
