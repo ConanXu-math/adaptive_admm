@@ -4,13 +4,10 @@ import pathlib
 import json
 from typing import Dict, Any, Callable, List
 
-
 TEMPLATE_REGISTRY: Dict[str, Callable[[Dict[str, Any], str, str], List[str]]] = {}
-
 
 def register_template(name: str, render_fn: Callable[[Dict[str, Any], str, str], List[str]]) -> None:
     TEMPLATE_REGISTRY[name] = render_fn
-
 
 def _render_header(admm_name: str) -> List[str]:
     return [
@@ -27,7 +24,6 @@ def _render_header(admm_name: str) -> List[str]:
         "[NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F]\n",
         f"variable ({admm_name} : ADMM E₁ E₂ F)\n",
     ]
-
 
 def _render_standard(ir: Dict[str, Any], admm_name: str, kkt_name: str) -> List[str]:
     tau = ir.get("tau", {})
@@ -208,7 +204,6 @@ def extract_function_source(file_path: str, func_name: str) -> str:
             return textwrap.dedent(ast.get_source_segment(src, node))
 
     raise ValueError(f"Function `{func_name}` not found in {file_path}")
-
 
 def generate_auto_lean_file_from_file(
     file_path: str,

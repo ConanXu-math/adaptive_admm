@@ -4,7 +4,6 @@
 
 import numpy as np
 
-
 def tau(k, c=1.0, p=1.2):
     """
     递减步长（可求和）
