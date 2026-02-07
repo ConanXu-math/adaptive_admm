@@ -1,0 +1,32 @@
+2026-02-03 14:37:15,212 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_143715.log
+2026-02-03 14:37:15,212 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 14:37:15,228 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 14:37:15,242 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 14:37:15,270 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 14:37:15,271 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 14:37:15,272 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 14:37:15,272 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 14:37:15,273 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 14:37:15,273 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 14:37:15,273 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 14:37:15,273 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 14:37:15,277 - openevolve.evaluator - INFO - Evaluated program cb57a4a1-2147-490d-b71c-dc4f3f60a1a7 in 0.00s: combined_score=0.0430, metrics={'converged': True, 'iters': 23, 'combined_score': 0.043007227611818806}, artifacts={'status': 'CONVERGED', 'iterations': 23, 'eval_time': '0.003s'}
+2026-02-03 14:37:15,277 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 14:37:15,282 - openevolve.process_parallel - INFO - Initialized process parallel controller with 4 workers
+2026-02-03 14:37:15,282 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 14:37:15,283 - openevolve.process_parallel - INFO - Started process pool with 4 processes
+2026-02-03 14:37:15,283 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 14:37:15,283 - openevolve.database - INFO - Island Status:
+2026-02-03 14:37:15,283 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0430, avg=0.0430, diversity=0.00, gen=0 (best: cb57a4a1-2147-490d-b71c-dc4f3f60a1a7)
+2026-02-03 14:37:15,283 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 14:37:15,283 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 14:37:15,283 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 14:37:15,283 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 50 iterations (total: 51)
+2026-02-03 14:37:15,302 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 14:37:18,394 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 14:37:18,395 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 14:37:18,396 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 14:37:18,396 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 14:37:18,396 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 14:37:18,999 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 14:37:19,377 - openevolve.controller - INFO - Force exit requested - terminating immediately

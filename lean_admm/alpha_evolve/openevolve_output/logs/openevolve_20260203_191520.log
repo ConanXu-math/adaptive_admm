@@ -1,0 +1,46 @@
+2026-02-03 19:15:20,208 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_191520.log
+2026-02-03 19:15:20,208 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 19:15:20,223 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 19:15:20,237 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 19:15:20,265 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 19:15:20,267 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 19:15:20,267 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 19:15:20,267 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 19:15:20,316 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 19:15:20,316 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 19:15:20,316 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 19:15:20,316 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 19:15:20,698 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 19:15:31,498 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 19:15:42,537 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 19:16:32,170 - openevolve.evaluator - INFO - Evaluated program 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3 in 71.85s: combined_score=0.0385, metrics={'converged': True, 'iters': 13, 'combined_score': 0.038461538461538464}, artifacts={'status': 'CONVERGED', 'iterations': 13, 'eval_time': '21.752s'}, formal_certification=Lean4_Auto_Proven
+2026-02-03 19:16:32,171 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 19:16:32,179 - openevolve.process_parallel - INFO - Initialized process parallel controller with 2 workers
+2026-02-03 19:16:32,180 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 19:16:32,180 - openevolve.process_parallel - INFO - Started process pool with 2 processes
+2026-02-03 19:16:32,180 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 19:16:32,180 - openevolve.database - INFO - Island Status:
+2026-02-03 19:16:32,180 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0385, avg=0.0385, diversity=0.00, gen=0 (best: 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3)
+2026-02-03 19:16:32,180 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 19:16:32,181 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 19:16:32,181 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 19:16:32,181 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 10 iterations (total: 11)
+2026-02-03 19:16:32,186 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 19:17:55,492 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 5}
+2026-02-03 19:17:55,493 - openevolve.process_parallel - INFO - Iteration 1: Program 452800a0-b119-4eb6-bd96-1c43714d77e5 (parent: 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3) completed in 82.35s
+2026-02-03 19:17:55,493 - openevolve.process_parallel - INFO - Metrics: metrics={'converged': False, 'iters': 0, 'combined_score': 0.0}, artifacts={'exception': "update_rho() got an unexpected keyword argument 'mu'", 'traceback': 'Traceback (most recent call last):\n  File "/Users/huayun/pythonProject/lean_admm/alpha_evolve/evaluator.py", line 159, in evaluate\n    result = run_admm(module.update_rho)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/huayun/pythonProject/lean_admm/alpha_evolve/evaluator.py", line 109, in run_admm\n    rho, _, _ = update_rho_fn(\n                ^^^^^^^^^^^^^^\nTypeError: update_rho() got an unexpected keyword argument \'mu\'\n', 'status': 'EXCEPTION'}
+2026-02-03 19:17:55,493 - openevolve.process_parallel - WARNING - ⚠️  No 'combined_score' metric found in evaluation results. Using average of all numeric metrics (0.0000) for evolution guidance. For better evolution results, please modify your evaluator to return a 'combined_score' metric that properly weights different aspects of program performance.
+2026-02-03 19:18:59,757 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 9}
+2026-02-03 19:18:59,758 - openevolve.database - INFO - New best program c9cea351-41b2-47b2-a85b-044d143f8d01 replaces 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3 (combined_score: 0.0385 → 0.0769, +0.0385)
+2026-02-03 19:18:59,758 - openevolve.process_parallel - INFO - Iteration 2: Program c9cea351-41b2-47b2-a85b-044d143f8d01 (parent: 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3) completed in 146.63s
+2026-02-03 19:18:59,758 - openevolve.process_parallel - INFO - Metrics: combined_score=0.0769, metrics={'converged': True, 'iters': 13, 'combined_score': 0.07692307692307693}, artifacts={'status': 'CONVERGED', 'iterations': 13, 'eval_time': '26.922s'}, formal_certification=Lean4_Not_Auto_Proven
+2026-02-03 19:18:59,758 - openevolve.process_parallel - INFO - 🌟 New best solution found at iteration 2: c9cea351-41b2-47b2-a85b-044d143f8d01
+2026-02-03 19:20:05,143 - openevolve.process_parallel - INFO - Iteration 4: Program efafdd5f-d9d1-4e19-8e2c-a1140f52cb35 (parent: 15ba70ae-dd2c-4642-8afa-55d2a5a1b2b3) completed in 65.38s
+2026-02-03 19:20:05,155 - openevolve.process_parallel - INFO - Metrics: metrics={'converged': False, 'iters': 0, 'combined_score': 0.0}, artifacts={'exception': "update_rho() got an unexpected keyword argument 'mu'", 'traceback': 'Traceback (most recent call last):\n  File "/Users/huayun/pythonProject/lean_admm/alpha_evolve/evaluator.py", line 159, in evaluate\n    result = run_admm(module.update_rho)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/huayun/pythonProject/lean_admm/alpha_evolve/evaluator.py", line 109, in run_admm\n    rho, _, _ = update_rho_fn(\n                ^^^^^^^^^^^^^^\nTypeError: update_rho() got an unexpected keyword argument \'mu\'\n', 'status': 'EXCEPTION'}
+2026-02-03 19:20:10,427 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 19:20:10,428 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 19:20:10,436 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 19:20:10,436 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 19:20:10,437 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 19:20:10,673 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 19:20:10,865 - openevolve.controller - INFO - Force exit requested - terminating immediately

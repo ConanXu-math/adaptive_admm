@@ -1,0 +1,14 @@
+2026-02-07 14:36:04,056 - openevolve.controller - INFO - Logging to lean_admm/alpha_evolve/openevolve_output/logs/openevolve_20260207_143604.log
+2026-02-07 14:36:04,074 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-07 14:36:04,075 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: 
+2026-02-07 14:36:04,076 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-07 14:36:04,076 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-07 14:36:04,076 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-07 14:36:04,196 - openevolve.evaluator - INFO - Successfully loaded evaluation function from lean_admm/alpha_evolve/evaluator.py
+2026-02-07 14:36:04,197 - openevolve.evaluator - WARNING - Configuration has 'cascade_evaluation: true' but evaluator 'lean_admm/alpha_evolve/evaluator.py' does not define 'evaluate_stage1' function. This will fall back to direct evaluation, making the cascade setting useless. Consider setting 'cascade_evaluation: false' or implementing cascade functions.
+2026-02-07 14:36:04,197 - openevolve.evaluator - INFO - Initialized evaluator with lean_admm/alpha_evolve/evaluator.py
+2026-02-07 14:36:04,197 - openevolve.controller - INFO - Initialized OpenEvolve with lean_admm/alpha_evolve/initial_program.py
+2026-02-07 14:36:04,197 - openevolve.controller - INFO - Adding initial program to database
+2026-02-07 14:36:06,009 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-07 14:36:20,237 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-07 14:36:30,818 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"

@@ -1,0 +1,15 @@
+2026-02-03 20:00:43,007 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_200043.log
+2026-02-03 20:00:43,007 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 20:00:43,027 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 20:00:43,043 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 20:00:43,073 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 20:00:43,075 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 20:00:43,076 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 20:00:43,076 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 20:00:43,162 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 20:00:43,162 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 20:00:43,162 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 20:00:43,162 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 20:00:44,002 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 20:00:56,959 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 20:01:06,652 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"

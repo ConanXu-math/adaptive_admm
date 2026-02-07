@@ -1,0 +1,35 @@
+2026-02-03 18:43:13,713 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_184313.log
+2026-02-03 18:43:13,714 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 18:43:13,732 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 18:43:13,746 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 18:43:13,776 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 18:43:13,778 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 18:43:13,779 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 18:43:13,779 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 18:43:13,849 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 18:43:13,849 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 18:43:13,849 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 18:43:13,849 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 18:43:14,234 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:43:26,327 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:43:39,136 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:44:24,677 - openevolve.evaluator - INFO - Evaluated program 8a6d1a7d-ad7b-41c2-b12d-a0fd5fe311a7 in 70.83s: combined_score=0.0000, metrics={'converged': False, 'iters': inf, 'combined_score': 0.0, 'formal_valid': False}, artifacts={'lean_file': '/Users/huayun/pythonProject/lean_admm/adaptive_admm/Optlib/Algorithm/AdaptiveADMM/Strategies/generated_prove_05a10530.lean', 'stdout': "Optlib/Algorithm/AdaptiveADMM/Strategies/generated_prove_05a10530.lean:1:0: error: unexpected token '`'; expected command\nOptlib/Algorithm/AdaptiveADMM/Strategies/generated_prove_05a10530.lean:3:0: error: invalid 'import' command, it must be used in the beginning of the file\n", 'stderr': "warning: manifest out of date: git revision of dependency 'mathlib' changed; use `lake update mathlib` to update it\n", 'eval_time': 70.82645392417908}
+2026-02-03 18:44:24,678 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 18:44:24,683 - openevolve.process_parallel - INFO - Initialized process parallel controller with 4 workers
+2026-02-03 18:44:24,684 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 18:44:24,684 - openevolve.process_parallel - INFO - Started process pool with 4 processes
+2026-02-03 18:44:24,684 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 18:44:24,684 - openevolve.database - INFO - Island Status:
+2026-02-03 18:44:24,684 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0 (best: 8a6d1a7d-ad7b-41c2-b12d-a0fd5fe311a7)
+2026-02-03 18:44:24,684 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:44:24,684 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:44:24,684 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:44:24,684 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 10 iterations (total: 11)
+2026-02-03 18:44:24,696 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 18:44:45,201 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 18:44:45,202 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 18:44:45,202 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 18:44:45,202 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 18:44:45,203 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 18:44:46,531 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 18:44:47,448 - openevolve.controller - INFO - Force exit requested - terminating immediately

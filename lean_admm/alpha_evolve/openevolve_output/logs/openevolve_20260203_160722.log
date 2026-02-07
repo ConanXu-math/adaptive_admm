@@ -1,0 +1,34 @@
+2026-02-03 16:07:22,821 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_160722.log
+2026-02-03 16:07:22,821 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 16:07:22,839 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 16:07:22,852 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 16:07:22,881 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 16:07:22,883 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 16:07:22,883 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 16:07:22,884 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 16:07:22,949 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 16:07:22,949 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 16:07:22,949 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 16:07:22,949 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 16:07:23,381 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 16:07:41,936 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 16:07:51,900 - openevolve.evaluator - INFO - Evaluated program 42f3c1bb-9b43-456d-adf2-28fd25b913a6 in 28.95s: combined_score=0.0000, metrics={'converged': False, 'iters': inf, 'combined_score': 0.0, 'formal_valid': False}, artifacts={'formal_check': False, 'issues': 'R3: tau_k depends only on k and fixed constants, but the update factor (1+tau_k) is raised to the power of tilde{m}_k, which depends on R_k (residual ratio) and thus on r_k and s_k; R4: The update formula rho_{k+1} = rho_k * (1+tau_k)^{tilde{m}_k} is not exactly one of the allowed forms (multiply by (1+tau_k), divide by (1+tau_k), or keep) because the exponent tilde{m}_k is not restricted to +1, -1, or 0; R5: The numeric update factor (1+tau_k)^{tilde{m}_k} depends on tilde{m}_k, which depends on r_k and s_k, violating the requirement that the numeric update factor must depend only on tau_k; R6: The update includes bounding of m_k to tilde{m}_k via min/max, which is a form of clipping/projection applied before the update, but the requirement prohibits any post-processing modification, and the bounding is part of the update rule; R7: The update rule is deterministic and well-defined, but the violation of other requirements makes it not fully compliant with the strict conditions.', 'eval_time': 28.948933124542236}
+2026-02-03 16:07:51,902 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 16:07:51,923 - openevolve.process_parallel - INFO - Initialized process parallel controller with 4 workers
+2026-02-03 16:07:51,925 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 16:07:51,926 - openevolve.process_parallel - INFO - Started process pool with 4 processes
+2026-02-03 16:07:51,926 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 16:07:51,926 - openevolve.database - INFO - Island Status:
+2026-02-03 16:07:51,926 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0 (best: 42f3c1bb-9b43-456d-adf2-28fd25b913a6)
+2026-02-03 16:07:51,926 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 16:07:51,926 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 16:07:51,927 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 16:07:51,927 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 50 iterations (total: 51)
+2026-02-03 16:07:51,951 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 16:08:04,049 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 16:08:04,050 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 16:08:04,050 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 16:08:04,051 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 16:08:04,051 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 16:08:05,003 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 16:08:05,347 - openevolve.controller - INFO - Force exit requested - terminating immediately

@@ -1,0 +1,141 @@
+# ===============================
+# Adaptive-ρ ADMM (LASSO) Search
+# ===============================
+
+max_iterations: 15
+checkpoint_interval: 5
+
+# -------------------------------
+# LLM configuration
+# -------------------------------
+llm:
+  # 从环境变量读取，主进程与 worker 均需能拿到（search_admm 入口处 load_dotenv）
+  api_key: ${DEEPSEEK_API_KEY}
+  api_base: "https://api.deepseek.com/v1"
+  primary_model: "deepseek-chat"
+  primary_model_weight: 0.8
+  secondary_model: "deepseek-chat"
+  secondary_model_weight: 0.2
+
+  # Slightly higher temperature encourages rule diversity
+  temperature: 0.9
+  max_tokens: 4096
+  timeout: 180
+  retries: 5
+  retry_delay: 10
+
+# -------------------------------
+# Prompt configuration
+# -------------------------------
+system_message: |
+  You are an expert in numerical optimization and ADMM algorithms,
+  with deep knowledge of provably convergent adaptive penalty schemes.
+
+  Your task is to improve the function `update_rho(rho, k, r_norm, s_norm, ...)`,
+  which adaptively updates the ADMM penalty parameter ρ.
+
+  =========================
+  MATHEMATICAL REQUIREMENTS
+  =========================
+
+  The adaptive penalty update MUST satisfy the following structure EXACTLY.
+
+  (A) There exists a nonnegative, summable sequence τ(k) ≥ 0 such that:
+        sum_k τ(k) < ∞
+
+      - τ(k) MUST decay faster than 1 / k
+      - Typical valid forms include O(1 / k^p) with p > 1
+      - Do NOT add any non-summable components
+        (e.g. 1 / k, 1 / sqrt(k), constants, or oscillatory terms)
+
+  (B) The penalty update at iteration k MUST be exactly one of:
+        ρ_{k+1} = ρ_k * (1 + τ(k))
+        ρ_{k+1} = ρ_k / (1 + τ(k))
+        ρ_{k+1} = ρ_k
+
+      - The factor (1 + τ(k)) MUST be used verbatim
+      - No other multiplicative, additive, smoothing, damping,
+        or corrective factors are allowed on ρ
+
+  (C) If the mode is "keep", the returned ρ MUST be exactly unchanged.
+
+  (D) Any aggressiveness, damping, or iteration-dependent behavior
+      MUST be implemented ONLY by modifying τ(k),
+      not by introducing any additional scaling of ρ.
+  
+  (E) If the generated code introduces ANY factor other than (1 + τ(k))
+      directly multiplying or dividing ρ, the solution is INVALID.
+  
+  (F) The mode field MUST be one of exactly: "mul", "div", "keep".
+
+
+  =================
+  DESIGN GUIDELINES
+  =================
+
+  - Use the relative magnitude of r_norm and s_norm
+    (e.g. ratios or log-ratios) to decide whether to increase,
+    decrease, or keep ρ
+  - Early iterations may use larger τ(k);
+    later iterations should be conservative
+  - Prefer monotone or damped decisions to avoid oscillation
+  - Avoid frequent alternating increase/decrease of ρ
+
+  =================
+  HARD CONSTRAINTS
+  =================
+
+  - You may ONLY modify the body of `update_rho` and helper functions
+    in `initial_program.py`
+  - The function signature, inputs, and return types MUST remain unchanged
+  - The update rule must be deterministic and numerically safe
+  - Ensure ρ always remains strictly positive
+  - Avoid division by zero or ill-conditioned expressions
+
+  =================
+  OUTPUT REQUIREMENTS
+  =================
+
+  - Return the updated ρ
+  - The auxiliary output MUST be τ(k) or a closely related scalar
+  - The mode string MUST correctly reflect the update
+    ("mul", "div", or "keep")
+
+
+
+# -------------------------------
+# Database / Population
+# -------------------------------
+database:
+  population_size: 60
+  archive_size: 25
+  num_islands: 4
+
+  # Keep elites — good update rules are rare
+  elite_selection_ratio: 0.25
+
+  # Slightly more exploitation than exploration
+  exploitation_ratio: 0.65
+
+  similarity_threshold: 0.985
+
+# -------------------------------
+# Evaluator
+# -------------------------------
+evaluator:
+  timeout: 180
+  cascade_evaluation: false
+
+  # Allows fast heuristics to filter obviously bad programs
+  cascade_thresholds: [0.5, 1.0]
+
+  # 1 worker 减少限流导致的空 response
+  parallel_evaluations: 1
+
+# -------------------------------
+# Evolution behavior
+# -------------------------------
+diff_based_evolution: true
+
+# update_rho is small — no need for huge programs
+max_code_length: 12000

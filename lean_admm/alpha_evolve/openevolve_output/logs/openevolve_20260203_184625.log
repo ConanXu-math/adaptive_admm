@@ -1,0 +1,36 @@
+2026-02-03 18:46:25,518 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_184625.log
+2026-02-03 18:46:25,518 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 18:46:25,534 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 18:46:25,548 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 18:46:25,576 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 18:46:25,580 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 18:46:25,580 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 18:46:25,580 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 18:46:25,646 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 18:46:25,647 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 18:46:25,647 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 18:46:25,647 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 18:46:26,034 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:46:37,523 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:47:08,271 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 18:47:55,649 - openevolve.evaluator - WARNING - Evaluation timed out after 90s
+2026-02-03 18:47:55,650 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 18:47:55,650 - openevolve.controller - WARNING - ⚠️  No 'combined_score' metric found in evaluation results. Using average of all numeric metrics (0.0000) for evolution guidance. For better evolution results, please modify your evaluator to return a 'combined_score' metric that properly weights different aspects of program performance.
+2026-02-03 18:47:55,656 - openevolve.process_parallel - INFO - Initialized process parallel controller with 4 workers
+2026-02-03 18:47:55,657 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 18:47:55,658 - openevolve.process_parallel - INFO - Started process pool with 4 processes
+2026-02-03 18:47:55,658 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 18:47:55,658 - openevolve.database - INFO - Island Status:
+2026-02-03 18:47:55,658 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.5000, avg=0.5000, diversity=0.00, gen=0 (best: 3492bd93-5135-41a4-af68-32b6a53ec803)
+2026-02-03 18:47:55,658 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:47:55,658 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:47:55,658 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 18:47:55,658 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 10 iterations (total: 11)
+2026-02-03 18:47:55,670 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 18:49:02,357 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 18:49:02,359 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 18:49:02,364 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 18:49:02,365 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 18:49:02,365 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 18:49:02,771 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 18:49:03,101 - openevolve.controller - INFO - Force exit requested - terminating immediately

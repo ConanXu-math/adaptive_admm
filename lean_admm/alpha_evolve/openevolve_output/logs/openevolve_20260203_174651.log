@@ -1,0 +1,44 @@
+2026-02-03 17:46:51,189 - openevolve.controller - INFO - Logging to alpha_evolve/openevolve_output/logs/openevolve_20260203_174651.log
+2026-02-03 17:46:51,189 - openevolve.controller - INFO - Set random seed to 42 for reproducibility
+2026-02-03 17:46:51,205 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: deepseek-chat
+2026-02-03 17:46:51,218 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 17:46:51,247 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: deepseek-chat (weight: 0.80), deepseek-chat (weight: 0.20)
+2026-02-03 17:46:51,251 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-02-03 17:46:51,252 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-02-03 17:46:51,252 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-02-03 17:46:51,318 - openevolve.evaluator - INFO - Successfully loaded evaluation function from alpha_evolve/evaluator.py
+2026-02-03 17:46:51,318 - openevolve.evaluator - INFO - Initialized evaluator with alpha_evolve/evaluator.py
+2026-02-03 17:46:51,318 - openevolve.controller - INFO - Initialized OpenEvolve with alpha_evolve/initial_program.py
+2026-02-03 17:46:51,318 - openevolve.controller - INFO - Adding initial program to database
+2026-02-03 17:46:51,742 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 17:47:02,087 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-03 17:47:16,378 - openevolve.evaluator - INFO - Evaluated program ea693467-feb8-446e-b865-0ff1cc47ca35 in 25.06s: combined_score=0.0767, metrics={'converged': True, 'iters': 13, 'combined_score': 0.07665244068848408}, artifacts={'status': 'CONVERGED', 'iterations': 13, 'eval_time': '25.053s'}
+2026-02-03 17:47:16,380 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-02-03 17:47:16,390 - openevolve.process_parallel - INFO - Initialized process parallel controller with 4 workers
+2026-02-03 17:47:16,392 - openevolve.process_parallel - INFO - Set max None tasks per child
+2026-02-03 17:47:16,393 - openevolve.process_parallel - INFO - Started process pool with 4 processes
+2026-02-03 17:47:16,393 - openevolve.controller - INFO - Using island-based evolution with 4 islands
+2026-02-03 17:47:16,393 - openevolve.database - INFO - Island Status:
+2026-02-03 17:47:16,393 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0767, avg=0.0767, diversity=0.00, gen=0 (best: ea693467-feb8-446e-b865-0ff1cc47ca35)
+2026-02-03 17:47:16,393 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 17:47:16,393 - openevolve.database - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 17:47:16,393 - openevolve.database - INFO -    Island 3: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-02-03 17:47:16,393 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 50 iterations (total: 51)
+2026-02-03 17:47:16,410 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-02-03 17:48:23,000 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 5}
+2026-02-03 17:48:23,001 - openevolve.database - INFO - New best program e2269426-585d-4178-a2f3-e63cbd2d52cc replaces ea693467-feb8-446e-b865-0ff1cc47ca35 (combined_score: 0.0767 → 0.0767, +0.0000)
+2026-02-03 17:48:23,001 - openevolve.process_parallel - INFO - Iteration 1: Program e2269426-585d-4178-a2f3-e63cbd2d52cc (parent: ea693467-feb8-446e-b865-0ff1cc47ca35) completed in 65.63s
+2026-02-03 17:48:23,001 - openevolve.process_parallel - INFO - Metrics: combined_score=0.0767, metrics={'converged': True, 'iters': 13, 'combined_score': 0.07667191698828735}, artifacts={'status': 'CONVERGED', 'iterations': 13, 'eval_time': '28.994s'}
+2026-02-03 17:48:23,001 - openevolve.process_parallel - INFO - 🌟 New best solution found at iteration 1: e2269426-585d-4178-a2f3-e63cbd2d52cc
+2026-02-03 17:48:29,862 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 9}
+2026-02-03 17:48:29,862 - openevolve.database - INFO - New best program aa46c262-9f50-4111-be5f-d5e6660fd253 replaces e2269426-585d-4178-a2f3-e63cbd2d52cc (combined_score: 0.0767 → 0.0827, +0.0060)
+2026-02-03 17:48:29,862 - openevolve.process_parallel - INFO - Iteration 2: Program aa46c262-9f50-4111-be5f-d5e6660fd253 (parent: ea693467-feb8-446e-b865-0ff1cc47ca35) completed in 72.53s
+2026-02-03 17:48:29,862 - openevolve.process_parallel - INFO - Metrics: combined_score=0.0827, metrics={'converged': True, 'iters': 12, 'combined_score': 0.08270650443105622}, artifacts={'status': 'CONVERGED', 'iterations': 12, 'eval_time': '26.994s'}
+2026-02-03 17:48:29,862 - openevolve.process_parallel - INFO - 🌟 New best solution found at iteration 2: aa46c262-9f50-4111-be5f-d5e6660fd253
+2026-02-03 17:48:43,191 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-02-03 17:48:43,192 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-02-03 17:48:43,196 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-02-03 17:48:43,197 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-02-03 17:48:43,201 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-02-03 17:48:43,679 - openevolve.controller - INFO - Force exit requested - terminating immediately
+2026-02-03 17:48:43,992 - openevolve.controller - INFO - Force exit requested - terminating immediately
