@@ -17,3 +17,6 @@ require mathlib from git
 meta if get_config? env = some "CI_BUILD" then
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git" @ "c2156beadb1a4d049ff3b19fe396c5403025aac5"
+
+-- lakefile.lean
+require llmlean from git "https://github.com/cmu-l3/llmlean.git" @ "main"

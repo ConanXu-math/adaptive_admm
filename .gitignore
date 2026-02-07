@@ -1,6 +1,7 @@
 # Lean build artifacts
 .lake/
 build/
+.env
 
 # Lean package manager
 # lake-manifest.json
