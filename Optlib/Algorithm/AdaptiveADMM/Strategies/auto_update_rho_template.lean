@@ -1,7 +1,7 @@
 -- AUTO GENERATED Lean4 FILE
 import Optlib.Algorithm.AdaptiveADMM.Strategies.Adaptive_Strategy_Convergence
 import Optlib.Algorithm.AdaptiveADMM.Strategies.VerificationLib
-import LLMlean
+-- import LLMlean
 
 
 noncomputable section
@@ -95,6 +95,3 @@ theorem auto_converges
       update_fun := update_fun tau dir
       h_update_equiv := h_update_equiv tau dir h_dir' }
   apply Strategy3.converges_from_adaptable_strategy (admm := admm) (admm_kkt := admm_kkt) s h_rho fullrank₁ fullrank₂
-
-example : 1 + 1 = 2 := by
-  llmstep ""
