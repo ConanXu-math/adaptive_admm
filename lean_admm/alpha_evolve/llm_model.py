@@ -5,7 +5,7 @@ from openai import OpenAI
 # data generation close-source models #######
 claude_key = None
 open_ai_key = None
-deepseek_key = "sk-968853b16b864c3681edbfe5ff4675ae"
+deepseek_key = ""
 
 
 def call_api(model, message, system_prompt):
