@@ -1,3 +1,4 @@
+import os
 import anthropic
 import time
 from openai import OpenAI
@@ -5,7 +6,12 @@ from openai import OpenAI
 # data generation close-source models #######
 claude_key = None
 open_ai_key = None
-deepseek_key = ""
+
+
+def _deepseek_api_key() -> str:
+    """优先 DEEPSEEK_API_KEY，与 config.yaml / search_admm 一致；否则 OPENAI_API_KEY。"""
+    key = os.environ.get("DEEPSEEK_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
+    return key.strip()
 
 
 def call_api(model, message, system_prompt):
@@ -79,7 +85,13 @@ def call_api(model, message, system_prompt):
         )
         return response.choices[0].message.content
     elif 'deepseek' in model:
-        openai_client = OpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com/v1")
+        api_key = _deepseek_api_key()
+        if not api_key:
+            raise ValueError(
+                "DeepSeek 调用缺少密钥：请在环境变量中设置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY "
+                "（可在项目根或 lean_admm/alpha_evolve/.env 中配置）"
+            )
+        openai_client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com/v1")
         response = openai_client.chat.completions.create(
             model="deepseek-chat",
             messages=[
@@ -137,7 +149,10 @@ def call_gpt35_api(message, system_prompt):
 
 
 def call_deepseek_api(message, system_prompt):
-    openai_client = OpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com")
+    api_key = _deepseek_api_key()
+    if not api_key:
+        raise ValueError("DeepSeek 调用缺少密钥：请设置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY")
+    openai_client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
     response = openai_client.chat.completions.create(
         model="deepseek-chat",
         messages=[

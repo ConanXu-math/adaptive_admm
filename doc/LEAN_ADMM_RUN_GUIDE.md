@@ -1,6 +1,6 @@
 # Lean ADMM 进化搜索运行说明
 
-本文档说明如何运行 `lean_admm` 下的自适应 ADMM 策略进化搜索（OpenEvolve 入口）。
+本文档说明如何运行 `lean_admm` 下的自适应 ADMM 策略进化搜索（OpenEvolve 入口），以及 **`translate`（Python → Lean）** 脚本的用法。
 
 ---
 
@@ -119,5 +119,67 @@ DEEPSEEK_API_KEY=your_api_key_here
 | `lean_admm/alpha_evolve/initial_program.py` | 初始 `update_rho` 等实现，作为进化起点。 |
 | `lean_admm/alpha_evolve/evaluator.py` | 实现 `evaluate(program_path)`，对候选程序做数值评估与可选的 Lean4 验证。 |
 | `Optlib/` | Lean4 形式化库，evaluator 生成的证明会写至 `Optlib/Algorithm/AdaptiveADMM/Strategies/` 并在此工程下用 `lake env lean` 检查。 |
+| `lean_admm/alpha_evolve/translate.py` | 模板方式：从 `best_program.py` 生成 Lean、报告与 IR，写入 `Optlib/.../Strategies/`（不调用 LLM）。 |
+| `lean_admm/alpha_evolve/translate_LLM.py` | LLM 方式：Python→数学表述→Lean，默认写入带时间戳的 `.lean` 并打印到终端。 |
+
+**翻译流水线（两条路径、R1–R7 门禁、evaluator 如何衔接）** 见 **`doc/TRANSLATE_PIPELINE.md`**。
 
 更多关于自适应 ADMM 与 Lean 证明流程的说明，见项目根目录的 `readme.md` 与 `readme-.md`。
+
+---
+
+## 6. 运行 translate（Python → Lean）
+
+**设计说明（模板 vs LLM、三阶段、evaluator）**：`doc/TRANSLATE_PIPELINE.md`。
+
+两种脚本默认都读取 **`lean_admm/alpha_evolve/openevolve_output/best/best_program.py`**。若尚未跑过进化，可将目标 Python 放到该路径，或按脚本内注释改为读取 `initial_program.py`。
+
+### 6.1 `translate.py`（模板生成，无需 LLM）
+
+在**仓库根目录**执行：
+
+```bash
+python lean_admm/alpha_evolve/translate.py
+```
+
+- **输入**：`lean_admm/alpha_evolve/openevolve_output/best/best_program.py`
+- **输出**：写入 `Optlib/Algorithm/AdaptiveADMM/Strategies/`，生成 `.lean` 及同名的 `.report.md`、`.ir.json`
+
+脚本内部按文件路径解析目录，一般可在任意当前工作目录下运行；输出路径相对于仓库根下的 `Optlib`。
+
+### 6.2 `translate_LLM.py`（LLM 生成）
+
+在 **`lean_admm` 目录**下执行即可（脚本会自动把 `lean_admm` 加入 `sys.path`，**不必**再设 `PYTHONPATH`）：
+
+```bash
+cd lean_admm
+python alpha_evolve/translate_LLM.py
+```
+
+若仍习惯显式指定：
+
+```bash
+cd lean_admm && PYTHONPATH=. python alpha_evolve/translate_LLM.py
+```
+
+- **输入**：同上，默认 `openevolve_output/best/best_program.py`
+- **输出**：
+  - 默认**写入** `Optlib/Algorithm/AdaptiveADMM/Strategies/auto_update_rho_llm_YYYYMMDD_HHMMSS.lean`（带时间戳，与模板生成的 `auto_update_rho.lean` 区分）。
+  - 仍会把同一份 Lean 打印到**标准输出**（便于管道或复制）。
+  - 自定义路径：设置环境变量 `TRANSLATE_LLM_OUT`（绝对路径，或相对于 `Strategies` 的相对路径）。
+
+**API Key**：`llm_model.py` 会按顺序读取环境变量 **`DEEPSEEK_API_KEY`**、**`OPENAI_API_KEY`**（与 `config.yaml` / `search_admm` 一致）。脚本启动时会尝试加载项目根与 `lean_admm/alpha_evolve/.env`。
+
+若出现 **`AuthenticationError: Authentication Fails (governor)`** 等认证错误：多为密钥错误、已失效、额度或风控限制；请到 DeepSeek 控制台核对密钥，勿把密钥写进代码仓库。
+
+```bash
+export DEEPSEEK_API_KEY="你的密钥"
+cd lean_admm && python alpha_evolve/translate_LLM.py
+```
+
+### 6.3 对照
+
+| 脚本 | 命令要点 | 依赖 |
+|------|----------|------|
+| `translate.py` | 仓库根：`python lean_admm/alpha_evolve/translate.py` | 存在 `best_program.py` |
+| `translate_LLM.py` | `cd lean_admm && python alpha_evolve/translate_LLM.py` | `best_program.py` + `DEEPSEEK_API_KEY` 或 `OPENAI_API_KEY` |

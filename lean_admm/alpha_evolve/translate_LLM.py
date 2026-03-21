@@ -1,12 +1,40 @@
 import json
 import os
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# 保证可直接 `python alpha_evolve/translate_LLM.py`（无需手动 PYTHONPATH）
+_LEAN_ADMM_ROOT = Path(__file__).resolve().parent.parent
+if str(_LEAN_ADMM_ROOT) not in sys.path:
+    sys.path.insert(0, str(_LEAN_ADMM_ROOT))
+
+# 与 search_admm 一致：先加载 .env 再读 DEEPSEEK_API_KEY
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    load_dotenv(_LEAN_ADMM_ROOT.parent / ".env")
+    load_dotenv(_LEAN_ADMM_ROOT / "alpha_evolve" / ".env")
+except ImportError:
+    pass
+
 from alpha_evolve.llm_model import call_api
+
+# LLM 生成的 Lean 默认写入 Optlib Strategies（与 translate.py 同目录）
+_OptlibStrategies = (
+    _LEAN_ADMM_ROOT.parent
+    / "Optlib"
+    / "Algorithm"
+    / "AdaptiveADMM"
+    / "Strategies"
+)
+# 默认文件名前缀；实际为 auto_update_rho_llm_YYYYMMDD_HHMMSS.lean
+_LLM_LEAN_BASENAME_PREFIX = "auto_update_rho_llm"
 
 
 # ======================================================
-# Initialize LLM client
-# Make sure the environment variable is set:
-# export OPENAI_API_KEY="your_api_key_here"
+# Initialize LLM client（密钥：DEEPSEEK_API_KEY 或 OPENAI_API_KEY，见 .env）
 # ======================================================
 class LLMClient:
     def __init__(self, model_name: str = "deepseek"):
@@ -278,5 +306,19 @@ if __name__ == "__main__":
     mathematical_formulation = get_math_form_from_code(python_code, llm)
     # check_results = check_math_form(mathematical_formulation, llm)
     lean4_results = get_lean4_results(mathematical_formulation)
+
+    # 写入 Optlib/.../Strategies（此前仅 print，不会落盘）
+    _override = os.environ.get("TRANSLATE_LLM_OUT", "").strip()
+    if _override:
+        out_path = Path(_override).expanduser()
+        if not out_path.is_absolute():
+            out_path = _OptlibStrategies / out_path
+    else:
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_path = _OptlibStrategies / f"{_LLM_LEAN_BASENAME_PREFIX}_{ts}.lean"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(lean4_results, encoding="utf-8")
+    print(f"[translate_LLM] 已写入: {out_path.resolve()}", file=sys.stderr)
+
     print(lean4_results)
 
