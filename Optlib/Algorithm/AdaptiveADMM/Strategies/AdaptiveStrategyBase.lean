@@ -6,24 +6,26 @@ import Optlib.Algorithm.AdaptiveADMM.Strategies.VerificationLib
 noncomputable section
 
 namespace AdaptiveStrategyBase
-open Topology Filter AdaptiveADMM_Verification AdaptiveADMM_Convergence_Proof
+open AdaptiveADMM
 
-variable {E₁ E₂ F : Type*} [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
-  [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
-  [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F]
+def r_ratio (r_norm_seq s_norm_seq : ℕ → ℝ) (eps : ℝ) (n : ℕ) : ℝ :=
+  r_norm_seq n / max (s_norm_seq n) eps
 
-variable (admm : ADMM E₁ E₂ F)
+def s_ratio (r_norm_seq s_norm_seq : ℕ → ℝ) (eps : ℝ) (n : ℕ) : ℝ :=
+  s_norm_seq n / max (r_norm_seq n) eps
 
+/-- Standard residual-balancing branch selector used by generated certificates. -/
+def residualBalanceAction
+    (mu eps : ℝ) (r_norm_seq s_norm_seq : ℕ → ℝ) (n : ℕ) : RhoAction :=
+  if r_ratio r_norm_seq s_norm_seq eps n > mu then .increase
+  else if s_ratio r_norm_seq s_norm_seq eps n > mu then .decrease
+  else .keep
 
+/-- Compatibility update for historical certificates that encoded actions as integers. -/
 def update_fun (tau : ℕ → ℝ) (dir : ℕ → ℤ) (n : ℕ) (rho : ℝ) : ℝ :=
   if dir n = (-1 : ℤ) then rho / (1 + tau n)
   else if dir n = (1 : ℤ) then rho * (1 + tau n)
   else rho
-
-def r_ratio (r_norm_seq s_norm_seq : ℕ → ℝ) (eps : ℝ) (n : ℕ) : ℝ :=
-  r_norm_seq n / max (s_norm_seq n) eps
-def s_ratio (r_norm_seq s_norm_seq : ℕ → ℝ) (eps : ℝ) (n : ℕ) : ℝ :=
-  s_norm_seq n / max (r_norm_seq n) eps
 
 lemma h_update_equiv (tau : ℕ → ℝ) (dir : ℕ → ℤ)
     (h_dir : ∀ n, dir n = 1 ∨ dir n = 0 ∨ dir n = -1) :

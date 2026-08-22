@@ -33,6 +33,20 @@ namespace AdaptiveADMM_Convergence_Proof
 
 variable {admm admm_kkt}
 
+/-- Comparison test for nonnegative real-valued families. -/
+theorem summable_of_nonneg_of_le {β : Type*} {f g : β → ℝ}
+    (hg : ∀ n, 0 ≤ g n) (hgf : ∀ n, g n ≤ f n) (hf : Summable f) :
+    Summable g := by
+  rw [← NNReal.summable_mk]
+  have hf_nonneg : ∀ n, 0 ≤ f n := fun n => (hg n).trans (hgf n)
+  have hle : ∀ n, (⟨g n, hg n⟩ : NNReal) ≤ ⟨f n, hf_nonneg n⟩ := by
+    intro n
+    exact hgf n
+  apply NNReal.summable_of_le hle
+  rw [← NNReal.summable_coe]
+  exact hf
+  exact hg
+
 class Setting (E₁ E₂ F : outParam Type*)
     [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
     [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
@@ -267,12 +281,10 @@ lemma inner_gradient { α β : Type*}
    have := norm_nonneg (x - x1)
    rwa[mul_nonneg_iff_right_nonneg_of_pos εpos]
 
-#check HasGradient_iff_Convergence_Point
 lemma ADMM_iter_process₁'_eq3_2'_1 [Setting E₁ E₂ F admm admm_kkt](c : F) :∀ x,
       HasGradientAt ((fun x => ⟪c , (A₁ x)⟫)) (A₁† c) x := by
    apply inner_gradient
 
-#check HasDerivAt.hasGradientAt'
 lemma ADMM_iter_process₁'_eq3_2' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ , ∀ x ,
       HasGradientAt (fun x => ⟪y n.natPred , (A₁ x) + (A₂ (x₂ n.natPred)) - b⟫) (A₁† (y n.natPred)) x := by
    intro n x
@@ -313,8 +325,6 @@ lemma norm_comm {α β: Type*}
       (A : α →L[ℝ] β) (a₁ a₂ : α): ‖A (a₁ - a₂)‖ =‖A (a₂ - a₁)‖ := by
    rw [map_sub, map_sub , ←neg_sub (A a₂) (A a₁)]; apply norm_neg
 
-#check norm_eq_zero
-#check le_iff_eq_or_lt.1 $ norm_nonneg (1 : ℝ)
 /-Derivatives of quadratic forms-/
 lemma Gradient_of_quadratic_forms { α β : Type*}
       [NormedAddCommGroup α]  [NormedAddCommGroup β]
@@ -380,7 +390,6 @@ lemma Gradient_of_quadratic_forms { α β : Type*}
               _ = _ := by
                  field_simp[hzero]
 
-#check add_sub
 lemma ADMM_iter_process₁'_eq3_3' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ ,
       HasGradientAt (fun x => ρₙ n / 2 * ‖(A₁ x) + (A₂ (x₂ n.natPred)) - b‖ ^ 2)
       (ρₙ n • (A₁† (A₁ (x₁ n) + A₂ (x₂ n.natPred) - b))) (x₁ n) := by
@@ -444,12 +453,6 @@ lemma ADMM_iter_process₁'_eq2_1'_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n 
    congr
 
 
-#check SubderivAt.add
-#check continuousOn_const
-#check convexOn_const
-#check convex_univ
-#check ConvexOn.add
-#check ContinuousOn.add
 --(@continuousOn_const E₁ ℝ _ _ univ (f₂ (x₂ n.natPred)) )
 
 lemma ADMM_iter_process₁'_eq2_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ ,
@@ -486,7 +489,6 @@ lemma ADMM_iter_process₁'_eq1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ
    intro n
    rw[← ADMM_iter_process₁'_eq2_3 n,← ADMM_iter_process₁'_eq2_2 n,← ADMM_iter_process₁'_eq2_1 n]
 
-#check first_order_convex_iff_subgradient
 lemma ADMM_iter_process₁' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ ,0 ∈
       SubderivAt f₁ (x₁ n) + { A₁† (y n.natPred)} + {ρₙ n • (A₁† (A₁ (x₁ n) + A₂ (x₂ n.natPred) - b))}:= by
    intro n
@@ -555,7 +557,6 @@ lemma ADMM_iter_process₂'_eq3_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : �
    apply SubderivAt_eq_gradient (convexOn_const (f₁ (x₁ n)) (convex_univ))
    apply ADMM_iter_process₂'_eq3_1'
 
-#check ADMM_iter_process₁'_eq3_2'
 lemma ADMM_iter_process₂'_eq3_2' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ , ∀ x ,
       HasGradientAt (fun x => ⟪y n.natPred , (A₁ (x₁ n)) + (A₂ x) - b⟫) (A₂† (y n.natPred)) x := by
    intro n x
@@ -590,7 +591,6 @@ lemma ADMM_iter_process₂'_eq3_2 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : �
    apply SubderivAt_eq_gradient (inner_convex2 n)
    apply ADMM_iter_process₂'_eq3_2'
 
-#check ADMM_iter_process₁'_eq3_3'
 lemma ADMM_iter_process₂'_eq3_3' --xkn阅
    [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+ ,
       HasGradientAt (fun x => ρₙ n / 2 * ‖(A₁ (x₁ n)) + (A₂ x) - b‖ ^ 2)
@@ -1625,18 +1625,6 @@ lemma eq2 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
        + τ * (T_HWY - τ) * ρₙ (n)^2 * ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ ^ 2:= by
       intro n
       linarith [(HWY_eq35 n),(eq1 n)]
--- lemma eq4 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
---        τ * (2 - τ) * (ρₙ (n+1))^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2
---        + τ * (ρₙ (n+1))^2 * ‖A₂ (x₂ (n) - x₂ (n+1))‖^2
---        - τ * (T_HWY - τ) * (ρₙ n)^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
---     - (1 - τ)^2 / (T_HWY - τ) * τ * (ρₙ (n+1))^2 * ‖A₂ (x₂ (n) - x₂ (n+1))‖^2
---        + τ * (T_HWY - τ) * ρₙ (n)^2 * ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ ^ 2 =
---        τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2
---        + τ * (ρₙ (n+1))^2 * ((2-T_HWY) *‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2+(1- (1 - τ)^2 / (T_HWY - τ))* ‖A₂ (x₂ (n) - x₂ (n+1))‖^2 )  :=by
---        intro n
---       --  rw[eq0 n]
---        ring_nf
-
 lemma eq3 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
       ‖ey n‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ (n)^2* ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ ^ 2 ≥
        ‖ey (n+1)‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ (n+1))‖^2
@@ -1662,7 +1650,6 @@ lemma eq3'  [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
          have h : ‖ey (n+1)‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ (n+1))‖^2
        + τ * (T_HWY - τ) * (ρₙ (n+1))^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2
        + τ * (ρₙ (n+1))^2 * ((2-T_HWY) *‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2+(1- (1 - τ)^2 / (T_HWY - τ))* ‖A₂ (x₂ (n) - x₂ (n+1))‖^2 ) ≤ ‖ey n‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ (n)^2* ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ ^ 2 := by exact eq3 n
-         -- set D : ℝ := τ * (ρₙ (n+1))^2 * ((2-T_HWY) *‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2+(1- (1 - τ)^2 / (T_HWY - τ))* ‖A₂ (x₂ (n) - x₂ (n+1))‖^2 ) with hD
          -- set L : ℝ := ‖ey (n+1)‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ (n+1))‖^2 + τ * (T_HWY - τ) * (ρₙ (n+1))^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 with hL
          -- set R : ℝ := ‖ey n‖^2 + τ * (ρₙ (n+1))^2 * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ (n)^2* ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖ ^ 2 with hR
          linarith  --我服了，表达式打错了，怪不得证不出来
@@ -1787,7 +1774,6 @@ lemma thm3_1_ineq3 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
    have h : τ * (ρₙ (n+1))^2 > 0 := by exact mul_pos (admm.htau.1) (pow_pos (admm.hρₙ_pos (n+1)) 2)
    have hA_nonneg : 0 ≤  1 + τ - τ^2 := (admm.htau_range).le
    -- have h4 :1/2 ≤ 1/3 := by norm_num
-   -- set D : ℝ := 1/2*(1+τ-τ^2) with hD
    -- set L : ℝ := ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2 with hL
    -- have h3 : 1/2* ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2 ≥  1/3 *  ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2:= by
    --    gcongr
@@ -1805,16 +1791,6 @@ lemma thm3_1_ineq3 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
    have h6 := mul_le_mul_of_nonneg_left h5 (le_of_lt h)
    linarith [h6] --神之一手
 
-
--- lemma thm3_1_ineq2 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
---       ‖ey n‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ n)‖^2
---        + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
---        - τ * (ρₙ (n+1))^2 * ((1/2*(1+τ-τ^2)) *‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2 + (1- (1 - τ)^2 / (T_HWY - τ))* ‖A₂ (x₂ n - x₂ (n+1))‖^2 ) ≥
---        ‖ey n‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ n)‖^2
---         + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
---        - τ * (ρₙ (n+1))^2 * ((1/2*(1+τ-τ^2)) *‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2 + 1/3 * (1 + τ - τ^2)* ‖A₂ (x₂ n - x₂ (n+1))‖^2 ) := by
---         intro n
---         linarith [thm3_1_ineq1]
 
 theorem HWY_Theorem_3_1 [Setting E₁ E₂ F admm admm_kkt] : ∀ n : ℕ+,
 ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
@@ -1845,23 +1821,6 @@ lemma HWY_thm4_1_ineq [Setting E₁ E₂ F admm admm_kkt] :T_HWY - τ >0 := by
       rw [this]
       exact h
    linarith
--- lemma rho_change_term [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
---       ρₙ n * ‖A₂ (e₂ n)‖^2 - ρₙ (n+1) * ‖A₂ (e₂ (n+1))‖^2
---       ≤ ρₙ (n+1) * (‖A₂ (e₂ n)‖^2 - ‖A₂ (e₂ (n+1))‖^2)
---       + (ρₙ n - ρₙ (n+1)) * ‖A₂ (e₂ n)‖^2 := by
---    intro n
---    -- 展开右边：这实际上是一个等式
---    have : ρₙ (n+1) * (‖A₂ (e₂ n)‖^2 - ‖A₂ (e₂ (n+1))‖^2) + (ρₙ n - ρₙ (n+1)) * ‖A₂ (e₂ n)‖^2
---         = ρₙ n * ‖A₂ (e₂ n)‖^2 - ρₙ (n+1) * ‖A₂ (e₂ (n+1))‖^2 := by ring
---    rw [← this]
-
--- 辅助引理：ey项的变化（考虑ρ变化）
--- lemma ey_change_with_rho [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
---       1 / (τ * ρₙ n) * ‖ey n‖^2 - 1 / (τ * ρₙ (n+1)) * ‖ey (n+1)‖^2
---       = 1 / (τ * ρₙ (n+1)) * (‖ey n‖^2 - ‖ey (n+1)‖^2)
---       + ‖ey n‖^2 * (1/(τ * ρₙ n) - 1/(τ * ρₙ (n+1))) := by
---    intro n
---    ring
 
 lemma inSet {X : Type*} ( f : ℕ → X ) : ∀ n : ℕ , f n ∈ range f := by
    intro n;use n

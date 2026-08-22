@@ -1,5 +1,6 @@
 import Optlib.Algorithm.AdaptiveADMM.AdaptiveScheme
 import Optlib.Algorithm.AdaptiveADMM.AdaptiveLemmas
+import Optlib.Algorithm.AdaptiveADMM.AdaptiveProductBounds
 
 noncomputable section
 
@@ -43,7 +44,6 @@ def η_k [Setting E₁ E₂ F admm admm_kkt] : ℕ → ℝ :=
            else if ρₙ (n+1) > ρₙ n then
             Real.sqrt ((ρₙ (n+1) / ρₙ n)^2 - 1)
            else 0
-#check η_k
 
 def h1 [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) := - g1 (n+1) + (1 + (η_k n)^2)* (g1 n)
 -- Condition C1: 增长情况下的收敛条件
@@ -115,12 +115,6 @@ lemma rho_square_ratio_bound [Setting E₁ E₂ F admm admm_kkt] (n : ℕ+) :
     have h6:= (sq_le_sq₀  pos2 pos1).2 this
     linarith[h6]
     exact sq_pos_of_pos (admm.hρₙ_pos n)
-
--- lemma HWY_Convergence_1_1_1 [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) : 1 ≤ 1 + (η_k n)^2 := by
---  norm_num
---  exact sq_nonneg (η_k n)
-
-#check Bound.one_lt_div_of_pos_of_lt
 
 lemma HWY_Convergence_1_1 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
        ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
@@ -212,53 +206,6 @@ lemma HWY_ineq_52_0 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
    have hneg := HWY_ineq_51' n
    linarith
 
--- lemma HWY_ineq_52_0_nat [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
--- ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
--- + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
--- ≤ (1 + (η_k n)^2)*
--- (‖ey n‖^2 + τ * ρₙ (n)^2  * ‖A₂ (e₂ n)‖^2
--- + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2) := by
---    intro n
---    have : ‖ey (1)‖^2 + τ * ρₙ (1)^2 * ‖A₂ (e₂ (1))‖^2
---    + τ * (T_HWY - τ) * ρₙ (1)^2 * ‖A₁ (x₁ (1)) + A₂ (x₂ (1)) - b‖ ^ 2
---    ≤(1 + (η_k 0)^2) *
---    (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
---    + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
---          have h1 : (η_k 0) = 0 := by simp [η_k]
---          rw [h1]
---          simp
---    induction' n with k h
---    ·
---       have : ‖ey (1)‖^2 + τ * ρₙ (1)^2 * ‖A₂ (e₂ (1))‖^2 + τ * (T_HWY - τ) * ρₙ (1)^2 * ‖A₁ (x₁ (1)) + A₂ (x₂ (1)) - b‖ ^ 2 ≤ (1 + (η_k 0)^2) *
---    (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
---    + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
---          have h1 : (η_k 0) = 0 := by simp [η_k]
---          rw [h1]
---          simp
---       simp
---       exact this
--- lemma HWY_ineq_52_0_nat [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
--- ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
--- + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
--- ≤ (1 + (η_k n)^2)*
--- (‖ey n‖^2 + τ * ρₙ (n)^2  * ‖A₂ (e₂ n)‖^2
--- + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2) := by
---    intro n
---    cases n with
---    | zero =>
---       sorry
---    | succ k =>
---       -- n = k + 1 的情况 (k ≥ 0, 即 n ≥ 1)
---       -- 这里可以直接调用已有的 ℕ+ 版本
---       let n_pnat : ℕ+ := ⟨k + 1, Nat.succ_pos k⟩
---       have h := HWY_ineq_51 n_pnat
---       have hneg := HWY_ineq_51' n_pnat
---       -- 转换类型以匹配目标
---       have h_idx : (n_pnat : ℕ) = k + 1 := rfl
---       simp only [h_idx] at h hneg
---       linarith
-
-#check Finset.Icc 1 4
 lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
   ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
@@ -311,31 +258,20 @@ lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
          linarith
          -- exact le_trans h2 h4 --为什么linarith 不行？？？？？？？？？？？ 还得是Claude 解我心头之患 --后续 绷不住 原来是版本问题.。。。
 
-lemma HWY_ineq_52_ [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]: ∀ n : ℕ,
+lemma HWY_ineq_52_ [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
   ∏ k ∈  Finset.range (n+1), (1 + (η_k k)^2) ≤ ∏' k : ℕ, (1 + (η_k k)^2) := by
    intro n
-   have hf_nonneg : ∀ k, 0 ≤ 1 + (η_k k)^2 := by intro k ;linarith [sq_nonneg (η_k k)]
    let f : ℕ → ℝ:= fun k => 1 + (η_k k)^2
    let S : Finset ℕ := Finset.range (n + 1)
    have hmult : Multipliable f := Condition_C1.one_eta_square_multipliable
-   have h_ge_one : ∀ i : ℕ, i ∉ S → (1:ℝ) ≤ f i := by
-      intro i _
-      show (1 : ℝ) ≤ f i
+   have h_ge_one : ∀ i : ℕ, (1 : ℝ) ≤ f i := by
+      intro i
       simp only [f]
       linarith [sq_nonneg (η_k i)]
-   -- obtain ⟨a, ah⟩ := Condition_C1.one_eta_square_multipliable
-   -- have h1 : HasProd f a := ah
-   -- -- calc (∏ k in S, f k : ℝ) ≤ (∏ k in t, f k : ℝ) := by ...
-   -- show (∏ k ∈ S, f k:ℝ) ≤ (∏' k : ℕ, f k : ℝ)
-   -- -- have := prod_le_tprod S h_ge_one hmult
-   -- have h2 : ∏ i ∈  S, f i ≤ a := ge_of_tendsto h1 (eventually_atTop.2
-   --   ⟨S, fun _t hst =>
-   --  @Finset.prod_le_prod_of_subset_of_one_le' (ι := ℕ) (N := ℝ) (f := f) (s := S) (t := _t) _ _ _ hst
-   --        (fun i _ hi => h_ge_one i hi)⟩)
-   exact Multipliable.prod_le_tprod S h_ge_one hmult
+   exact real_finset_prod_le_tprod_of_one_le f S h_ge_one hmult
 
 
-lemma HWY_ineq_52_2 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : ℕ,
+lemma HWY_ineq_52_2 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
   (∏ k ∈ Finset.range (n+1), (1 + (η_k k)^2)) *
   (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2)
@@ -343,20 +279,22 @@ lemma HWY_ineq_52_2 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : �
   (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) := by
    intro n
-   gcongr
-   -- have h:  0 ≤ ‖ey 1‖^2 := by exact sq_nonneg ‖ey 1‖
-   -- have := sq_nonneg ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖
-   -- have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' 1) this
-   -- have h2:= admm.htau.1
-   -- have h3:= sq_pos_of_pos (admm.hρₙ_pos 1)
-   -- have h4 : 0 ≤  τ * ρₙ 1^2 := by linarith[mul_pos h2 h3]
-   -- have h5 := sq_nonneg ‖A₂ (e₂ 1)‖
-   -- have h6 : 0 ≤ τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2 := by exact mul_nonneg h4 h5
-   linarith[HWY_ineq_52_ n]
-   -- have h:= HWY_Convergence_1_1_1 n
-   -- exact HWY_ineq_52_0 n
+   have h_energy_nonneg :
+       0 ≤ ‖ey 1‖^2 + τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2
+         + τ * (T_HWY - τ) * ρₙ 1^2 *
+           ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by
+      have h_dual : 0 ≤ ‖ey 1‖^2 := sq_nonneg _
+      have h_second : 0 ≤ τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2 := by
+         exact mul_nonneg
+           (mul_nonneg (le_of_lt admm.htau.1) (sq_nonneg _)) (sq_nonneg _)
+      have h_residual :
+          0 ≤ τ * (T_HWY - τ) * ρₙ 1^2 *
+            ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by
+         exact mul_nonneg (HWY_thm4_1_ineq' 1) (sq_nonneg _)
+      linarith
+   exact mul_le_mul_of_nonneg_right (HWY_ineq_52_ n) h_energy_nonneg
 
-lemma HWY_ineq_52_3 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : ℕ,
+lemma HWY_ineq_52_3 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
   ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
   ≤ (∏' k : ℕ, (1 + (η_k k)^2)) *
@@ -369,7 +307,7 @@ lemma HWY_ineq_52_3 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : �
   have h3 := HWY_ineq_52_1 n
   linarith
 
-lemma HWY_ineq_52_4 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:  (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
+lemma HWY_ineq_52_4 [Condition_C1 admm admm_kkt]:  (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) ≥ 0 := by
    have h1 : 0 ≤ ‖ey 1‖^2 := by exact sq_nonneg ‖ey 1‖
    have := sq_nonneg ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖
@@ -381,7 +319,7 @@ lemma HWY_ineq_52_4 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:  (‖ey 1
    have h6 : 0 ≤ τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2 := by exact mul_nonneg h4 h5
    linarith
 
-lemma HWY_ineq_52 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ P >0 , ∀ n : ℕ, ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
+lemma HWY_ineq_52 [Condition_C1 admm admm_kkt]: ∃ P >0 , ∀ n : ℕ, ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
   ≤ P * (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
@@ -397,7 +335,7 @@ lemma HWY_ineq_52 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ P >0 , 
       exact mul_le_mul_of_nonneg_right hP HWY_ineq_52_4
    exact le_trans h1 h2
 
-lemma HWY_ineq_53 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C > 0, ∀ n : ℕ+,
+lemma HWY_ineq_53 [Condition_C1 admm admm_kkt]: ∃ C > 0, ∀ n : ℕ+,
 ‖ey n‖^2 + τ * ρₙ n^2 * ‖A₂ (e₂ n)‖^2
   + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ ^ 2 ≤ C := by
    obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_52
@@ -426,7 +364,7 @@ lemma HWY_ineq_53 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C > 0, 
 
 -- 扩展到自然数（包括0）
 
-lemma HWY_ineq_53_nat [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∃ C > 0, ∀ n : ℕ,
+lemma HWY_ineq_53_nat [Condition_C1 admm admm_kkt]: ∃ C > 0, ∀ n : ℕ,
 g1 n ≤ C := by
    obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_53
   -- 取 C' = C + 初始值（n=0时的值），确保对所有 n 都成立
@@ -468,21 +406,7 @@ lemma g1_nonneg [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) : 0 ≤ g1 n := by
    apply sq_nonneg (ρₙ (n))
    apply sq_nonneg ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖
 
-theorem summable_of_nonneg_of_le {β : Type*} {f : β → ℝ} {g : β → ℝ}
-(hg : ∀ (n : β), 0 ≤ g n) (hgf : ∀ (n : β), g n ≤ f n) (hf : Summable f) :
-Summable g:=by
-   rw[← NNReal.summable_mk]
-   have f_ge_zero :∀ (n : β), 0 ≤ f n := by
-      intro n
-      apply le_trans (hg n) (hgf n)
-   have :∀ (n : β), (⟨g n, hg n⟩ : NNReal) ≤ ⟨f n , f_ge_zero n⟩ := by
-      simp only [Subtype.mk_le_mk]
-      apply hgf
-   apply NNReal.summable_of_le this
-   rw[← NNReal.summable_coe]
-   exact hf; grind
-
-lemma HWY_ineq_54_0 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : ℕ+,
+lemma HWY_ineq_54_0 [Condition_C1 admm admm_kkt]: ∀ n : ℕ+,
     (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
     ≤ - g1 (n+1)
     + (1 + (η_k n)^2)* g1 n := by
@@ -491,7 +415,7 @@ lemma HWY_ineq_54_0 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : �
    unfold g1
    linarith
 
-lemma HWY_ineq_54_1 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : ℕ+,
+lemma HWY_ineq_54_1 [Condition_C1 admm admm_kkt]: ∀ n : ℕ+,
     (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
     ≤ h1 n:= by
    intro n
@@ -499,7 +423,7 @@ lemma HWY_ineq_54_1 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]: ∀ n : �
    unfold h1
    linarith
 
-lemma g1_summable_0 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∃ C >0,∀ n : ℕ,
+lemma g1_summable_0 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 * g1 (i+1)
    ≤  ∑ i ∈ Finset.range n, (η_k (i+1)^2) * C := by
    obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_53_nat
@@ -509,12 +433,9 @@ lemma g1_summable_0 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∃ C >0
    intro n
    apply Finset.sum_le_sum
    intro i hi
-   refine mul_le_mul' ?_ ?_
-   · exact Std.IsPreorder.le_refl (η_k (i+1) ^ 2)
-   · exact hC (i+1)
+   exact mul_le_mul_of_nonneg_left (hC (i+1)) (sq_nonneg _)
 
-#check Finset.sum_le_sum
-lemma g1_summable_0_sum [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∀ n : ℕ,
+lemma g1_summable_0_sum [Condition_C1 admm admm_kkt]  :∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 ≤ ∑' i : ℕ, (η_k (i+1))^2:= by
       intro n
       let f : ℕ → ℝ:= fun k => (η_k (k+1))^2
@@ -531,13 +452,13 @@ lemma g1_summable_0_sum [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∀ 
       rw[summable_nat_add_iff 1]
       exact Condition_C1.eta_square_summable'
 
-lemma eta_square_summable [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : Summable (fun n ↦ η_k (n+1) ^ 2) := by
+lemma eta_square_summable [Condition_C1 admm admm_kkt]  : Summable (fun n ↦ η_k (n+1) ^ 2) := by
    let f':ℕ → ℝ:= fun k => (η_k k)^2
    show Summable (fun i => f' (i + 1))
    rw[summable_nat_add_iff 1]
    exact Condition_C1.eta_square_summable'
 
-lemma eta_square_summable' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :
+lemma eta_square_summable' [Condition_C1 admm admm_kkt]  :
 ∃ S > 0, ∑' (n : ℕ), η_k (n+1) ^ 2 ≤ S := by
    obtain ⟨C, hC_pos, hC⟩ := Condition_C1.eta_square_summable
    use C
@@ -552,7 +473,7 @@ lemma eta_square_summable' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :
        ≤ ∑' (n : ℕ), η_k n ^ 2 := this
      _ ≤ C := hC
 
-lemma g1_summable_0_sum' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :
+lemma g1_summable_0_sum' [Condition_C1 admm admm_kkt]  :
    ∃ C >0 ,∀ n : ℕ,
    ∑ i ∈ Finset.range n, (η_k (i+1))^2 ≤ C := by
    obtain ⟨C, hC_pos, hC⟩ :=  eta_square_summable'
@@ -563,7 +484,7 @@ lemma g1_summable_0_sum' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :
       have h1 := g1_summable_0_sum n
       linarith
 
-lemma g1_summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∃ C >0,∀ n : ℕ,
+lemma g1_summable_1 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 * g1 (i+1)
    ≤  C := by
    obtain ⟨C1, hC_pos1,hC1⟩ := g1_summable_0
@@ -580,7 +501,7 @@ lemma g1_summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :∃ C >0
       rw [Finset.sum_mul]
    linarith
 
-lemma h1_summable_0 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n, (η_k (i+1))^2* (g1 (i+1)) := by
+lemma h1_summable_0 [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n, (η_k (i+1))^2* (g1 (i+1)) := by
    intro n
    calc
       _ = ∑ i ∈ Finset.range n, (- g1 (i+1+1) + (1 + (η_k (i+1))^2)* (g1 (i+1))) := by
@@ -595,7 +516,7 @@ lemma h1_summable_0 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n :
       _ = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n,  (η_k (i+1))^2 * (g1 (i+1)) := by
          rw[Finset.sum_range_sub']
 
-lemma h1_summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∃ C >0,∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) ≤ C := by
+lemma h1_summable_1 [Condition_C1 admm admm_kkt]  : ∃ C >0,∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) ≤ C := by
    rcases g1_summable_1 with ⟨C1,hC_pos1,hC1⟩
    rcases HWY_ineq_53_nat with ⟨C2,hC_pos2,hC2⟩
    use 2* C2 + C1
@@ -611,21 +532,21 @@ lemma h1_summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∃ C >
    gcongr
    linarith
 
-lemma h1_eq' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:∀ n : ℕ+, (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
+lemma h1_eq' [Condition_C1 admm admm_kkt]:∀ n : ℕ+, (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
 ≤ h1 n := by
    intro n
    have h := HWY_ineq_54_0 n
    unfold h1
    linarith
 
-lemma h1_eq'' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n : ℕ, h1 (n+1) ≥ (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
+lemma h1_eq'' [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, h1 (n+1) ≥ (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
    (‖A₁ (x₁ (n+2)) + A₂ (x₂ (n+2)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ (n+2))‖^2) := by
    intro n
    have : n+1>0 := by linarith
    have h := h1_eq' (n+1).toPNat'
    exact h
 
-lemma h1_eq''' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n : ℕ,(1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
+lemma h1_eq''' [Condition_C1 admm admm_kkt]  : ∀ n : ℕ,(1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
    (‖A₁ (x₁ (n+2)) + A₂ (x₂ (n+2)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ (n+2))‖^2)≥ 0:= by
    intro n
    have h1:= admm.htau.1
@@ -641,14 +562,14 @@ lemma h1_eq''' [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n : ℕ,
    linarith
 
 
-lemma h1_nonneg [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] : ∀ n : ℕ, h1 (n+1) ≥ 0:= by
+lemma h1_nonneg [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, h1 (n+1) ≥ 0:= by
    intro n
    have := h1_eq'' n
    have : n+1>0 := by linarith
    have := h1_eq''' n
    linarith
 
-lemma  h1_summable [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :  Summable (fun n : ℕ => h1 (n+1)) := by
+lemma  h1_summable [Condition_C1 admm admm_kkt]  :  Summable (fun n : ℕ => h1 (n+1)) := by
    rcases h1_summable_1 with ⟨C, hC_pos, hC⟩
    apply summable_of_sum_range_le (c:=C)
    intro n
@@ -658,7 +579,7 @@ lemma  h1_summable [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ] :  Summabl
    have := hC n
    linarith
 
-lemma HWY_ineq_54 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:∀ (n : ℕ), ∑ i ∈ Finset.range n, (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
+lemma HWY_ineq_54 [Condition_C1 admm admm_kkt]:∀ (n : ℕ), ∑ i ∈ Finset.range n, (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
    (‖A₁ (x₁ (i+1+1)) + A₂ (x₂ (i+1+1)) - b‖^2 + ‖A₂ (x₂ (i+1) - x₂ (i+1+1))‖^2) ≤
    ∑ i ∈ Finset.range n, h1 (i+1) := by
    intro n
@@ -667,7 +588,7 @@ lemma HWY_ineq_54 [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:∀ (n : ℕ
    have h1 := HWY_ineq_54_1 (i+1).toPNat'
    exact h1
 
-lemma Summable_1' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:∀ (i : ℕ),  (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
+lemma Summable_1' [Condition_C1 admm admm_kkt]:∀ (i : ℕ),  (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
    (‖A₁ (x₁ (i+1+1)) + A₂ (x₂ (i+1+1)) - b‖^2 + ‖A₂ (x₂ (i+1) - x₂ (i+1+1))‖^2) ≤
    h1 (i+1) := by
    intro i
@@ -675,7 +596,7 @@ lemma Summable_1' [Condition_C1 admm admm_kkt][IsOrderedMonoid ℝ]:∀ (i : ℕ
    have h1 := HWY_ineq_54_1 (i+1).toPNat'
    exact h1
 
-lemma Summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]:
+lemma Summable_1 [Condition_C1 admm admm_kkt] :
    Summable (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
    (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) := by
    let f := fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
@@ -693,11 +614,11 @@ lemma Summable_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]:
    exact Summable_1'
    exact h1_summable
 
-lemma converge_zero_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]: Tendsto (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) atTop (nhds 0) := by
+lemma converge_zero_1 [Condition_C1 admm admm_kkt] : Tendsto (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) atTop (nhds 0) := by
   apply Summable.tendsto_atTop_zero Summable_1
 
 -- 主要收敛定理：残差项趋于零
-theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]:
+theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] :
     Tendsto (fun n => ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ n)‖^2) atTop (nhds 0) := by
    obtain ⟨ BL, hBL_pos, hBL⟩ := admm.rho_lower_bound
   -- 关于τ的条件
@@ -746,10 +667,9 @@ theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]:
    have := Tendsto.const_mul ((1/3) * (1 + τ - τ^2) * τ * BL^2)⁻¹ h_lower
    field_simp at this
    exact this
-#check tendsto_add_atTop_iff_nat
 
 -- 第一项：残差项趋于零
-theorem HWY_Convergence_1_residual' [IsOrderedMonoid ℝ][Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm admm_kkt]:
+theorem HWY_Convergence_1_residual' [Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm admm_kkt]:
     Tendsto (fun n => ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2) atTop (nhds 0) := by
   have h_sum := HWY_Convergence_1
   have h_nonneg : ∀ n, 0 ≤ ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 := by
@@ -766,7 +686,7 @@ theorem HWY_Convergence_1_residual' [IsOrderedMonoid ℝ][Condition_C1 admm admm
   · exact h_nonneg
   · exact h_bound
 
-theorem HWY_Convergence_1_increment [Condition_C1 admm admm_kkt] [IsOrderedMonoid ℝ]:
+theorem HWY_Convergence_1_increment [Condition_C1 admm admm_kkt] :
     Tendsto (fun n => ‖A₂ (x₂ (n+1) - x₂ n)‖^2) atTop (nhds 0) := by
    have h_sum := HWY_Convergence_1
    have h_nonneg : ∀ n, 0 ≤ ‖A₂ (x₂ (n+1) - x₂ n)‖^2 := by
@@ -783,66 +703,8 @@ theorem HWY_Convergence_1_increment [Condition_C1 admm admm_kkt] [IsOrderedMonoi
    · exact h_nonneg
    · exact h_bound
 
-#check inv_mul_cancel_left₀
 
-#check summable_of_nonneg_of_le
 
 
 
 end AdaptiveADMM_Convergence_Proof
-
-
-
-
-
--- theorem algebra_528788 (a b c : ℝ) (ha : |a| < 1) (hb : |b| < 1) (hc : |c| < 1) :
---     a * b + b * c + c * a + 1 > 0 := by
---   -- 将原式转化为两个正数的和的一半
---   have h : a * b + b * c + c * a + 1 = ((1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c)) / 2 := by
---     -- 展开右边的表达式并简化
---     ring_nf
---   -- 证明每个因子均为正数
---   have h1 : 1 + a > 0 := by sorry
---   have h2 : 1 + b > 0 := by sorry
---   have h3 : 1 + c > 0 := by sorry
---   have h4 : 1 - a > 0 := by sorry
---   have h5 : 1 - b > 0 := by sorry
---   have h6 : 1 - c > 0 := by sorry
---   -- 两个乘积均为正数
---   have h7 : (1 + a) * (1 + b) * (1 + c) > 0 := by positivity
---   have h8 : (1 - a) * (1 - b) * (1 - c) > 0 := by positivity
---   -- 两个正数的和仍为正数
---   have h9 : (1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c) > 0 := by linarith [h7, h8]
---   -- 原式等于正数除以2，故为正
---   rw [h]
---   apply div_pos
---   · exact h9
---   · positivity
-
-
-
-
--- theorem algebra_528788 (a b c : ℝ) (ha : |a| < 1) (hb : |b| < 1) (hc : |c| < 1) :
---     a * b + b * c + c * a + 1 > 0 := by
---   -- 将原式转化为两个正数的和的一半
---   have h : a * b + b * c + c * a + 1 = ((1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c)) / 2 := by
---     -- 展开右边的表达式并简化
---     ring_nf
---     ring
---   -- 证明每个因子均为正数
---   have h1 : 1 + a > 0 := by linarith [ha]
---   have h2 : 1 + b > 0 := by linarith [hb]
---   have h3 : 1 + c > 0 := by linarith [hc]
---   have h4 : 1 - a > 0 := by linarith [ha]
---   have h5 : 1 - b > 0 := by linarith [hb]
---   have h6 : 1 - c > 0 := by linarith [hc]
---   -- 两个乘积均为正数
---   have h7 : (1 + a) * (1 + b) * (1 + c) > 0 := by positivity
---   have h8 : (1 - a) * (1 - b) * (1 - c) > 0 := by positivity
---   -- 两个正数的和仍为正数
---   have h9 : (1 + a) * (1 + b) * (1 + c) + (1 - a) * (1 - b) * (1 - c) > 0 := by linarith [h7, h8]
---   -- 原式等于正数除以2，故为正
---   rw [h]
---   apply div_pos
---   · exact h9
---   · positivity

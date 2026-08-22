@@ -1,13 +1,10 @@
-import Optlib.Algorithm.AdaptiveADMM.AdaptiveScheme
-import Optlib.Algorithm.AdaptiveADMM.AdaptiveLemmas
-import Optlib.Algorithm.AdaptiveADMM.AdaptiveCondition1
-import Optlib.Algorithm.AdaptiveADMM.AdaptiveCondition2
 import Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c1
-import Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c2
+import Optlib.Algorithm.AdaptiveADMM.Strategies.StrategyPolicy
 
 noncomputable section
 
 open Set InnerProductSpace Topology Filter Real
+open AdaptiveADMM
 open AdaptiveADMM_Convergence_Proof
 
 variable {E₁ E₂ F : Type*}
@@ -22,7 +19,7 @@ variable (admm_kkt : Existance_of_kkt admm)
 ## Strategy 3 定义
 说明：Strategy3 只关心 ρ 的三态更新（乘/除/保持）与 tau 的可和性。
 -/
-class Strategy3 [Setting E₁ E₂ F admm admm_kkt][IsOrderedMonoid ℝ] where
+class Strategy3 [Setting E₁ E₂ F admm admm_kkt] where
   tau_seq : ℕ → ℝ
   h_tau_nonneg : ∀ n, 0 ≤ tau_seq n
   h_tau_summable : Summable tau_seq
@@ -34,7 +31,6 @@ class Strategy3 [Setting E₁ E₂ F admm admm_kkt][IsOrderedMonoid ℝ] where
 namespace Strategy3
 
 variable [Setting E₁ E₂ F admm admm_kkt]
-variable [IsOrderedMonoid ℝ]
 variable [s3 : Strategy3 admm admm_kkt]
 
 local notation "τ" => s3.tau_seq
@@ -128,7 +124,6 @@ lemma summable_eta_sq : Summable (fun n => (η_k (admm := admm) n)^2) := by
 lemma multipliable_one_eta_sq : Multipliable (fun n => 1 + (η_k (admm := admm) n)^2) := by
   let f := fun n => (η_k (admm := admm) n)^2
   have h_sum : Summable f := summable_eta_sq admm admm_kkt
-  have h_nonneg : ∀ n, 0 ≤ f n := fun n => sq_nonneg _
   exact Real.multipliable_one_add_of_summable h_sum
 
 -- 实例化 Condition_C1
@@ -149,21 +144,12 @@ instance strategy3_satisfies_C1 [Setting E₁ E₂ F admm admm_kkt] [s3 : Strate
 
   one_eta_square_multipliable' := by
     obtain ⟨P, hP⟩ := multipliable_one_eta_sq admm admm_kkt
-    use P + 1
+    use max P 0 + 1
     constructor
-    · -- 1. 证明每一项都 >= 1
-      have h_one_le : ∀ n, 1 ≤ 1 + (η_k (admm := admm) n)^2 :=
-        fun n => le_add_of_nonneg_right (sq_nonneg _)
-      -- 2. 证明任意有限子集的乘积 >= 1 (匹配 HasProd 的定义)
-      have h_finset_ge_one : ∀ s : Finset ℕ, 1 ≤ ∏ i ∈ s, (1 + (η_k (admm := admm) i)^2) := by
-        intro s
-        apply Finset.one_le_prod'
-        intro i _
-        exact h_one_le i
-      -- 3. 应用极限保序性，P >= 1
-      have hP_ge_one : 1 ≤ P := ge_of_tendsto' hP h_finset_ge_one
+    · have hmax : 0 ≤ max P 0 := le_max_right P 0
       linarith
     · rw [hP.tprod_eq]
+      have hmax : P ≤ max P 0 := le_max_left P 0
       linarith
 /-
 ### 3. Strategy3 收敛性定理
@@ -172,7 +158,6 @@ instance strategy3_satisfies_C1 [Setting E₁ E₂ F admm admm_kkt] [s3 : Strate
 omit s3 in
 theorem strategy3_converges
     [Strategy3 admm admm_kkt]
-    [IsOrderedMonoid ℝ]
     (fullrank₁ : Function.Injective admm.A₁)
     (fullrank₂ : Function.Injective admm.A₂) :
     ∃ (x₁_star : E₁) (x₂_star : E₂) (y_star : F),
@@ -184,10 +169,48 @@ theorem strategy3_converges
   apply adaptive_admm_convergence_c1
 end Strategy3
 
+/-- Turn the typed public policy into the proof-internal Strategy3 contract. -/
+noncomputable
+def Strategy3.ofPolicy
+    [Setting E₁ E₂ F admm admm_kkt]
+    (policy : StrategyPolicy)
+    (hρ : ∀ n, admm.ρₙ (n+1) = policy.updateRho n (admm.ρₙ n)) :
+    Strategy3 admm admm_kkt :=
+{
+  tau_seq := policy.tau.seq
+  h_tau_nonneg := policy.tau.nonneg
+  h_tau_summable := policy.tau.summable
+  h_rho_update := by
+    intro n
+    rw [hρ n]
+    exact policy.updateRho_cases n (admm.ρₙ n)
+}
+
+namespace Strategy3
+
+/-- Canonical public bridge: a typed policy plus the ADMM recurrence yields convergence. -/
+theorem converges_from_policy
+    [Setting E₁ E₂ F admm admm_kkt]
+    (policy : StrategyPolicy)
+    (hρ : ∀ n, admm.ρₙ (n+1) = policy.updateRho n (admm.ρₙ n))
+    (fullrank₁ : Function.Injective admm.A₁)
+    (fullrank₂ : Function.Injective admm.A₂) :
+    ∃ (x₁_star : E₁) (x₂_star : E₂) (y_star : F),
+      Convex_KKT x₁_star x₂_star y_star admm.toOptProblem ∧
+      (Tendsto admm.x₁ atTop (𝓝 x₁_star) ∧
+       Tendsto admm.x₂ atTop (𝓝 x₂_star) ∧
+       Tendsto admm.y atTop (𝓝 y_star)) := by
+  letI : Strategy3 admm admm_kkt :=
+    Strategy3.ofPolicy (admm := admm) (admm_kkt := admm_kkt) policy hρ
+  apply Strategy3.strategy3_converges
+    (admm := admm) (admm_kkt := admm_kkt) fullrank₁ fullrank₂
+
+end Strategy3
+
 -- 更“工程化”的策略接口：只给出 update_fun 与证明其等价于三态更新
 structure AdaptableStrategy
     [Setting E₁ E₂ F admm admm_kkt]
-    [IsOrderedMonoid ℝ] where
+     where
   tau_seq : ℕ → ℝ
   h_tau_nonneg : ∀ n, 0 ≤ tau_seq n
   h_tau_summable : Summable tau_seq
@@ -205,7 +228,6 @@ structure AdaptableStrategy
 noncomputable
 def Strategy3.ofAdaptableStrategy
     [Setting E₁ E₂ F admm admm_kkt]
-    [IsOrderedMonoid ℝ]
     (s : AdaptableStrategy (admm := admm) (admm_kkt := admm_kkt))
     (hρ : ∀ n, admm.ρₙ (n+1) = s.update_fun n (admm.ρₙ n)) :
     Strategy3 admm admm_kkt :=
@@ -231,7 +253,6 @@ namespace Strategy3
 -- 对外桥接定理：给出 AdaptableStrategy 与 hρ 即可得到收敛
 theorem converges_from_adaptable_strategy
     [Setting E₁ E₂ F admm admm_kkt]
-    [IsOrderedMonoid ℝ]
     (s : AdaptableStrategy (admm := admm) (admm_kkt := admm_kkt))
     (hρ : ∀ n, admm.ρₙ (n+1) = s.update_fun n (admm.ρₙ n))
     (fullrank₁ : Function.Injective admm.A₁)
