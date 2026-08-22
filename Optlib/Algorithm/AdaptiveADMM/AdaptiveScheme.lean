@@ -31,7 +31,6 @@ def Augmented_Lagrangian_Function (opt : OptProblem E₁ E₂ F) (ρ : ℝ) :
     (opt.f₁ x₁) + (opt.f₂ x₂) +
     @inner ℝ F _ y ((opt.A₁ x₁) + (opt.A₂ x₂) - opt.b) +
     ρ / 2 * ‖(opt.A₁ x₁) + (opt.A₂ x₂) - opt.b‖ ^ 2
-#check prod_le_tprod
 -- Variable-penalty ADMM (ρₖ)
 class ADMM extends (OptProblem E₁ E₂ F) where
   x₁ : ℕ → E₁

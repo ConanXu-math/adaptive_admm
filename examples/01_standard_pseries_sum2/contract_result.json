@@ -1,0 +1,19 @@
+{
+  "classification": "Strategy3-pseries_sum2",
+  "valid": true,
+  "tau_family": "pseries_sum2",
+  "tau_ir": {
+    "family": "pseries_sum2",
+    "template": "pseries_sum",
+    "terms": [
+      {
+        "coef": "c1",
+        "exp": "p1"
+      },
+      {
+        "coef": "c2",
+        "exp": "p2"
+      }
+    ]
+  }
+}

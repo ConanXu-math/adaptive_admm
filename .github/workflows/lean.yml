@@ -1,0 +1,50 @@
+name: Lean
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Lean and build the default target
+        uses: leanprover/lean-action@v1
+        with:
+          build: true
+          test: false
+
+      - name: Build Adaptive ADMM public facade
+        run: lake build Optlib.Algorithm.AdaptiveADMM.Strategies
+
+      - name: Build Adaptive ADMM C2 theorem
+        run: lake build Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c2
+
+      - name: Check the public facade with strict implicit settings
+        run: >-
+          lake env lean -DautoImplicit=false -DrelaxedAutoImplicit=false
+          Optlib/Algorithm/AdaptiveADMM/Strategies.lean
+
+      - name: Compile checked strategy certificates
+        run: >-
+          find examples -name certificate.lean -print0 |
+          xargs -0 -n1 lake env lean
+          -DautoImplicit=false -DrelaxedAutoImplicit=false
+
+      - name: Reject proof placeholders in the active surface
+        shell: bash
+        run: |
+          if grep -R -n -E '(^|[^[:alnum:]_])(sorry|admit|axiom)([^[:alnum:]_]|$)' \
+            Optlib/Algorithm/AdaptiveADMM examples --include='*.lean'; then
+            echo "Proof placeholders are not allowed in the active formalization or examples."
+            exit 1
+          fi

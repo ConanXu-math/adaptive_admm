@@ -1,87 +1,118 @@
-# ADMM 自适应策略转译流水线（整理版）
+# Adaptive ADMM in Lean
 
-## 目标
-LLM 搜索得到 `best_program.py` 中的自适应步长/更新策略，自动转译为 Lean4 接入代码，并复用既有收敛性证明框架完成验证。
+这个仓库保存 Adaptive ADMM 收敛性分析的 Lean 4 形式化。当前主发布面是
+`Optlib/Algorithm/AdaptiveADMM/`：证明核心、类型化策略接口和可复用的
+$\tau$ 序列模板都由 Lean 检查。
 
----
+历史 Python、LLM 和 OpenEvolve 生成器源码仍保留在 `lean_admm/`，用于追溯早期
+实验；它们不是当前形式化的可信入口，也不自动保证任意候选策略能够通过证明。
 
-## Phase 1: Lean 基础设施（Safety Net）
-文件：`Optlib/Algorithm/AdaptiveADMM/Strategies/VerificationLib.lean`
+## 当前状态
 
-**目的**：提供可复用的“乐高积木”定理，避免每次让 LLM 从零发明证明。
+| 层次 | 状态 | 验收方式 |
+| --- | --- | --- |
+| C1 收敛定理 | Lean 已检查 | `adaptive_admm_convergence_c1` |
+| C2 收敛定理 | Lean 已检查 | `adaptive_admm_convergence` |
+| Strategy3 类型化桥接 | Lean 已检查 | `Strategy3.converges_from_policy` |
+| $\tau$ 模板库 | Lean 已检查 | p-series、shifted p-series、geometric、有限和、smooth-as-sum、bounded modulation |
+| 三个证书示例 | 分别由 Lean 编译 | `examples/*/certificate.lean` |
+| 历史搜索/生成器 | legacy 源码 | 不属于 v2 证明门禁 |
 
-**模板定理**
-- **L1 P-级数收敛（标准 decay）**
-  - 形式：`c / (n+1)^p`，需 `p > 1`
-- **L2 几何级数收敛（指数 decay）**
-  - 形式：`c * r^n`，需 `0 ≤ r < 1`
-- **通用工具：最终相等引理**
-  - 若 `f` 在某个 `N` 之后与 `g` 相等且 `g` 可和，则 `f` 可和。
+## 形式化结论的范围
 
----
+在相应的 C1 或 C2 条件、`Setting` 假设以及 $A_1$、$A_2$ 的单射假设下，核心定理
+给出一个 KKT 点，并证明 ADMM 的 $x_1$、$x_2$、$y$ 迭代序列分别收敛到该点的
+对应分量。
 
-## Phase 2: LLM 语义解析（The Brain）
-目标：LLM 从 Python 代码中抽取策略逻辑，输出严格 JSON IR。
+策略层把当前可复用的 Strategy3 条件封装为：
 
-### 任务 1：分类 tau（步长）
-- **standard**：匹配 `c/(n+1)^p` 或 `c*r^n`
-- **piecewise**：存在 `if k < N` 结构，提取 cutoff 与稳定表达式
-- **complex**：复杂表达式，提供可证明上界 `upper_bound`
+- `CertifiedTau`：包含非负序列 $\tau_n$ 及其可和性证明；
+- `RhoAction`：每步只允许 increase、decrease 或 keep；
+- `StrategyPolicy`：把 $\tau_n$ 与动作序列组合成类型化策略；
+- `Strategy3.converges_from_policy`：在实际 $\rho_n$ 递推与该策略一致时复用 C1
+  收敛证明。
 
-### 任务 2：提取更新方向
-输出 `dir_logic`，映射为 `{1, -1, 0}` 的分支逻辑（Lean if-then-else 形式）。
+这些结果不表示：任意 Python/LLM 策略会自动获得证明、生成器本身已被形式化验证、
+或某个自适应规则在数值性能上优于其他规则。每个新策略仍需提供自己的 Lean 证书并
+通过仓库门禁。
 
-### IR Schema
-```json
-{
-  "tau": {
-    "type": "standard | piecewise | complex",
-    "params": ["c", "p"],
-    "constraints": ["1 < p"],
-    "lean_expr": "...",
-    "cutoff": 100,
-    "stable_lean_expr": "...",
-    "upper_bound": "..."
-  },
-  "dir_logic": "if r / max s eps > mu then 1 else ..."
-}
+## 稳定入口
+
+新证书只需导入：
+
+```lean
+import Optlib.Algorithm.AdaptiveADMM.Strategies
 ```
 
----
+主要文件：
 
-## Phase 3: Python 胶水（translate.py 渲染）
-文件：`translate.py`
+| 路径 | 职责 |
+| --- | --- |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveScheme.lean` | Adaptive ADMM 的基本对象与迭代结构 |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveCondition1.lean` | C1 条件 |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveCondition2.lean` | C2 条件 |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveTheorem_converge_c1.lean` | C1 收敛定理 |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveTheorem_converge_c2.lean` | C2 收敛定理 |
+| `Optlib/Algorithm/AdaptiveADMM/AdaptiveProductBounds.lean` | 实数乘积界的局部辅助引理 |
+| `Optlib/Algorithm/AdaptiveADMM/Strategies/StrategyPolicy.lean` | 公开的类型化策略接口 |
+| `Optlib/Algorithm/AdaptiveADMM/Strategies/TauTemplates.lean` | 可认证 $\tau$ 模板 |
+| `Optlib/Algorithm/AdaptiveADMM/Strategies.lean` | 策略证书的稳定 facade |
 
-**职责**：接收 IR，渲染 Lean 代码文件。
+策略子目录的设计与生成产物边界见
+[`Optlib/Algorithm/AdaptiveADMM/Strategies/README.md`](Optlib/Algorithm/AdaptiveADMM/Strategies/README.md)，
+完整发布边界见 [`doc/FORMALIZATION_SCOPE.md`](doc/FORMALIZATION_SCOPE.md)。
 
-### 生成流程（核心）
-1. 选择模板（基于 AST/IR）
-2. 生成 `tau_seq`、`dir_seq`、`update_fun`
-3. 自动构造 `h_tau_summable`：
-   - **standard**：调用 `p_series_summable_template` 或 `geometric_summable_template`
-   - **piecewise**：通过“最终相等”把尾部收敛转移给整体
-   - **complex**：尝试比较判别（可能需要 `sorry` 或额外不等式）
-4. 封装 `AdaptableStrategy`，接入 Strategy3 收敛定理
+## 示例
 
----
+`examples/` 包含三个已检查的策略证书：
 
-## 策略复杂度分级
-| 级别 | 类型 | 方法 | 预期成功率 |
-|---|---|---|---|
-| L1 | 标准型 (P-series/Geometric) | 模板库直接调用 | 99% |
-| L2 | 分段型 (Piecewise) | 分解 + Tail 收敛 | 90% |
-| L3 | 有界复杂型 (Complex) | 比较判别法 | 70% |
-| L4 | 未知型 (Unknown) | Tactic + Sorry | 低 |
+1. 两项标准 p-series 之和；
+2. shifted p-series 与 geometric 项的局部组合；
+3. 两项 shifted p-series 的因式分解组合。
 
----
+每个目录中的 `candidate.py` 和 `contract_result.json` 是生成输入/中间合约的溯源快照；
+形式化结论由同目录的 `certificate.lean` 承担。详见
+[`examples/README.md`](examples/README.md)。
 
-## 关键要点
-1. **Lean 证明固定化**：将收敛性证明完全交给 `VerificationLib` + `Strategy3` 框架。
-2. **LLM 输出必须结构化**：只允许 JSON IR，禁止直接生成完整 Lean。
-3. **模板优先 + LLM 兜底**：满足模板走确定性路径，不满足走 LLM。
+## 本地验证
 
----
+工具链固定在 `leanprover/lean4:v4.24.0-rc1`，依赖版本记录在
+`lake-manifest.json`。首次运行需要网络下载依赖。
 
-## 下一步建议
-- 为 L2/L3 提供更强的自动证明工具（例如更多比较判别模板）
-- 将 LLM prompt 固化，限制输出范围，减少 Lean 端不确定性
+```bash
+# 构建公开策略入口及其 C1 依赖
+lake build Optlib.Algorithm.AdaptiveADMM.Strategies
+
+# 构建 C2 收敛定理
+lake build Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c2
+
+# 构建 Optlib 的默认目标
+lake build
+
+# 严格参数下复查公开入口
+lake env lean -DautoImplicit=false -DrelaxedAutoImplicit=false \
+  Optlib/Algorithm/AdaptiveADMM/Strategies.lean
+
+# 分别编译示例证书
+find examples -name certificate.lean -print0 | \
+  xargs -0 -n1 lake env lean -DautoImplicit=false -DrelaxedAutoImplicit=false
+```
+
+Adaptive ADMM 和仓库内较早的标准 ADMM 模块都使用顶层 `ADMM` 声明，不能在同一
+Lean 环境中由一个聚合文件同时导入。因此 CI 分别构建默认目标、Adaptive ADMM
+策略入口和 C2 定理；三个目标全部通过才算完成本仓库的构建门禁。
+
+GitHub Actions 还会拒绝活跃形式化和示例中出现 `sorry`、`admit` 或新增的
+`axiom` 声明。
+
+## 仓库边界
+
+- `Optlib/Algorithm/AdaptiveADMM/`：当前可信的形式化核心。
+- `examples/`：具体候选到 Lean 证书的可读样例。
+- `lean_admm/`：历史搜索和翻译源码，仅作 legacy 参考。
+- 已提交的 checkpoints、日志、缓存、IDE 元数据和旧占位样例已从 v2 发布面移除；
+  它们仍可从 Git 历史恢复。
+
+## License
+
+本仓库采用 [`LICENSE.txt`](LICENSE.txt) 中的 Apache License 2.0。

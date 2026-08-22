@@ -18,4 +18,19 @@ Thumbs.db
 *~
 *.swp
 *.swo
-*.pyc
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# IDE metadata
+.idea/
+
+# Historical search/runtime outputs
+openevolve_output/
+res/openevolve_output/
+lean_admm/alpha_evolve/openevolve_output.zip
+
+# Generated proof drafts do not belong in the trusted Lean source tree
+Optlib/Algorithm/AdaptiveADMM/Strategies/generated_prove_*.lean
+Optlib/Algorithm/AdaptiveADMM/Strategies/auto_update_rho_llm*.lean
