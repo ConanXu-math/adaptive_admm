@@ -1,0 +1,20 @@
+{
+  "classification": "Strategy3-atom_sum2",
+  "valid": true,
+  "tau_family": "atom_sum2",
+  "tau_ir": {
+    "family": "atom_sum2",
+    "template": "finite_atom_sum",
+    "terms": [
+      {
+        "coef": "c1",
+        "exp": "p1"
+      },
+      {
+        "kind": "geometric",
+        "coef": "c2",
+        "ratio": "q2"
+      }
+    ]
+  }
+}
