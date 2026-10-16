@@ -1,78 +1,102 @@
-# Adaptive ADMM in Lean
+# Adaptive ADMM 的 Lean 形式化
 
-A Lean library for convergence of two-block ADMM with a variable scalar penalty. It contains the C1 and C2 convergence proofs and a reusable interface for summable increase/decrease/keep policies.
+[English](README.en.md)
 
-## Build and import
+本项目使用 Lean 4 形式化证明变罚参数两块 ADMM 的收敛性，包含 C1、C2 两条收敛证明，以及可复用的增大、减小、保持罚参数的策略接口。
 
-The project pins Lean and mathlib to `v4.24.0-rc1`. With elan installed, run from this directory:
+## 构建与使用
+
+Lean 和 mathlib 均固定为 `v4.24.0-rc1`。安装 elan 后，在本目录运行：
 
 ```bash
 lake exe cache get
 lake build
 ```
 
-The default build includes the public entry point, all AdaptiveADMM modules, and their supporting mathematics. Import the library with:
+默认构建包含 Adaptive ADMM 的统一入口、全部相关证明模块及其数学依赖。使用时导入：
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
 
+#check KKTPoint
 #check AdaptiveADMM_Convergence_Proof.adaptive_admm_convergence_c1
 #check AdaptiveADMM_Convergence_Proof.adaptive_admm_convergence
 #check Strategy3.converges_from_policy
-#check KKTPoint
 ```
 
-The unsuffixed `adaptive_admm_convergence` is the C2 theorem. Existing imports of individual modules remain available. `Optlib.lean` belongs to the broader upstream library; use the AdaptiveADMM entry point above for this project.
+没有后缀的 `adaptive_admm_convergence` 是 C2 定理。原有的单模块导入路径仍可使用。`Optlib.lean` 属于更广泛的上游算法库，本项目使用上面的 Adaptive ADMM 入口。
 
-To check a proof that imports the library:
+检查自己的证明文件：
 
 ```bash
 lake env lean -E hasSorry -DautoImplicit=false -DrelaxedAutoImplicit=false MyProof.lean
 ```
 
-## Mathematical scope
+## 证明的问题与条件
 
-The problem is `min f₁(x₁) + f₂(x₂)` subject to `A₁ x₁ + A₂ x₂ = b`, in finite-dimensional real inner-product spaces. The full convergence theorems assume:
+考虑有限维实内积空间中的凸优化问题：
 
-- Convex, everywhere finite real-valued objectives and an existing KKT point.
-- Exact minimization of both ADMM subproblems.
-- Injective `A₁` and `A₂`.
-- A penalty sequence bounded above and bounded away from zero.
-- Fixed multiplier relaxation `0 < τ < (1 + sqrt 5) / 2`.
-- The relative-penalty variation condition C1 or C2.
+```text
+minimize    f₁(x₁) + f₂(x₂)
+subject to  A₁ x₁ + A₂ x₂ = b
+```
 
-`Strategy3.converges_from_policy` derives C1 from a nonnegative summable modulation sequence and the stated three-action recurrence. Clipping uses the effective modulation along the actual penalty sequence. A concrete candidate must establish its parameters, recurrence, and problem assumptions; the generic theorem does not establish Python-to-Lean correspondence.
+完整收敛定理使用以下条件：
 
-## Explicit reference points
+- 两个目标函数下半连续、凸且处处取有限实数值，并存在 KKT 点。
+- 每一步都精确求解两个 ADMM 子问题。
+- `A₁`、`A₂` 都是单射；对矩阵而言，对应满列秩。
+- 罚参数序列具有有限上界和严格正的下界。
+- 乘子更新使用固定松弛参数 `0 < τ < (1 + sqrt 5) / 2`。
+- 罚参数的相对变化满足 C1 或 C2 条件。
 
-`KKTPoint admm` stores a primal-dual point and its KKT proof. Errors and energies take that point as an ordinary argument: `e₁ admm reference n`, `ey admm reference n`, and `g1 admm reference n`. `Condition_C1 admm` and `Condition_C2 admm` concern only the penalty sequence.
+定理证明两个原变量序列和乘子序列收敛到同一个 KKT 点的对应分量。
 
-The convergence proofs pass the original reference to the boundedness and subsequence construction. They then pass the resulting `limitKKT` to the final error and energy estimates, keeping the selected subsequence fixed. Core proofs do not use `Setting` or infer a reference point through typeclass search.
+`Strategy3.converges_from_policy` 根据非负、可求和的调节幅度，以及增大、减小、保持三类实际递推，建立 C1 并应用收敛定理。裁剪策略使用沿实际罚参数序列计算的有效调节幅度。具体候选仍需证明参数条件、递推对应关系和问题假设；这些结果不会自动证明任意 Python 浮点程序与 Lean 模型等价。
 
-`Compatibility.lean` retains the old `Existance_of_kkt` spelling and empty `Setting` parameter for the three existing candidate examples. New proofs should use `KKTPoint` and the explicit arguments above.
+## 显式传入 KKT 参考点
 
-## Source organization
+`KKTPoint admm` 保存原变量、乘子及其满足 KKT 条件的证明。误差和能量函数直接接收参考点，例如：
 
-All paths below are relative to `Optlib/Algorithm/AdaptiveADMM/`.
+```text
+e₁ admm reference n
+ey admm reference n
+g1 admm reference n
+```
 
-| Module | Responsibility |
+`Condition_C1 admm`、`Condition_C2 admm` 只描述罚参数条件，不再携带参考点。策略收敛接口的调用形式为：
+
+```lean
+Strategy3.converges_from_policy
+  (admm := admm) reference policy h_rho fullrank₁ fullrank₂
+```
+
+证明先用原始参考点建立有界性并选取子列，再把得到的 `limitKKT` 显式传给最终误差和能量估计。选定的子列保持不变，核心证明不依赖 `Setting` 自动选择参考点。
+
+`Compatibility.lean` 为历史证明保留 `Existance_of_kkt` 和空的 `Setting` 参数。新证明使用 `KKTPoint` 和显式参数；当前三个策略模板也采用这一接口。
+
+## 源码结构
+
+下列路径相对于 `Optlib/Algorithm/AdaptiveADMM/`：
+
+| 模块 | 内容 |
 | --- | --- |
-| `AdaptiveScheme.lean` | Problem, iteration, KKT relation, and `KKTPoint` |
-| `AdaptiveDefinitions.lean` | Errors, energies, and auxiliary sequences with explicit arguments |
-| `AdaptiveOptimality.lean` | Subproblem convexity, differentiation, and subgradient membership |
-| `AdaptiveEnergyIdentities.lean` | Residual identities and subgradient monotonicity estimates |
-| `AdaptiveEnergyDescent.lean` | Cross-term bounds and the common energy decrease inequality |
-| `AdaptiveLemmas.lean` | Import entry point for the common optimality and descent results |
-| `AdaptiveCondition1.lean`, `AdaptiveCondition2.lean` | Penalty variation, energy bounds, and vanishing residuals |
-| `BoundednessC1.lean`, `BoundednessC2.lean` | Product normalization, bounded trajectories, and subsequence selection |
-| `ClusterPointC1.lean`, `ClusterPointC2.lean` | Subsequence limits and construction of the KKT cluster point |
-| `AdaptiveTheorem_converge_c1.lean`, `AdaptiveTheorem_converge_c2.lean` | Recentered energy and convergence of the full sequence |
-| `SequenceConvergence.lean` | Shared scalar argument from a zero subsequence to a zero limit |
-| `AdaptiveProductBounds.lean`, `AdaptiveInv_bounded.lean` | Product estimates and bounds for injective linear maps |
-| `Strategies.lean`, `Strategies/` | Policies, summable modulation sequences, clipping, and the C1 connection |
+| `AdaptiveScheme.lean` | 优化问题、迭代格式、KKT 条件和 `KKTPoint` |
+| `AdaptiveDefinitions.lean` | 显式接收参考点的误差、能量及辅助序列 |
+| `AdaptiveOptimality.lean` | 子问题凸性、求导和次梯度最优性 |
+| `AdaptiveEnergyIdentities.lean` | 残差恒等式和次梯度单调性估计 |
+| `AdaptiveEnergyDescent.lean` | 交叉项估计与公共能量下降不等式 |
+| `AdaptiveLemmas.lean` | 公共最优性和下降结果的导入入口 |
+| `AdaptiveCondition1.lean`、`AdaptiveCondition2.lean` | 罚参数变化、能量有界性和残差趋零 |
+| `BoundednessC1.lean`、`BoundednessC2.lean` | 乘积归一化、迭代有界性和子列选取 |
+| `ClusterPointC1.lean`、`ClusterPointC2.lean` | 子列极限与 KKT 聚点的构造 |
+| `AdaptiveTheorem_converge_c1.lean`、`AdaptiveTheorem_converge_c2.lean` | 以聚点为参考的能量估计和整列收敛 |
+| `SequenceConvergence.lean` | 从趋零子列推出整列趋零的公共标量引理 |
+| `AdaptiveProductBounds.lean`、`AdaptiveInv_bounded.lean` | 乘积估计和单射线性映射的逆向界 |
+| `Strategies.lean`、`Strategies/` | 策略接口、可求和调节序列、裁剪及 C1 连接 |
 
-The supporting `Optlib/Convex`, `Optlib/Differential`, `Optlib/Function`, and `Optlib/Optimality` modules supply the reused mathematics. See the [strategy guide](Optlib/Algorithm/AdaptiveADMM/Strategies/README.md) for the policy interface.
+`Optlib/Convex`、`Optlib/Differential`、`Optlib/Function` 和 `Optlib/Optimality` 提供所需的基础数学结果。策略接口的详细说明见[策略指南](Optlib/Algorithm/AdaptiveADMM/Strategies/README.md)。
 
-## License
+## 许可证
 
-The project retains the upstream [Apache 2.0 license](LICENSE.txt) and source author notices.
+沿用上游的 [Apache 2.0 许可证](LICENSE.txt)，并保留源码作者说明。

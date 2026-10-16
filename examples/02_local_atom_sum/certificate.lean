@@ -1,5 +1,5 @@
--- AUTO GENERATED Lean4 FILE
-import Optlib.Algorithm.AdaptiveADMM.Strategies
+-- Manually maintained Lean proof example (ResearchCandidate.lean style)
+import Optlib.Algorithm.AdaptiveADMM
 
 noncomputable section
 open Topology Filter AdaptiveADMM AdaptiveADMM_Verification AdaptiveADMM_Convergence_Proof AdaptiveStrategyBase
@@ -9,8 +9,7 @@ variable {E₁ E₂ F : Type*} [NormedAddCommGroup E₁] [InnerProductSpace ℝ 
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F]
 variable (admm : ADMM E₁ E₂ F)
 
-theorem auto_converges (admm_kkt : Existance_of_kkt admm)
-    [Setting E₁ E₂ F admm admm_kkt]
+theorem auto_converges (reference : KKTPoint admm)
     (c1 p1 c2 q2 : ℝ) (hp1 : 1 < p1) (hq2 : ‖q2‖ < 1)
     (action : ℕ → RhoAction)
     (h_tau_nonneg : ∀ n, 0 ≤ (fun n : ℕ => tau_seq_shifted c1 p1 1 n + (tau_seq_geom c2 q2 n)) n)
@@ -23,8 +22,7 @@ theorem auto_converges (admm_kkt : Existance_of_kkt admm)
     { seq := (fun n : ℕ => tau_seq_shifted c1 p1 1 n + (tau_seq_geom c2 q2 n)), nonneg := h_tau_nonneg, summable := ((h_tau_summable_shifted c1 p1 1 hp1 (by norm_num)).add (h_tau_summable_geom c2 q2 hq2)) }
   let policy : StrategyPolicy :=
     { tau := tau, action := action }
-  exact Strategy3.converges_from_policy (admm := admm) (admm_kkt := admm_kkt)
-    policy
+  exact Strategy3.converges_from_policy (admm := admm) reference policy
     (by
       intro n
       simpa [policy, tau, StrategyPolicy.updateRho] using h_rho n)

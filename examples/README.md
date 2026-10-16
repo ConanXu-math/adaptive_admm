@@ -9,6 +9,8 @@
 | `certificate.lean` | 将策略包装为 `CertifiedTau` 与 `StrategyPolicy`，调用收敛定理 | Lean 编译 |
 | `notes.md` | 解释对应的证明模式 | 文档审查 |
 
+三个模板统一导入 `Optlib.Algorithm.AdaptiveADMM`，使用显式的 `reference : KKTPoint admm`，并将它传给 `Strategy3.converges_from_policy`。新模板不再需要 `Setting`；参数条件和实际罚参数递推仍需由具体候选证明。
+
 三个模式分别是：
 
 1. `01_standard_pseries_sum2`：两项标准 p-series 之和；
