@@ -15,7 +15,7 @@ variable(admm : ADMM E₁ E₂ F)
 
 namespace AdaptiveADMM_Convergence_Proof
 
-variable {admm admm_kkt}
+variable {admm} {admm_kkt : KKTPoint admm}
 
 local notation "f₁" => admm.f₁
 local notation "f₂" => admm.f₂
@@ -27,7 +27,6 @@ local notation "b" => admm.b
 local notation "y"  => admm.y
 local notation "τ"  => admm.τ
 local notation "ρₙ" => admm.ρₙ
-local notation "ρmin" => admm.ρmin
 
 local notation "x₁'" => admm_kkt.x₁
 local notation "x₂'" => admm_kkt.x₂
@@ -39,51 +38,67 @@ local notation "⟪" a₁ ", " a₂ "⟫" => @inner ℝ _ _ a₁ a₂
 
 -- ==========================
 
-def η_k [Setting E₁ E₂ F admm admm_kkt] : ℕ → ℝ :=
+/-- Relative increases of rho; index zero is omitted from the C1 tail estimate. -/
+def η_k (admm : ADMM E₁ E₂ F)  : ℕ → ℝ :=
   fun n => if n = 0 then 0
-           else if ρₙ (n+1) > ρₙ n then
-            Real.sqrt ((ρₙ (n+1) / ρₙ n)^2 - 1)
+           else if admm.ρₙ (n+1) > admm.ρₙ n then
+            Real.sqrt ((admm.ρₙ (n+1) / admm.ρₙ n)^2 - 1)
            else 0
 
-def h1 [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) := - g1 (n+1) + (1 + (η_k n)^2)* (g1 n)
--- Condition C1: 增长情况下的收敛条件
-class Condition_C1 {E₁ E₂ F : outParam Type*}
+-- Condition C1 controls cumulative relative increases of rho; decreases are allowed.
+class Condition_C1 {E₁ E₂ F : Type*}
     [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
     [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [FiniteDimensional ℝ F]
-    (admm : outParam (ADMM E₁ E₂ F))
-    (admm_kkt : outParam (Existance_of_kkt admm))
-    extends Setting E₁ E₂ F admm admm_kkt where
-   eta_square_summable : ∃ S > 0, ∑' n : ℕ, (η_k n)^2 ≤ S
-   eta_square_summable' : Summable (f := fun n :ℕ  => (η_k n)^2)
+    (admm : ADMM E₁ E₂ F)
+    : Prop where
+   eta_square_summable : ∃ S > 0, ∑' n : ℕ, ((η_k admm) n)^2 ≤ S
+   eta_square_summable' : Summable (f := fun n :ℕ  => ((η_k admm) n)^2)
    one_eta_square_multipliable':
-      ∃ S > 0 , ∏' n : ℕ, (1 + (η_k n)^2) ≤ S
-   one_eta_square_multipliable : Multipliable (f := fun n :ℕ  => (1 + (η_k n)^2))
+      ∃ S > 0 , ∏' n : ℕ, (1 + ((η_k admm) n)^2) ≤ S
+   one_eta_square_multipliable : Multipliable (f := fun n :ℕ  => (1 + ((η_k admm) n)^2))
+
+def h1 (admm : ADMM E₁ E₂ F) (admm_kkt : KKTPoint admm)  (n : ℕ) := - (g1 admm admm_kkt) (n+1) + (1 + ((η_k admm) n)^2)* ((g1 admm admm_kkt) n)
+
+local notation "e₁" => AdaptiveADMM_Convergence_Proof.e₁ admm admm_kkt
+local notation "e₂" => AdaptiveADMM_Convergence_Proof.e₂ admm admm_kkt
+local notation "ey" => AdaptiveADMM_Convergence_Proof.ey admm admm_kkt
+local notation "g1" => AdaptiveADMM_Convergence_Proof.g1 admm admm_kkt
+local notation "g2" => AdaptiveADMM_Convergence_Proof.g2 admm admm_kkt
+local notation "u" => AdaptiveADMM_Convergence_Proof.u admm admm_kkt
+local notation "v" => AdaptiveADMM_Convergence_Proof.v admm admm_kkt
+local notation "Ψ" => AdaptiveADMM_Convergence_Proof.Ψ admm admm_kkt
+local notation "Φ" => AdaptiveADMM_Convergence_Proof.Φ admm admm_kkt
+local notation "T_HWY" => AdaptiveADMM_Convergence_Proof.T_HWY admm
+local notation "υ" => AdaptiveADMM_Convergence_Proof.υ admm
+local notation "η_k" => AdaptiveADMM_Convergence_Proof.η_k admm
+local notation "H1" => AdaptiveADMM_Convergence_Proof.h1 admm admm_kkt
 
 
-lemma HWY_thm4_1_ineq'[Setting E₁ E₂ F admm admm_kkt] :∀ n : ℕ,τ * (T_HWY - τ) * ρₙ n^2  ≥ 0 := by
+
+lemma HWY_thm4_1_ineq' :∀ n : ℕ,τ * (T_HWY - τ) * ρₙ n^2  ≥ 0 := by
    intro n
    have h1:= admm.htau.1
-   have h2:= HWY_thm4_1_ineq
+   have h2:= (HWY_thm4_1_ineq (admm := admm))
    have h3:= sq_pos_of_pos (admm.hρₙ_pos n)
    have h4:= mul_pos h1 h2
    have := mul_pos h4 h3
    linarith[this]
 
-lemma HWY_eq_bounded_below [Setting E₁ E₂ F admm admm_kkt] :
+lemma HWY_eq_bounded_below  :
     ∀ n : ℕ+,
         0 ≤ ‖ey n‖^2 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by
         intro n
         have h:  0 ≤ ‖ey n‖^2 := by exact sq_nonneg ‖ey ↑n‖
         have := sq_nonneg ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖
-        have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' n) this
+        have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2 := by exact mul_nonneg  ((HWY_thm4_1_ineq' (admm := admm)) n) this
         linarith
 
-lemma rho_square_ratio_bound [Setting E₁ E₂ F admm admm_kkt] (n : ℕ+) :
+lemma rho_square_ratio_bound  (n : ℕ+) :
     (ρₙ (n+1))^2 / (ρₙ n)^2 ≤ 1 + (η_k n)^2 := by
   by_cases h : ρₙ (n+1) > ρₙ n
   ·
-    simp [η_k, h]
+    simp [ AdaptiveADMM_Convergence_Proof.η_k, h]
     have h5: (ρₙ (n+1) / ρₙ n)^2 - 1 ≥ 0 := by
       field_simp
       have h3:(ρₙ n)  ≥ 0 := by linarith [admm.hρₙ_pos n]
@@ -106,8 +121,8 @@ lemma rho_square_ratio_bound [Setting E₁ E₂ F admm admm_kkt] (n : ℕ+) :
     simp
     ring_nf
     linarith
-  · -- 当 ρₙ 不增长时
-    simp [η_k,h]
+  · -- When ρₙ does not increase.
+    simp [ AdaptiveADMM_Convergence_Proof.η_k,h]
     have pos1 : 0 ≤  ρₙ n := by linarith [admm.hρₙ_pos n]
     have pos2 : 0 ≤  ρₙ (n+1) := by linarith [admm.hρₙ_pos (n+1)]
     rw [div_le_one]
@@ -116,25 +131,25 @@ lemma rho_square_ratio_bound [Setting E₁ E₂ F admm admm_kkt] (n : ℕ+) :
     linarith[h6]
     exact sq_pos_of_pos (admm.hρₙ_pos n)
 
-lemma HWY_Convergence_1_1 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
+lemma HWY_Convergence_1_1 :∀ n : ℕ+,
        ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
 + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
 ≤ ‖ey n‖^2 + τ * (ρₙ (n+1)^2 / ρₙ (n)^2) *  ρₙ (n)^2 * ‖A₂ (e₂ n)‖^2
 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
 - (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2):= by
       intro n
-      have h1:= HWY_Theorem_3_1 n
+      have h1:= (HWY_Theorem_3_1 (admm := admm) (admm_kkt := admm_kkt)) n
       have h : (ρₙ (n+1)^2 / ρₙ (n)^2) *  ρₙ (n)^2 = ρₙ (n+1)^2 := by
        refine div_mul_cancel₀ (ADMM.ρₙ E₁ E₂ F (↑n + 1) ^ 2) ?h
        have := sq_pos_of_pos (admm.hρₙ_pos n)
        linarith
-      -- 统一乘法结合律的括号，以匹配目标中的形态
+      -- Reassociate multiplication to match the target.
       have hmul : τ * ((ρₙ (n+1)^2 / ρₙ (n)^2) * ρₙ (n)^2) = τ * (ρₙ (n+1)^2 / ρₙ (n)^2) * ρₙ (n)^2 := by
         ring
       nth_rw 3 [← h] at h1
-      linarith[h1]
+      linarith[ h1]
 
-lemma HWY_Convergence_1_2 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
+lemma HWY_Convergence_1_2 :∀ n : ℕ+,
       ‖ey n‖^2 + τ * (ρₙ (n+1)^2/ ρₙ (n)^2) *  ρₙ (n)^2  * ‖A₂ (e₂ n)‖^2
       + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
       - (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
@@ -147,9 +162,9 @@ lemma HWY_Convergence_1_2 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
          simp
          gcongr
          · linarith [admm.htau.1]
-         · exact rho_square_ratio_bound n
+         · exact (rho_square_ratio_bound (admm := admm)) n
 
-lemma HWY_Convergence_1_3 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
+lemma HWY_Convergence_1_3 :∀ n : ℕ+,
 ‖ey n‖^2 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2
       - (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
          (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
@@ -162,10 +177,10 @@ lemma HWY_Convergence_1_3 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
          have h : 1 ≤ 1 + (η_k n)^2 := by
             norm_num
             exact sq_nonneg (η_k n)
-         have := mul_le_mul_of_nonneg_left h (HWY_eq_bounded_below n)
+         have := mul_le_mul_of_nonneg_left h ((HWY_eq_bounded_below (admm := admm) (admm_kkt := admm_kkt)) n)
          linarith
 
-lemma HWY_ineq_51 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
+lemma HWY_ineq_51 :∀ n : ℕ+,
 ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
 + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
 ≤ (1 + (η_k n)^2)*
@@ -174,12 +189,12 @@ lemma HWY_ineq_51 [Setting E₁ E₂ F admm admm_kkt]:∀ n : ℕ+,
 - (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
    (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2):= by
      intro n
-     have := HWY_Convergence_1_1 n
-     have := HWY_Convergence_1_3 n
-     have := HWY_Convergence_1_2 n
+     have := (HWY_Convergence_1_1 (admm := admm) (admm_kkt := admm_kkt)) n
+     have := (HWY_Convergence_1_3 (admm := admm) (admm_kkt := admm_kkt)) n
+     have := (HWY_Convergence_1_2 (admm := admm) (admm_kkt := admm_kkt)) n
      linarith
 
-lemma  HWY_ineq_51' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
+lemma  HWY_ineq_51' : ∀ n : ℕ+,
  -(1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
    (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2) ≤   0 := by
    intro n
@@ -195,18 +210,18 @@ lemma  HWY_ineq_51' [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
    have h9:= mul_nonneg this h8
    linarith
 
-lemma HWY_ineq_52_0 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ+,
+lemma HWY_ineq_52_0 : ∀ n : ℕ+,
 ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
 + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
 ≤ (1 + (η_k n)^2)*
 (‖ey n‖^2 + τ * ρₙ (n)^2  * ‖A₂ (e₂ n)‖^2
 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖^2) := by
    intro n
-   have h := HWY_ineq_51 n
-   have hneg := HWY_ineq_51' n
+   have h := (HWY_ineq_51 (admm := admm) (admm_kkt := admm_kkt)) n
+   have hneg := (HWY_ineq_51' (admm := admm)) n
    linarith
 
-lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
+lemma HWY_ineq_52_1 : ∀ n : ℕ,
   ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
   ≤ (∏ k ∈ Finset.range (n+1), (1 + (η_k k)^2)) *
@@ -218,8 +233,8 @@ lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
   ≤(1 + (η_k 0)^2) *
   (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
-      have h1 : (η_k 0) = 0 := by simp [η_k]
-      rw [h1]
+      have h1 : (η_k 0) = 0 := by simp [ AdaptiveADMM_Convergence_Proof.η_k]
+      rw [ h1]
       simp
   induction' n with k h
   ·   simp
@@ -227,15 +242,15 @@ lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
   ·   by_cases hh : k = 0
       ·  simp [hh]
          simp [Finset.range]
-         have h2 := HWY_ineq_52_0 1
+         have h2 := (HWY_ineq_52_0 (admm := admm) (admm_kkt := admm_kkt)) 1
          simp at h2
-         have h1 : (η_k 0) = 0 := by simp [η_k]
-         rw [h1]
+         have h1 : (η_k 0) = 0 := by simp [ AdaptiveADMM_Convergence_Proof.η_k]
+         rw [ h1]
          simp
          exact h2
       ·  push_neg at hh
          have k_pos : k > 0 := by apply Nat.pos_of_ne_zero hh
-         have h2 := HWY_ineq_52_0 ((k.toPNat k_pos)+1)
+         have h2 := (HWY_ineq_52_0 (admm := admm) (admm_kkt := admm_kkt)) ((k.toPNat k_pos)+1)
          have h1 : ‖ey ((k.toPNat k_pos+1))‖^2 + τ * ρₙ ((k.toPNat k_pos+1))^2 * ‖A₂ (e₂ ((k.toPNat k_pos+1)))‖^2
          + τ * (T_HWY - τ) * ρₙ ((k.toPNat k_pos+1))^2 * ‖A₁ (x₁ ((k.toPNat k_pos+1))) + A₂ (x₂ ((k.toPNat k_pos+1))) - b‖ ^ 2
          ≤ (∏ m ∈ Finset.range ((k.toPNat k_pos+1)), (1 + (η_k m)^2)) *
@@ -256,14 +271,14 @@ lemma HWY_ineq_52_1 [Setting E₁ E₂ F admm admm_kkt]: ∀ n : ℕ,
          have h4 : _ := mul_le_mul_of_nonneg_left h1 hnonneg
          rw [← mul_assoc, ← h3] at h4
          linarith
-         -- exact le_trans h2 h4 --为什么linarith 不行？？？？？？？？？？？ 还得是Claude 解我心头之患 --后续 绷不住 原来是版本问题.。。。
 
-lemma HWY_ineq_52_ [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
+
+lemma HWY_ineq_52_ [Condition_C1 admm]: ∀ n : ℕ,
   ∏ k ∈  Finset.range (n+1), (1 + (η_k k)^2) ≤ ∏' k : ℕ, (1 + (η_k k)^2) := by
    intro n
    let f : ℕ → ℝ:= fun k => 1 + (η_k k)^2
    let S : Finset ℕ := Finset.range (n + 1)
-   have hmult : Multipliable f := Condition_C1.one_eta_square_multipliable
+   have hmult : Multipliable f := (Condition_C1.one_eta_square_multipliable (admm := admm))
    have h_ge_one : ∀ i : ℕ, (1 : ℝ) ≤ f i := by
       intro i
       simp only [f]
@@ -271,7 +286,7 @@ lemma HWY_ineq_52_ [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
    exact real_finset_prod_le_tprod_of_one_le f S h_ge_one hmult
 
 
-lemma HWY_ineq_52_2 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
+lemma HWY_ineq_52_2 [Condition_C1 admm]: ∀ n : ℕ,
   (∏ k ∈ Finset.range (n+1), (1 + (η_k k)^2)) *
   (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2)
@@ -290,11 +305,11 @@ lemma HWY_ineq_52_2 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
       have h_residual :
           0 ≤ τ * (T_HWY - τ) * ρₙ 1^2 *
             ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by
-         exact mul_nonneg (HWY_thm4_1_ineq' 1) (sq_nonneg _)
+         exact mul_nonneg ((HWY_thm4_1_ineq' (admm := admm)) 1) (sq_nonneg _)
       linarith
-   exact mul_le_mul_of_nonneg_right (HWY_ineq_52_ n) h_energy_nonneg
+   exact mul_le_mul_of_nonneg_right ((HWY_ineq_52_ (admm := admm)) n) h_energy_nonneg
 
-lemma HWY_ineq_52_3 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
+lemma HWY_ineq_52_3 [Condition_C1 admm]: ∀ n : ℕ,
   ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
   ≤ (∏' k : ℕ, (1 + (η_k k)^2)) *
@@ -302,16 +317,16 @@ lemma HWY_ineq_52_3 [Condition_C1 admm admm_kkt]: ∀ n : ℕ,
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2)
   := by
   intro n
-  have h1 := HWY_ineq_52_2 n
-  have h2 := HWY_ineq_52_ n
-  have h3 := HWY_ineq_52_1 n
+  have h1 := (HWY_ineq_52_2 (admm := admm) (admm_kkt := admm_kkt)) n
+  have h2 := (HWY_ineq_52_ (admm := admm)) n
+  have h3 := (HWY_ineq_52_1 (admm := admm) (admm_kkt := admm_kkt)) n
   linarith
 
-lemma HWY_ineq_52_4 [Condition_C1 admm admm_kkt]:  (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
+lemma HWY_ineq_52_4 [Condition_C1 admm]:  (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) ≥ 0 := by
    have h1 : 0 ≤ ‖ey 1‖^2 := by exact sq_nonneg ‖ey 1‖
    have := sq_nonneg ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖
-   have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by exact mul_nonneg  (HWY_thm4_1_ineq' 1) this
+   have h1: 0 ≤ τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2 := by exact mul_nonneg  ((HWY_thm4_1_ineq' (admm := admm)) 1) this
    have h2:= admm.htau.1
    have h3:= sq_pos_of_pos (admm.hρₙ_pos 1)
    have h4 : 0 ≤  τ * ρₙ 1^2 := by linarith[mul_pos h2 h3]
@@ -319,30 +334,30 @@ lemma HWY_ineq_52_4 [Condition_C1 admm admm_kkt]:  (‖ey 1‖^2 + τ * ρₙ (1
    have h6 : 0 ≤ τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2 := by exact mul_nonneg h4 h5
    linarith
 
-lemma HWY_ineq_52 [Condition_C1 admm admm_kkt]: ∃ P >0 , ∀ n : ℕ, ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
+lemma HWY_ineq_52 [Condition_C1 admm]: ∃ P >0 , ∀ n : ℕ, ‖ey (n+1)‖^2 + τ * ρₙ (n+1)^2 * ‖A₂ (e₂ (n+1))‖^2
   + τ * (T_HWY - τ) * ρₙ (n+1)^2 * ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖ ^ 2
   ≤ P * (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
   + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
-   obtain ⟨P, hP_pos, hP⟩ := Condition_C1.one_eta_square_multipliable'
+   obtain ⟨P, hP_pos, hP⟩ := (Condition_C1.one_eta_square_multipliable' (admm := admm))
    use P
    constructor
    ·exact hP_pos
    intro n
-   have h1 := HWY_ineq_52_3 n
+   have h1 := (HWY_ineq_52_3 (admm := admm) (admm_kkt := admm_kkt)) n
    have h2 : (∏' k : ℕ, (1 + (η_k k)^2)) * (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) ≤ P * (‖ey 1‖^2 + τ * ρₙ (1)^2  * ‖A₂ (e₂ 1)‖^2
 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2):= by
-      exact mul_le_mul_of_nonneg_right hP HWY_ineq_52_4
+      exact mul_le_mul_of_nonneg_right hP (HWY_ineq_52_4 (admm := admm) (admm_kkt := admm_kkt))
    exact le_trans h1 h2
 
-lemma HWY_ineq_53 [Condition_C1 admm admm_kkt]: ∃ C > 0, ∀ n : ℕ+,
+lemma HWY_ineq_53 [Condition_C1 admm]: ∃ C > 0, ∀ n : ℕ+,
 ‖ey n‖^2 + τ * ρₙ n^2 * ‖A₂ (e₂ n)‖^2
   + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ ^ 2 ≤ C := by
-   obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_52
+   obtain ⟨C, hC_pos, hC⟩ := (HWY_ineq_52 (admm := admm) (admm_kkt := admm_kkt))
    use C * (‖ey 1‖^2 + τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) + 1
    constructor
    ·  apply add_pos_of_nonneg_of_pos
-      exact mul_nonneg (le_of_lt hC_pos) HWY_ineq_52_4
+      exact mul_nonneg (le_of_lt hC_pos) (HWY_ineq_52_4 (admm := admm) (admm_kkt := admm_kkt))
       norm_num
    ·  intro n
       have h1 := hC (n - 1)
@@ -362,12 +377,12 @@ lemma HWY_ineq_53 [Condition_C1 admm admm_kkt]: ∃ C > 0, ∀ n : ℕ+,
    --    norm_num
    -- ·  calc ‖ey n‖^2 + τ * ρₙ n^2 * ‖A₂ (e₂ n)‖^2 + τ * (T_HWY - τ) * ρₙ n^2 * ‖A₁ (x₁ n) + A₂ (x₂ n) - b‖ ^ 2 ≤ P * (‖ey 1‖^2 + τ * ρₙ 1^2 * ‖A₂ (e₂ 1)‖^2 + τ * (T_HWY - τ) * ρₙ 1^2 * ‖A₁ (x₁ 1) + A₂ (x₂ 1) - b‖^2) + 1 := by linarith
 
--- 扩展到自然数（包括0）
+-- Extend to all natural numbers, including zero.
 
-lemma HWY_ineq_53_nat [Condition_C1 admm admm_kkt]: ∃ C > 0, ∀ n : ℕ,
+lemma HWY_ineq_53_nat [Condition_C1 admm]: ∃ C > 0, ∀ n : ℕ,
 g1 n ≤ C := by
-   obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_53
-  -- 取 C' = C + 初始值（n=0时的值），确保对所有 n 都成立
+   obtain ⟨C, hC_pos, hC⟩ := (HWY_ineq_53 (admm := admm) (admm_kkt := admm_kkt))
+  -- Take C' = C plus the initial value so the bound holds for every n.
    let C₀ := ‖ey 0‖^2 + τ * ρₙ 0^2 * ‖A₂ (e₂ 0)‖^2 + τ * (T_HWY - τ) * ρₙ 0^2 * ‖A₁ (x₁ 0) + A₂ (x₂ 0) - b‖^2
    use max C C₀ + 1
    constructor
@@ -387,8 +402,8 @@ g1 n ≤ C := by
          _ ≤ max C C₀ + 1 := by linarith
 
 
-lemma g1_nonneg [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) : 0 ≤ g1 n := by
-   unfold g1
+lemma g1_nonneg  (n : ℕ) : 0 ≤ g1 n := by
+   unfold AdaptiveADMM_Convergence_Proof.g1
    apply add_nonneg
    apply add_nonneg
    apply sq_nonneg ‖ey (n)‖
@@ -399,34 +414,34 @@ lemma g1_nonneg [Setting E₁ E₂ F admm admm_kkt] (n : ℕ) : 0 ≤ g1 n := by
    apply sq_nonneg ‖A₂ (e₂ (n))‖
    apply mul_nonneg
    apply mul_nonneg
-   have : 0 ≤ T_HWY - τ := by linarith [T_minus_tau_positive]
+   have : 0 ≤ T_HWY - τ := by linarith [(T_minus_tau_positive (admm := admm))]
    apply mul_nonneg
    apply le_of_lt admm.htau.1
    exact this
    apply sq_nonneg (ρₙ (n))
    apply sq_nonneg ‖A₁ (x₁ (n)) + A₂ (x₂ (n)) - b‖
 
-lemma HWY_ineq_54_0 [Condition_C1 admm admm_kkt]: ∀ n : ℕ+,
+lemma HWY_ineq_54_0 [Condition_C1 admm]: ∀ n : ℕ+,
     (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
     ≤ - g1 (n+1)
     + (1 + (η_k n)^2)* g1 n := by
    intro n
-   have h1 := HWY_ineq_51 n
-   unfold g1
+   have h1 := (HWY_ineq_51 (admm := admm) (admm_kkt := admm_kkt)) n
+   unfold AdaptiveADMM_Convergence_Proof.g1
    linarith
 
-lemma HWY_ineq_54_1 [Condition_C1 admm admm_kkt]: ∀ n : ℕ+,
+lemma HWY_ineq_54_1 [Condition_C1 admm]: ∀ n : ℕ+,
     (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
-    ≤ h1 n:= by
+    ≤ H1 n:= by
    intro n
-   have := HWY_ineq_54_0 n
-   unfold h1
+   have := (HWY_ineq_54_0 (admm := admm) (admm_kkt := admm_kkt)) n
+   unfold AdaptiveADMM_Convergence_Proof.h1
    linarith
 
-lemma g1_summable_0 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
+lemma g1_summable_0 [Condition_C1 admm]  :∃ C >0,∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 * g1 (i+1)
    ≤  ∑ i ∈ Finset.range n, (η_k (i+1)^2) * C := by
-   obtain ⟨C, hC_pos, hC⟩ := HWY_ineq_53_nat
+   obtain ⟨C, hC_pos, hC⟩ := (HWY_ineq_53_nat (admm := admm) (admm_kkt := admm_kkt))
    use C
    constructor
    exact hC_pos
@@ -435,7 +450,7 @@ lemma g1_summable_0 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
    intro i hi
    exact mul_le_mul_of_nonneg_left (hC (i+1)) (sq_nonneg _)
 
-lemma g1_summable_0_sum [Condition_C1 admm admm_kkt]  :∀ n : ℕ,
+lemma g1_summable_0_sum [Condition_C1 admm]  :∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 ≤ ∑' i : ℕ, (η_k (i+1))^2:= by
       intro n
       let f : ℕ → ℝ:= fun k => (η_k (k+1))^2
@@ -450,17 +465,17 @@ lemma g1_summable_0_sum [Condition_C1 admm admm_kkt]  :∀ n : ℕ,
       let f':ℕ → ℝ:= fun k => (η_k k)^2
       show Summable (fun i => f' (i + 1))
       rw[summable_nat_add_iff 1]
-      exact Condition_C1.eta_square_summable'
+      exact (Condition_C1.eta_square_summable' (admm := admm))
 
-lemma eta_square_summable [Condition_C1 admm admm_kkt]  : Summable (fun n ↦ η_k (n+1) ^ 2) := by
+lemma eta_square_summable [Condition_C1 admm]  : Summable (fun n ↦ η_k (n+1) ^ 2) := by
    let f':ℕ → ℝ:= fun k => (η_k k)^2
    show Summable (fun i => f' (i + 1))
    rw[summable_nat_add_iff 1]
-   exact Condition_C1.eta_square_summable'
+   exact (Condition_C1.eta_square_summable' (admm := admm))
 
-lemma eta_square_summable' [Condition_C1 admm admm_kkt]  :
+lemma eta_square_summable' [Condition_C1 admm]  :
 ∃ S > 0, ∑' (n : ℕ), η_k (n+1) ^ 2 ≤ S := by
-   obtain ⟨C, hC_pos, hC⟩ := Condition_C1.eta_square_summable
+   obtain ⟨C, hC_pos, hC⟩ := (Condition_C1.eta_square_summable (admm := admm))
    use C
    constructor
    exact hC_pos
@@ -468,27 +483,27 @@ lemma eta_square_summable' [Condition_C1 admm admm_kkt]  :
       rw [tsum_eq_zero_add']
       have h1:= sq_nonneg (η_k 0)
       linarith
-      exact eta_square_summable
+      exact (eta_square_summable (admm := admm))
    calc ∑' (n : ℕ), η_k (n+1) ^ 2
        ≤ ∑' (n : ℕ), η_k n ^ 2 := this
      _ ≤ C := hC
 
-lemma g1_summable_0_sum' [Condition_C1 admm admm_kkt]  :
+lemma g1_summable_0_sum' [Condition_C1 admm]  :
    ∃ C >0 ,∀ n : ℕ,
    ∑ i ∈ Finset.range n, (η_k (i+1))^2 ≤ C := by
-   obtain ⟨C, hC_pos, hC⟩ :=  eta_square_summable'
+   obtain ⟨C, hC_pos, hC⟩ :=  (eta_square_summable' (admm := admm))
    use C
    constructor
    ·  exact hC_pos
    ·  intro n
-      have h1 := g1_summable_0_sum n
+      have h1 := (g1_summable_0_sum (admm := admm)) n
       linarith
 
-lemma g1_summable_1 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
+lemma g1_summable_1 [Condition_C1 admm]  :∃ C >0,∀ n : ℕ,
     ∑ i ∈ Finset.range n, (η_k (i+1))^2 * g1 (i+1)
    ≤  C := by
-   obtain ⟨C1, hC_pos1,hC1⟩ := g1_summable_0
-   obtain ⟨C2, hC_pos2, hC2⟩ := g1_summable_0_sum'
+   obtain ⟨C1, hC_pos1,hC1⟩ := (g1_summable_0 (admm := admm) (admm_kkt := admm_kkt))
+   obtain ⟨C2, hC_pos2, hC2⟩ := (g1_summable_0_sum' (admm := admm))
    use C1 * C2
    constructor
    exact mul_pos hC_pos1 hC_pos2
@@ -501,11 +516,11 @@ lemma g1_summable_1 [Condition_C1 admm admm_kkt]  :∃ C >0,∀ n : ℕ,
       rw [Finset.sum_mul]
    linarith
 
-lemma h1_summable_0 [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n, (η_k (i+1))^2* (g1 (i+1)) := by
+lemma h1_summable_0 [Condition_C1 admm]  : ∀ n : ℕ, ∑ i ∈ Finset.range n, H1 (i+1) = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n, (η_k (i+1))^2* (g1 (i+1)) := by
    intro n
    calc
       _ = ∑ i ∈ Finset.range n, (- g1 (i+1+1) + (1 + (η_k (i+1))^2)* (g1 (i+1))) := by
-         unfold h1
+         unfold AdaptiveADMM_Convergence_Proof.h1
          simp
       _ = ∑ i ∈ Finset.range n, ( g1 (i+1) - g1 (i+1+1) +  (η_k (i+1))^2 * (g1 (i+1))):= by
          congr
@@ -516,37 +531,37 @@ lemma h1_summable_0 [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, ∑ i ∈ Finse
       _ = g1 1 - g1 (n+1) + ∑ i ∈ Finset.range n,  (η_k (i+1))^2 * (g1 (i+1)) := by
          rw[Finset.sum_range_sub']
 
-lemma h1_summable_1 [Condition_C1 admm admm_kkt]  : ∃ C >0,∀ n : ℕ, ∑ i ∈ Finset.range n, h1 (i+1) ≤ C := by
-   rcases g1_summable_1 with ⟨C1,hC_pos1,hC1⟩
-   rcases HWY_ineq_53_nat with ⟨C2,hC_pos2,hC2⟩
+lemma h1_summable_1 [Condition_C1 admm]  : ∃ C >0,∀ n : ℕ, ∑ i ∈ Finset.range n, H1 (i+1) ≤ C := by
+   rcases (g1_summable_1 (admm := admm) (admm_kkt := admm_kkt)) with ⟨C1,hC_pos1,hC1⟩
+   rcases (HWY_ineq_53_nat (admm := admm) (admm_kkt := admm_kkt)) with ⟨C2,hC_pos2,hC2⟩
    use 2* C2 + C1
    constructor
    exact add_pos (mul_pos (by norm_num) hC_pos2) hC_pos1
    intro n
-   rw [h1_summable_0]
-   have := g1_nonneg 1
-   have := g1_nonneg (n+1)
+   rw [(h1_summable_0 (admm := admm) (admm_kkt := admm_kkt))]
+   have := (g1_nonneg (admm := admm) (admm_kkt := admm_kkt)) 1
+   have := (g1_nonneg (admm := admm) (admm_kkt := admm_kkt)) (n+1)
    have := hC1 (n)
    have := hC2 (n+1)
    have := hC2 1
    gcongr
    linarith
 
-lemma h1_eq' [Condition_C1 admm admm_kkt]:∀ n : ℕ+, (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
-≤ h1 n := by
+lemma h1_eq' [Condition_C1 admm]:∀ n : ℕ+, (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ n - x₂ (n+1))‖^2)
+≤ H1 n := by
    intro n
-   have h := HWY_ineq_54_0 n
-   unfold h1
+   have h := (HWY_ineq_54_0 (admm := admm) (admm_kkt := admm_kkt)) n
+   unfold AdaptiveADMM_Convergence_Proof.h1
    linarith
 
-lemma h1_eq'' [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, h1 (n+1) ≥ (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
+lemma h1_eq'' [Condition_C1 admm]  : ∀ n : ℕ, H1 (n+1) ≥ (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
    (‖A₁ (x₁ (n+2)) + A₂ (x₂ (n+2)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ (n+2))‖^2) := by
    intro n
    have : n+1>0 := by linarith
-   have h := h1_eq' (n+1).toPNat'
+   have h := (h1_eq' (admm := admm) (admm_kkt := admm_kkt)) (n+1).toPNat'
    exact h
 
-lemma h1_eq''' [Condition_C1 admm admm_kkt]  : ∀ n : ℕ,(1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
+lemma h1_eq''' [Condition_C1 admm]  : ∀ n : ℕ,(1/3) * (1 + τ - τ^2) * τ * ρₙ (n+2)^2 *
    (‖A₁ (x₁ (n+2)) + A₂ (x₂ (n+2)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ (n+2))‖^2)≥ 0:= by
    intro n
    have h1:= admm.htau.1
@@ -562,41 +577,42 @@ lemma h1_eq''' [Condition_C1 admm admm_kkt]  : ∀ n : ℕ,(1/3) * (1 + τ - τ^
    linarith
 
 
-lemma h1_nonneg [Condition_C1 admm admm_kkt]  : ∀ n : ℕ, h1 (n+1) ≥ 0:= by
+lemma h1_nonneg [Condition_C1 admm]  : ∀ n : ℕ, H1 (n+1) ≥ 0:= by
    intro n
-   have := h1_eq'' n
+   have := (h1_eq'' (admm := admm) (admm_kkt := admm_kkt)) n
    have : n+1>0 := by linarith
-   have := h1_eq''' n
+   have := (h1_eq''' (admm := admm)) n
    linarith
 
-lemma  h1_summable [Condition_C1 admm admm_kkt]  :  Summable (fun n : ℕ => h1 (n+1)) := by
-   rcases h1_summable_1 with ⟨C, hC_pos, hC⟩
+lemma  h1_summable [Condition_C1 admm]  :  Summable (fun n : ℕ => H1 (n+1)) := by
+   rcases (h1_summable_1 (admm := admm) (admm_kkt := admm_kkt)) with ⟨C, hC_pos, hC⟩
    apply summable_of_sum_range_le (c:=C)
    intro n
-   have :=h1_nonneg n
+   have :=(h1_nonneg (admm := admm) (admm_kkt := admm_kkt)) n
    linarith
    intro n
    have := hC n
    linarith
 
-lemma HWY_ineq_54 [Condition_C1 admm admm_kkt]:∀ (n : ℕ), ∑ i ∈ Finset.range n, (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
+lemma HWY_ineq_54 [Condition_C1 admm]:∀ (n : ℕ), ∑ i ∈ Finset.range n, (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
    (‖A₁ (x₁ (i+1+1)) + A₂ (x₂ (i+1+1)) - b‖^2 + ‖A₂ (x₂ (i+1) - x₂ (i+1+1))‖^2) ≤
-   ∑ i ∈ Finset.range n, h1 (i+1) := by
+   ∑ i ∈ Finset.range n, H1 (i+1) := by
    intro n
    gcongr with i _
    have : i+1 > 0 := by linarith
-   have h1 := HWY_ineq_54_1 (i+1).toPNat'
+   have h1 := (HWY_ineq_54_1 (admm := admm) (admm_kkt := admm_kkt)) (i+1).toPNat'
    exact h1
 
-lemma Summable_1' [Condition_C1 admm admm_kkt]:∀ (i : ℕ),  (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
+lemma Summable_1' [Condition_C1 admm]:∀ (i : ℕ),  (1/3) * (1 + τ - τ^2) * τ * ρₙ (i+1+1)^2 *
    (‖A₁ (x₁ (i+1+1)) + A₂ (x₂ (i+1+1)) - b‖^2 + ‖A₂ (x₂ (i+1) - x₂ (i+1+1))‖^2) ≤
-   h1 (i+1) := by
+   H1 (i+1) := by
    intro i
    have : i+1 > 0 := by linarith
-   have h1 := HWY_ineq_54_1 (i+1).toPNat'
+   have h1 := (HWY_ineq_54_1 (admm := admm) (admm_kkt := admm_kkt)) (i+1).toPNat'
    exact h1
 
-lemma Summable_1 [Condition_C1 admm admm_kkt] :
+include admm_kkt in
+lemma Summable_1 [Condition_C1 admm] :
    Summable (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
    (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) := by
    let f := fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 *
@@ -609,22 +625,24 @@ lemma Summable_1 [Condition_C1 admm admm_kkt] :
    unfold fsucc
    unfold f
    intro n
-   have := h1_eq''' n
+   have := (h1_eq''' (admm := admm)) n
    linarith
-   exact Summable_1'
-   exact h1_summable
+   exact (Summable_1' (admm := admm) (admm_kkt := admm_kkt))
+   exact (h1_summable (admm := admm) (admm_kkt := admm_kkt))
 
-lemma converge_zero_1 [Condition_C1 admm admm_kkt] : Tendsto (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) atTop (nhds 0) := by
-  apply Summable.tendsto_atTop_zero Summable_1
+include admm_kkt in
+lemma converge_zero_1 [Condition_C1 admm] : Tendsto (fun n => (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2)) atTop (nhds 0) := by
+  apply Summable.tendsto_atTop_zero (Summable_1 (admm := admm) (admm_kkt := admm_kkt))
 
--- 主要收敛定理：残差项趋于零
-theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] :
+-- Main convergence theorem: the residual term tends to zero.
+include admm_kkt in
+theorem HWY_Convergence_1 [Condition_C1 admm] :
     Tendsto (fun n => ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ n)‖^2) atTop (nhds 0) := by
    obtain ⟨ BL, hBL_pos, hBL⟩ := admm.rho_lower_bound
-  -- 关于τ的条件
+  -- Conditions on τ.
    have htau_pos : 0 < τ := admm.htau.1
    have htau_range := admm.htau_range
-   -- 构造常数下界
+   -- Construct a constant lower bound.
    have hconst : 0 < (1/3) * (1 + τ - τ^2) * τ * BL^2 := by
       apply mul_pos
       apply mul_pos
@@ -633,19 +651,19 @@ theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] :
       · exact admm.htau_range
       · exact admm.htau.1
       · apply sq_pos_of_pos; exact hBL_pos
-   -- 关键：利用范数的对称性
-   have norm_symm : ∀ n, ‖A₂ (x₂ (n) - x₂ (n+1))‖ = ‖A₂ (x₂ (n+1) - x₂ n)‖ := by
+   -- Use symmetry of the norm.
+   have h_norm_symm : ∀ n, ‖A₂ (x₂ (n) - x₂ (n+1))‖ = ‖A₂ (x₂ (n+1) - x₂ n)‖ := by
       intro n
       rw [← norm_neg]
       congr 1
       simp [sub_eq_add_neg, add_comm]
-   -- 从converge_zero得到的结论
-   have h_conv := converge_zero_1
-   -- 利用夹逼定理
+   -- Apply the conclusion from converge_zero.
+   have h_conv := (converge_zero_1 (admm := admm) (admm_kkt := admm_kkt))
+   -- Apply the squeeze theorem.
    have h_squeeze : ∀ n, (1/3) * (1 + τ - τ^2) * τ * BL^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ n)‖^2)
                         ≤ (1/3) * (1 + τ - τ^2) * τ * ρₙ (n+1)^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n) - x₂ (n+1))‖^2) := by
       intro n
-      rw [norm_symm n]
+      rw [h_norm_symm n]
       gcongr
       apply hBL (n+1)
    have h_pos : ∀ n, (1/3) * (1 + τ - τ^2) * τ * BL^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ n)‖^2)≥ 0:= by
@@ -655,23 +673,24 @@ theorem HWY_Convergence_1 [Condition_C1 admm admm_kkt] :
       apply add_nonneg
       apply sq_nonneg
       apply sq_nonneg
-   -- 应用夹逼定理得到结论
+   -- Conclude with the squeeze theorem.
    have h_lower : Tendsto (fun n => (1/3) * (1 + τ - τ^2) * τ * BL^2 * (‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 + ‖A₂ (x₂ (n+1) - x₂ n)‖^2)) atTop (nhds 0) := by
       apply tendsto_of_tendsto_of_tendsto_of_le_of_le
       exact tendsto_const_nhds
       exact h_conv
       exact h_pos
       exact h_squeeze
-   -- 除以正常数不改变极限为零
+   -- Division by a positive constant preserves convergence to zero.
    rw [show (0 : ℝ) =  ((1/3) * (1 + τ - τ^2) * τ * BL^2 * 0) by simp] at h_lower
    have := Tendsto.const_mul ((1/3) * (1 + τ - τ^2) * τ * BL^2)⁻¹ h_lower
    field_simp at this
    exact this
 
--- 第一项：残差项趋于零
-theorem HWY_Convergence_1_residual' [Condition_C1 admm admm_kkt][Setting E₁ E₂ F admm admm_kkt]:
+-- First term: the residual tends to zero.
+include admm_kkt in
+theorem HWY_Convergence_1_residual' [Condition_C1 admm]:
     Tendsto (fun n => ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2) atTop (nhds 0) := by
-  have h_sum := HWY_Convergence_1
+  have h_sum := (HWY_Convergence_1 (admm := admm) (admm_kkt := admm_kkt))
   have h_nonneg : ∀ n, 0 ≤ ‖A₁ (x₁ (n+1)) + A₂ (x₂ (n+1)) - b‖^2 := by
     intro n
     apply sq_nonneg
@@ -686,9 +705,10 @@ theorem HWY_Convergence_1_residual' [Condition_C1 admm admm_kkt][Setting E₁ E�
   · exact h_nonneg
   · exact h_bound
 
-theorem HWY_Convergence_1_increment [Condition_C1 admm admm_kkt] :
+include admm_kkt in
+theorem HWY_Convergence_1_increment [Condition_C1 admm] :
     Tendsto (fun n => ‖A₂ (x₂ (n+1) - x₂ n)‖^2) atTop (nhds 0) := by
-   have h_sum := HWY_Convergence_1
+   have h_sum := (HWY_Convergence_1 (admm := admm) (admm_kkt := admm_kkt))
    have h_nonneg : ∀ n, 0 ≤ ‖A₂ (x₂ (n+1) - x₂ n)‖^2 := by
          intro n
          apply sq_nonneg

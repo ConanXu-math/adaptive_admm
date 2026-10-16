@@ -7,7 +7,7 @@ noncomputable section
 
 open Real Topology Filter BigOperators
 
--- 【L1】P-级数模板：c / (n+1)^p，可和需 p > 1
+-- L1: p-series c / (n+1)^p, summable for p > 1.
 lemma p_series_summable_template (c p : ℝ) (hp : 1 < p) :
     Summable (fun (n : ℕ) => c / Real.rpow ((n : ℝ) + 1) p) := by
   have h0 : Summable (fun n : ℕ => 1 / (n : ℝ) ^ p) :=
@@ -18,12 +18,12 @@ lemma p_series_summable_template (c p : ℝ) (hp : 1 < p) :
   simpa [one_div, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
     (h1.mul_left c)
 
--- 【L2】几何级数模板：c * r^n, 需 0 ≤ r < 1
+-- L2: geometric series c * r^n, with 0 ≤ r < 1.
 lemma geometric_summable_template (c r : ℝ) (h_nonneg : 0 ≤ r) (h_lt_one : r < 1) :
     Summable (fun (n : ℕ) => c * r ^ n) := by
   exact (summable_geometric_of_lt_one h_nonneg h_lt_one).mul_left c
 
--- 【通用工具】若 f 最终等于 g 且 g 可和，则 f 可和
+-- If f eventually equals a summable g, then f is summable.
 lemma summable_of_eventually_eq_template {f g : ℕ → ℝ} (N : ℕ)
     (h_g_sum : Summable g)
     (h_eq : ∀ n, N ≤ n → f n = g n) : Summable f := by

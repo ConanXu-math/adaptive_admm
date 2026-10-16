@@ -10,7 +10,7 @@ variable (E₁ E₂ F : Type*)
 [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
 [NormedAddCommGroup F ] [InnerProductSpace ℝ F ] [FiniteDimensional ℝ F]
 
--- 基本问题形式
+-- Problem formulation.
 class OptProblem [FiniteDimensional ℝ E₁] [FiniteDimensional ℝ E₂] [FiniteDimensional ℝ F] where
   f₁ : E₁ → ℝ
   f₂ : E₂ → ℝ
@@ -21,8 +21,6 @@ class OptProblem [FiniteDimensional ℝ E₁] [FiniteDimensional ℝ E₂] [Fini
   lscf₂ : LowerSemicontinuous f₂
   cf₁ : ConvexOn ℝ univ f₁
   cf₂ : ConvexOn ℝ univ f₂
-  nonempty : ∃ x₁ x₂, (A₁ x₁) + (A₂ x₂) - b = 0 ∧
-              IsMinOn (fun (x₁,x₂) ↦ f₁ x₁ + f₂ x₂) univ (x₁,x₂)
 
 -- Augmented Lagrangian Function
 def Augmented_Lagrangian_Function (opt : OptProblem E₁ E₂ F) (ρ : ℝ) :
@@ -36,9 +34,9 @@ class ADMM extends (OptProblem E₁ E₂ F) where
   x₁ : ℕ → E₁
   x₂ : ℕ → E₂
   y  : ℕ → F
-  ρₙ : ℕ → ℝ                      -- 变罚参数序列
+  ρₙ : ℕ → ℝ                      -- Variable penalty sequence.
   τ  : ℝ
-  hρₙ_pos : ∀ k, ρₙ k > 0         -- 每步的 ρₖ > 0
+  hρₙ_pos : ∀ k, ρₙ k > 0         -- Positive rho at every step.
   rho_lower_bound: ∃ BL > 0, ∀ n, ρₙ n ≥ BL
   rho_upper_bound: ∃ BU > 0, ∀ n, ρₙ n ≤ BU
   htau : 0 < τ ∧ τ < (1 + √5)/2
@@ -58,7 +56,7 @@ class ADMM extends (OptProblem E₁ E₂ F) where
         (x₁ (k+1) , x₂ , y k))
       univ (x₂ (k+1))
 
-  -- 对偶变量更新（HWY）
+  -- Dual update (HWY).
   itey :
     ∀ k, y (k+1) = y k + (τ * ρₙ (k+1)) • ((A₁ $ x₁ (k+1)) + (A₂ $ x₂ (k+1)) - b)
 
@@ -69,3 +67,11 @@ class Convex_KKT (x₁ : E₁ )(x₂ : E₂)(y : F) (opt : OptProblem E₁ E₂ 
    subgrad₁ : -(ContinuousLinearMap.adjoint opt.A₁) y ∈ SubderivAt opt.f₁ x₁
    subgrad₂ : -(ContinuousLinearMap.adjoint opt.A₂) y ∈ SubderivAt opt.f₂ x₂
    eq       :  (opt.A₁ x₁) + (opt.A₂ x₂) = opt.b
+
+variable {E₁ E₂ F} in
+/-- A primal-dual KKT point for the problem underlying an ADMM trajectory. -/
+structure KKTPoint (admm : ADMM E₁ E₂ F) where
+  x₁ : E₁
+  x₂ : E₂
+  y : F
+  h : Convex_KKT x₁ x₂ y admm.toOptProblem
