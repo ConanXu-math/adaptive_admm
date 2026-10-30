@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           if grep -R -n -E '(^|[^[:alnum:]_])(sorry|admit|axiom)([^[:alnum:]_]|$)' \
-            Optlib/Algorithm/AdaptiveADMM examples --include='*.lean'; then
+            Optlib/Algorithm/AdaptiveADMM AdGD examples --include='*.lean'; then
             echo "Proof placeholders are not allowed in the active formalization or examples."
             exit 1
           fi

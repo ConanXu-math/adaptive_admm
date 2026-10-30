@@ -4,6 +4,8 @@
 
 本项目使用 Lean 4 证明变罚参数两块 ADMM 的收敛性，包含 C1、C2 两条证明路线，以及供具体罚参数策略复用的证明接口。
 
+仓库同时提供 [AdGD 的 Lean 形式化](docs/adgd.md)，包括 Malitsky–Mishchenko Algorithm 1 的步长规则、Lemma 1，以及 Theorem 1 的有界性、带权平均速率和整列收敛。证明入口为 `import AdGD`。
+
 ## 数学结论
 
 在有限维实内积空间中，考虑
@@ -122,7 +124,7 @@ lake exe cache get
 lake build
 ```
 
-默认构建包含 Adaptive ADMM 的统一入口、全部相关证明模块及其数学依赖。证明文件导入：
+默认构建包含 Adaptive ADMM 和 AdGD 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
@@ -173,6 +175,8 @@ Strategy3.converges_from_policy
 | [`Optlib/Algorithm/AdaptiveADMM/Strategies/`](Optlib/Algorithm/AdaptiveADMM/Strategies/) | 策略、可求和幅度模板与裁剪 |
 | `Optlib/Convex`、`Differential`、`Function`、`Optimality` | 基础数学结果 |
 | [`examples/`](examples/) | 三个策略的 Lean 证明模板 |
+| [`AdGD.lean`](AdGD.lean)、[`AdGD/Definitions.lean`](AdGD/Definitions.lean) | AdGD 定义、能量估计、速率和整列收敛 |
+| [`docs/adgd.md`](docs/adgd.md) | AdGD 数学条件、已证定理与验证方法 |
 
 ## 许可证
 
