@@ -32,5 +32,10 @@ lean_lib AdGD where
   srcDir := "."
   roots := #[`AdGD]
 
+@[default_target]
+lean_lib ISTABt where
+  srcDir := "."
+  roots := #[`ISTABt]
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "v4.24.0-rc1"

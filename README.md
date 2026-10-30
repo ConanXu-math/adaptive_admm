@@ -6,6 +6,8 @@
 
 仓库同时提供 [AdGD 的 Lean 形式化](docs/adgd.md)，包括 Malitsky–Mishchenko Algorithm 1 的步长规则、Lemma 1，以及 Theorem 1 的有界性、带权平均速率和整列收敛。证明入口为 `import AdGD`。
 
+仓库还提供 [ISTA with backtracking 的 Lean 形式化](docs/istabt.md)，包括近端点存在唯一性、回溯终止性、最小接受索引、递归迭代序列与函数值的 $O(1/k)$ 速率。证明入口为 `import ISTABt`，最终定理 `istabt_rate` 直接接收原始问题数据与假设。
+
 ## 数学结论
 
 在有限维实内积空间中，考虑
@@ -124,7 +126,7 @@ lake exe cache get
 lake build
 ```
 
-默认构建包含 Adaptive ADMM 和 AdGD 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
+默认构建包含 Adaptive ADMM、AdGD 和 ISTABt 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
@@ -177,6 +179,8 @@ Strategy3.converges_from_policy
 | [`examples/`](examples/) | 三个策略的 Lean 证明模板 |
 | [`AdGD.lean`](AdGD.lean)、[`AdGD/Definitions.lean`](AdGD/Definitions.lean) | AdGD 定义、能量估计、速率和整列收敛 |
 | [`docs/adgd.md`](docs/adgd.md) | AdGD 数学条件、已证定理与验证方法 |
+| [`ISTABt.lean`](ISTABt.lean)、[`ISTABt/Definitions.lean`](ISTABt/Definitions.lean) | ISTA with backtracking 的定义、序列构造与速率 |
+| [`ISTABt/AxiomCheck.lean`](ISTABt/AxiomCheck.lean)、[`docs/istabt.md`](docs/istabt.md) | 公理检查与数学说明 |
 
 ## 许可证
 

@@ -1,0 +1,31 @@
+import ISTABt.Definitions
+
+#print axioms proxLExists
+#print axioms proxL_min
+#print axioms proxL_unique
+#print axioms proxL_subgrad
+#print axioms descent_lemma
+#print axioms acceptance_when_large
+#print axioms key_inequality
+#print axioms key_inequality_min
+#print axioms Lbar_pos
+#print axioms alg_Lk_pos
+#print axioms alg_Lk_le_bound
+#print axioms alg_Fx_monotone
+#print axioms alg_rate
+#print axioms acceptAt_exists
+#print axioms btIndex_accept
+#print axioms btIndex_minimal
+#print axioms LkSeq_pos
+#print axioms xSeq_init
+#print axioms LkSeq_init
+#print axioms ikSeq_init
+#print axioms ikSeq_succ
+#print axioms LkSeq_succ
+#print axioms xSeq_succ
+#print axioms seq_acceptance
+#print axioms seq_ik_minimal
+#print axioms seq_Lk_update
+#print axioms seq_x_update
+#print axioms mkISTABt
+#print axioms istabt_rate

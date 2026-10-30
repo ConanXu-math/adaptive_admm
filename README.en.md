@@ -4,6 +4,8 @@
 
 This Lean 4 library proves convergence of two-block ADMM with a variable penalty. It provides the C1 and C2 proof routes and reusable interfaces for concrete penalty policies.
 
+The repository also contains [AdGD](docs/adgd.md), covering its adaptive stepsize rule, energy estimate, rate, and full-sequence convergence, and [ISTA with backtracking](docs/istabt.md), covering proximal-point existence and uniqueness, finite backtracking, minimal accepted indices, recursive iterates, and an $O(1/k)$ objective-value bound. Their public imports are `AdGD` and `ISTABt`. The final theorem `istabt_rate` takes the original problem data and assumptions directly.
+
 ## Mathematical results
 
 In finite-dimensional real inner-product spaces, consider
@@ -122,7 +124,7 @@ lake exe cache get
 lake build
 ```
 
-The default build includes the public Adaptive ADMM entry point, all related proof modules, and their mathematical dependencies. In a proof file, import:
+The default build includes the Adaptive ADMM, AdGD, and ISTABt entry points and their mathematical dependencies. In an Adaptive ADMM proof file, import:
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
@@ -173,6 +175,9 @@ Existing imports of individual modules remain available. `Optlib.lean` belongs t
 | [`Optlib/Algorithm/AdaptiveADMM/Strategies/`](Optlib/Algorithm/AdaptiveADMM/Strategies/) | Policies, summable modulation templates, and clipping |
 | `Optlib/Convex`, `Differential`, `Function`, `Optimality` | Supporting mathematics |
 | [`examples/`](examples/) | Lean proof templates for three policies |
+| [`AdGD.lean`](AdGD.lean), [`AdGD/Definitions.lean`](AdGD/Definitions.lean), [`docs/adgd.md`](docs/adgd.md) | AdGD formalization and mathematical documentation |
+| [`ISTABt.lean`](ISTABt.lean), [`ISTABt/Definitions.lean`](ISTABt/Definitions.lean) | ISTA with backtracking, recursive construction, and rate |
+| [`ISTABt/AxiomCheck.lean`](ISTABt/AxiomCheck.lean), [`docs/istabt.md`](docs/istabt.md) | Axiom checks and mathematical documentation |
 
 ## License
 
