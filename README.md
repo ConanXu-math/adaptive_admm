@@ -1,12 +1,27 @@
 # Adaptive ADMM 的 Lean 形式化
 
-[English](README.en.md) · [数学结论](#数学结论) · [证明框架](#形式化证明框架) · [使用方法](#使用方法) · [源码导览](#源码导览)
+[English](README.en.md) · [仓库来源](#仓库来源与依赖) · [数学结论](#数学结论) · [证明框架](#形式化证明框架) · [使用方法](#使用方法) · [源码导览](#源码导览)
 
 本项目使用 Lean 4 证明变罚参数两块 ADMM 的收敛性，包含 C1、C2 两条证明路线，以及供具体罚参数策略复用的证明接口。
 
 仓库同时提供 [AdGD 的 Lean 形式化](docs/adgd.md)，包括 Malitsky–Mishchenko Algorithm 1 的步长规则、Lemma 1，以及 Theorem 1 的有界性、带权平均速率和整列收敛。证明入口为 `import AdGD`。
 
 仓库还提供 [ISTA with backtracking 的 Lean 形式化](docs/istabt.md)，包括近端点存在唯一性、回溯终止性、最小接受索引、递归迭代序列与函数值的 $O(1/k)$ 速率。证明入口为 `import ISTABt`，最终定理 `istabt_rate` 直接接收原始问题数据与假设。
+
+## 仓库来源与依赖
+
+本项目使用以下开源仓库：
+
+| 仓库 | 在本项目中的用途 |
+| --- | --- |
+| [optsuite/optlib](https://github.com/optsuite/optlib) | 优化数学基础源码的来源，包括凸分析、次梯度、光滑函数和近端算子。ISTABt 还参考其固定步长近端梯度证明 [`ProximalGradient.lean`](Optlib/Algorithm/ProximalGradient.lean)。 |
+| [leanprover-community/mathlib4](https://github.com/leanprover-community/mathlib4) | 提供实分析、内积空间、凸性、拓扑及证明策略等通用数学基础；通过 Lake 引入，固定为 `v4.24.0-rc1`。 |
+| [leanprover/lean4](https://github.com/leanprover/lean4) | 提供 Lean 语言、证明内核和 Lake 构建工具；工具链固定为 `v4.24.0-rc1`。 |
+| [anomalyco/opencode](https://github.com/anomalyco/opencode) | ISTABt 形式化任务使用的 coding agent，用于编写证明、修改文件和调用 Lean 检查。 |
+
+Optlib 源码保存在本仓库的 [`Optlib/`](Optlib/) 中，并保留上游作者说明及 Apache 2.0 许可证。本项目在这些数学基础上提供 Adaptive ADMM、AdGD 和 ISTABt 的证明。
+
+OpenCode 属于开发工具，证明由 Lean 检查。mathlib 及其间接依赖的仓库地址和固定提交见 [`lake-manifest.json`](lake-manifest.json)；直接依赖配置见 [`lakefile.lean`](lakefile.lean)，Lean 版本见 [`lean-toolchain`](lean-toolchain)。
 
 ## 数学结论
 

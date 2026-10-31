@@ -1,10 +1,25 @@
 # Adaptive ADMM in Lean
 
-[简体中文](README.md) · [Results](#mathematical-results) · [Proof framework](#formal-proof-framework) · [Usage](#usage) · [Source guide](#source-guide)
+[简体中文](README.md) · [Upstream repositories](#upstream-repositories-and-dependencies) · [Results](#mathematical-results) · [Proof framework](#formal-proof-framework) · [Usage](#usage) · [Source guide](#source-guide)
 
 This Lean 4 library proves convergence of two-block ADMM with a variable penalty. It provides the C1 and C2 proof routes and reusable interfaces for concrete penalty policies.
 
 The repository also contains [AdGD](docs/adgd.md), covering its adaptive stepsize rule, energy estimate, rate, and full-sequence convergence, and [ISTA with backtracking](docs/istabt.md), covering proximal-point existence and uniqueness, finite backtracking, minimal accepted indices, recursive iterates, and an $O(1/k)$ objective-value bound. Their public imports are `AdGD` and `ISTABt`. The final theorem `istabt_rate` takes the original problem data and assumptions directly.
+
+## Upstream repositories and dependencies
+
+This project uses the following open-source repositories:
+
+| Repository | Role in this project |
+| --- | --- |
+| [optsuite/optlib](https://github.com/optsuite/optlib) | Source of the supporting optimization library, including convex analysis, subgradients, smooth functions, and proximal operators. ISTABt also draws on its fixed-step proximal-gradient proof in [`ProximalGradient.lean`](Optlib/Algorithm/ProximalGradient.lean). |
+| [leanprover-community/mathlib4](https://github.com/leanprover-community/mathlib4) | General mathematical foundations and tactics, including real analysis, inner-product spaces, convexity, and topology. Required through Lake and pinned to `v4.24.0-rc1`. |
+| [leanprover/lean4](https://github.com/leanprover/lean4) | Lean language, proof kernel, and Lake build system. The toolchain is pinned to `v4.24.0-rc1`. |
+| [anomalyco/opencode](https://github.com/anomalyco/opencode) | Coding agent used for the ISTABt formalization to write proofs, edit files, and invoke Lean checks. |
+
+Optlib sources are included under [`Optlib/`](Optlib/), retaining upstream author notices and the Apache 2.0 license. This project builds on those mathematical foundations to provide the Adaptive ADMM, AdGD, and ISTABt proofs.
+
+OpenCode is a development tool; Lean checks the proofs. Repository URLs and pinned commits for mathlib and its transitive dependencies are recorded in [`lake-manifest.json`](lake-manifest.json). Direct dependencies are configured in [`lakefile.lean`](lakefile.lean), and the Lean version is specified in [`lean-toolchain`](lean-toolchain).
 
 ## Mathematical results
 
