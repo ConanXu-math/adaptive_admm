@@ -1,0 +1,369 @@
+⚠ [7226/7267] Replayed AdGD.Definitions
+warning: AdGD/Definitions.lean:117:39: unused variable `hmin`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: AdGD/Definitions.lean:594:12: This simp argument is unused:
+  hk0
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵h̵k̵0̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:639:12: This simp argument is unused:
+  hk0
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵h̵k̵0̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:706:37: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k), if_p̵o̵s̵ ̵r̵f̵l̵,̵ ̵i̵f̵_̵true, ↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:706:49: This simp argument is unused:
+  if_true
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k), if_pos rfl, i̵f̵_̵t̵r̵u̵e̵,̵ ̵↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:717:35: This simp argument is unused:
+  ↓reduceIte
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k),̵ ̵↓̵r̵e̵d̵u̵c̵e̵I̵t̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:738:28: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp [Finset.range,̵ ̵i̵f̵_̵p̵o̵s̵ ̵r̵f̵l̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:741:31: This simp argument is unused:
+  ↓reduceIte
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg hj0,̵ ̵↓̵r̵e̵d̵u̵c̵e̵I̵t̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:758:22: This simp argument is unused:
+  if_neg hi0
+
+Hint: Omit it from the simp argument list.
+  simp only [hi0, if_n̵e̵g̵ ̵h̵i̵0̵,̵ ̵i̵f̵_̵pos hik, if_true, ↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:758:46: This simp argument is unused:
+  if_true
+
+Hint: Omit it from the simp argument list.
+  simp only [hi0, if_neg hi0, if_pos hik, i̵f̵_̵t̵r̵u̵e̵,̵ ̵↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:765:22: This simp argument is unused:
+  if_neg hi0
+
+Hint: Omit it from the simp argument list.
+  simp only [hi0, if_neg hi0̵,̵ ̵i̵f̵_̵n̵e̵g̵ ̵h̵i̵k, if_false, ↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:765:46: This simp argument is unused:
+  if_false
+
+Hint: Omit it from the simp argument list.
+  simp only [hi0, if_neg hi0, if_neg hik, i̵f̵_̵f̵a̵l̵s̵e̵,̵ ̵↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:811:39: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k), if_p̵o̵s̵ ̵r̵f̵l̵,̵ ̵i̵f̵_̵true, ↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:811:51: This simp argument is unused:
+  if_true
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k), if_pos rfl, i̵f̵_̵t̵r̵u̵e̵,̵ ̵↓reduceIte]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:814:37: This simp argument is unused:
+  ↓reduceIte
+
+Hint: Omit it from the simp argument list.
+  simp only [if_neg (Ne.symm h0k),̵ ̵↓̵r̵e̵d̵u̵c̵e̵I̵t̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: AdGD/Definitions.lean:1010:13: unused variable `hL`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: AdGD/Definitions.lean:1467:10: This simp argument is unused:
+  hNp1_ne0
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵h̵N̵p̵1̵_̵n̵e̵0̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [7229/7267] Replayed ISTABt.Definitions
+warning: ISTABt/Definitions.lean:90:0: automatically included section variable(s) unused in theorem `proxL_unique`:
+  [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace E] [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ISTABt/Definitions.lean:91:5: unused variable `hg_cont`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: ISTABt/Definitions.lean:150:0: automatically included section variable(s) unused in theorem `descent_lemma`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: ISTABt/Definitions.lean:159:28: This simp argument is unused:
+  Nat.cast_two
+
+Hint: Omit it from the simp argument list.
+  simp only [NNReal.coe_mk,̵ ̵N̵a̵t̵.̵c̵a̵s̵t̵_̵t̵w̵o̵] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: ISTABt/Definitions.lean:255:5: unused variable `hmin`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [7232/7267] Replayed PDAL.CodexEnergyHelp
+warning: PDAL/CodexEnergyHelp.lean:36:53: This simp argument is unused:
+  ContinuousLinearMap.adjoint_inner_right
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, C̵o̵n̵t̵i̵n̵u̵o̵u̵s̵L̵i̵n̵e̵a̵r̵M̵a̵p̵.̵a̵d̵j̵o̵i̵n̵t̵_̵i̵n̵n̵e̵r̵_̵r̵i̵g̵h̵t̵,̵map_add, map_sub, map_smul, inner_add_left,
+      inner_add_right, inner_sub_left, inner_sub_right, real_inner_smul_left, real_inner_smul_right,
+  ̲  ̲ ̲ ̲real_inner_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: PDAL/CodexEnergyHelp.lean:39:4: This simp argument is unused:
+  real_inner_smul_left
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_right,
+      map_add, map_sub, map_smul,
+  ̵  ̵ ̵ ̵inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      real_inner_smul_l̵e̵f̵t̵,̵ ̵re̵a̵l̵_̵in̵n̵e̵r̵_̵s̵m̵u̵l̵_̵r̵i̵ght, real_inner_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: PDAL/CodexEnergyHelp.lean:42:0: 'PDALCodexHelp.energyCombinationIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: PDAL/CodexEnergyHelp.lean:66:4: This simp argument is unused:
+  real_inner_smul_left
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_right,
+      map_add, map_sub, map_smul,
+  ̵  ̵ ̵ ̵inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      real_inner_smul_l̵e̵f̵t̵,̵ ̵re̵a̵l̵_̵in̵n̵e̵r̵_̵s̵m̵u̵l̵_̵r̵i̵ght, real_inner_comm] at h11s h12 h13s h14s ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: PDAL/CodexEnergyHelp.lean:69:0: 'PDALCodexHelp.scaledEnergyFromOptimality' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [7233/7267] Replayed PDAL.CodexBoundHelp
+info: PDAL/CodexBoundHelp.lean:16:0: 'PDALCodexHelp.sqrtBoundOfDivLe' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/CodexBoundHelp.lean:45:0: 'PDALCodexHelp.boundedPairsOfSquareBounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [7235/7267] Replayed PDAL.AffineSeparationHelp
+info: PDAL/AffineSeparationHelp.lean:246:0: 'isClosed_epigraph_of_lsc' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AffineSeparationHelp.lean:247:0: 'affine_minorant_of_lsc_convex' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [7236/7267] Replayed PDAL.Definitions
+warning: PDAL/Definitions.lean:110:0: automatically included section variable(s) unused in theorem `ProperConvex.affine_minorant_exists`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:121:8: automatically included section variable(s) unused in theorem `_private.PDAL.Definitions.0.sublevel_closed_of_lsc_add_continuous`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:175:8: automatically included section variable(s) unused in theorem `_private.PDAL.Definitions.0.exists_minOn_of_lsc_compact`:
+  [InnerProductSpace ℝ E]
+  [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+  [ProperSpace E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] [ProperSpace E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:400:0: automatically included section variable(s) unused in theorem `prox_scale_unique`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:469:0: automatically included section variable(s) unused in theorem `prox_scale_optimality`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:599:0: automatically included section variable(s) unused in theorem `SaddlePoint.is_saddle`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:604:0: automatically included section variable(s) unused in theorem `primal_gap_nonneg`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:611:0: automatically included section variable(s) unused in theorem `dual_gap_nonneg`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:632:0: automatically included section variable(s) unused in theorem `accept_cond_of_small_tau`:
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+  [FiniteDimensional ℝ Y]
+  [ProperSpace Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [ProperSpace X] [FiniteDimensional ℝ Y] [ProperSpace Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:633:24: unused variable `hdelta`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:662:21: unused variable `g`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:665:5: unused variable `h_tau_km1`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:729:32: unused variable `g`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:732:5: unused variable `h_tau_km1`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:733:25: unused variable `h_delta`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:1084:0: automatically included section variable(s) unused in theorem `tau_pos`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1098:38: unused variable `hθ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:1179:0: automatically included section variable(s) unused in theorem `x_mem_dom`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1184:0: automatically included section variable(s) unused in theorem `cosine_rule`:
+  [CompleteSpace X]
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace X] [FiniteDimensional ℝ X] [ProperSpace X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1462:18: This simp argument is unused:
+  add_sub_cancel
+
+Hint: Omit it from the simp argument list.
+  simp [xbar,̵ ̵a̵d̵d̵_̵s̵u̵b̵_̵c̵a̵n̵c̵e̵l̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: PDAL/Definitions.lean:2371:8: 'congr 1' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: PDAL/Definitions.lean:3019:0: automatically included section variable(s) unused in theorem `primal_gap_convex`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+  [ProperSpace Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] [ProperSpace Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3035:0: automatically included section variable(s) unused in theorem `dual_gap_convex`:
+  [CompleteSpace X]
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace X] [FiniteDimensional ℝ X] [ProperSpace X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3109:55: unused variable `hN`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:3123:0: automatically included section variable(s) unused in theorem `pdal_weight_sum`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3125:14: unused variable `h`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:3210:0: automatically included section variable(s) unused in theorem `pdal_weight_vec`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3260:0: automatically included section variable(s) unused in theorem `pdal_weight_values`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3633:10: This simp argument is unused:
+  Nat.cast_mul
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵N̵a̵t̵.̵c̵a̵s̵t̵_̵m̵u̵l̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [7239/7267] Built Optlib.Algorithm.AdaptiveADMM.SequenceConvergence (4.7s)
+✔ [7240/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.VerificationLib (4.8s)
+✔ [7241/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.StrategyPolicy (4.8s)
+✔ [7242/7267] Built Optlib.Algorithm.AdaptiveADMM.Compatibility (5.5s)
+✔ [7243/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.AdaptiveStrategyBase (1.5s)
+✔ [7244/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.TauTemplates (1.9s)
+✔ [7245/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.ClippedPolicy (2.1s)
+✔ [7246/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveInv_bounded (7.5s)
+✔ [7247/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveProductBounds (7.6s)
+✔ [7248/7267] Built Optlib.Convex.ImageSubgradientClosed (33s)
+✔ [7249/7267] Built Optlib.Function.L1Space (37s)
+✔ [7250/7267] Built Optlib.Convex.FiniteDimensionalConvexFunctionsLocallyLipschitz (37s)
+✔ [7251/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveDefinitions (8.5s)
+✔ [7252/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveOptimality (16s)
+✔ [7253/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveEnergyIdentities (92s)
+✔ [7254/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveEnergyDescent (16s)
+✔ [7255/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveLemmas (3.8s)
+✔ [7256/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveCondition2 (11s)
+✔ [7257/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveCondition1 (12s)
+✔ [7258/7267] Built Optlib.Algorithm.AdaptiveADMM.BoundednessC2 (12s)
+✔ [7259/7267] Built Optlib.Algorithm.AdaptiveADMM.BoundednessC1 (10s)
+✔ [7260/7267] Built Optlib.Algorithm.AdaptiveADMM.ClusterPointC1 (11s)
+✔ [7261/7267] Built Optlib.Algorithm.AdaptiveADMM.ClusterPointC2 (11s)
+✔ [7262/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c1 (10s)
+✔ [7263/7267] Built Optlib.Algorithm.AdaptiveADMM.AdaptiveTheorem_converge_c2 (10s)
+✔ [7264/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies.Adaptive_Strategy_Convergence (3.5s)
+✔ [7265/7267] Built Optlib.Algorithm.AdaptiveADMM.Strategies (2.1s)
+✔ [7266/7267] Built Optlib.Algorithm.AdaptiveADMM (2.1s)
+Build completed successfully (7267 jobs).

@@ -32,6 +32,9 @@ jobs:
       - name: Build ISTA with backtracking and check axioms
         run: lake build ISTABt ISTABt.AxiomCheck
 
+      - name: 构建 PDAL 并检查公理依赖
+        run: lake build PDAL PDAL.AxiomCheck PDAL.PrintAxioms
+
       - name: Check the public facade with strict implicit settings
         run: >-
           lake env lean -DautoImplicit=false -DrelaxedAutoImplicit=false
@@ -47,7 +50,7 @@ jobs:
         shell: bash
         run: |
           if grep -R -n -E '(^|[^[:alnum:]_])(sorry|admit|axiom)([^[:alnum:]_]|$)' \
-            Optlib/Algorithm/AdaptiveADMM AdGD ISTABt examples --include='*.lean'; then
+            Optlib/Algorithm/AdaptiveADMM AdGD ISTABt PDAL examples --include='*.lean'; then
             echo "Proof placeholders are not allowed in the active formalization or examples."
             exit 1
           fi

@@ -1,0 +1,734 @@
+✔ [7225/7233] Built PDAL.CodexClusterHelp (19s)
+ℹ [7226/7233] Built PDAL.CodexBoundHelp (19s)
+info: PDAL/CodexBoundHelp.lean:16:0: 'PDALCodexHelp.sqrtBoundOfDivLe' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/CodexBoundHelp.lean:45:0: 'PDALCodexHelp.boundedPairsOfSquareBounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [7227/7233] Built PDAL.CodexEnergyHelp (21s)
+warning: PDAL/CodexEnergyHelp.lean:36:53: This simp argument is unused:
+  ContinuousLinearMap.adjoint_inner_right
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, C̵o̵n̵t̵i̵n̵u̵o̵u̵s̵L̵i̵n̵e̵a̵r̵M̵a̵p̵.̵a̵d̵j̵o̵i̵n̵t̵_̵i̵n̵n̵e̵r̵_̵r̵i̵g̵h̵t̵,̵map_add, map_sub, map_smul, inner_add_left,
+      inner_add_right, inner_sub_left, inner_sub_right, real_inner_smul_left, real_inner_smul_right,
+  ̲  ̲ ̲ ̲real_inner_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: PDAL/CodexEnergyHelp.lean:39:4: This simp argument is unused:
+  real_inner_smul_left
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_right,
+      map_add, map_sub, map_smul,
+  ̵  ̵ ̵ ̵inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      real_inner_smul_l̵e̵f̵t̵,̵ ̵re̵a̵l̵_̵in̵n̵e̵r̵_̵s̵m̵u̵l̵_̵r̵i̵ght, real_inner_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: PDAL/CodexEnergyHelp.lean:42:0: 'PDALCodexHelp.energyCombinationIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
+warning: PDAL/CodexEnergyHelp.lean:66:4: This simp argument is unused:
+  real_inner_smul_left
+
+Hint: Omit it from the simp argument list.
+  simp only [ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_right,
+      map_add, map_sub, map_smul,
+  ̵  ̵ ̵ ̵inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      real_inner_smul_l̵e̵f̵t̵,̵ ̵re̵a̵l̵_̵in̵n̵e̵r̵_̵s̵m̵u̵l̵_̵r̵i̵ght, real_inner_comm] at h11s h12 h13s h14s ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+info: PDAL/CodexEnergyHelp.lean:69:0: 'PDALCodexHelp.scaledEnergyFromOptimality' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [7228/7233] Built PDAL.AffineSeparationHelp (34s)
+info: PDAL/AffineSeparationHelp.lean:246:0: 'isClosed_epigraph_of_lsc' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AffineSeparationHelp.lean:247:0: 'affine_minorant_of_lsc_convex' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [7229/7233] Built PDAL.Definitions (71s)
+warning: PDAL/Definitions.lean:110:0: automatically included section variable(s) unused in theorem `ProperConvex.affine_minorant_exists`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:121:8: automatically included section variable(s) unused in theorem `_private.PDAL.Definitions.0.sublevel_closed_of_lsc_add_continuous`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:175:8: automatically included section variable(s) unused in theorem `_private.PDAL.Definitions.0.exists_minOn_of_lsc_compact`:
+  [InnerProductSpace ℝ E]
+  [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+  [ProperSpace E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] [ProperSpace E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:400:0: automatically included section variable(s) unused in theorem `prox_scale_unique`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:469:0: automatically included section variable(s) unused in theorem `prox_scale_optimality`:
+  [FiniteDimensional ℝ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:599:0: automatically included section variable(s) unused in theorem `SaddlePoint.is_saddle`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:604:0: automatically included section variable(s) unused in theorem `primal_gap_nonneg`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:611:0: automatically included section variable(s) unused in theorem `dual_gap_nonneg`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:632:0: automatically included section variable(s) unused in theorem `accept_cond_of_small_tau`:
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+  [FiniteDimensional ℝ Y]
+  [ProperSpace Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [ProperSpace X] [FiniteDimensional ℝ Y] [ProperSpace Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:633:24: unused variable `hdelta`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:662:21: unused variable `g`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:665:5: unused variable `h_tau_km1`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:729:32: unused variable `g`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:732:5: unused variable `h_tau_km1`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:733:25: unused variable `h_delta`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:1084:0: automatically included section variable(s) unused in theorem `tau_pos`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1098:38: unused variable `hθ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:1179:0: automatically included section variable(s) unused in theorem `x_mem_dom`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1184:0: automatically included section variable(s) unused in theorem `cosine_rule`:
+  [CompleteSpace X]
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace X] [FiniteDimensional ℝ X] [ProperSpace X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:1462:18: This simp argument is unused:
+  add_sub_cancel
+
+Hint: Omit it from the simp argument list.
+  simp [xbar,̵ ̵a̵d̵d̵_̵s̵u̵b̵_̵c̵a̵n̵c̵e̵l̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: PDAL/Definitions.lean:2371:8: 'congr 1' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: PDAL/Definitions.lean:3019:0: automatically included section variable(s) unused in theorem `primal_gap_convex`:
+  [FiniteDimensional ℝ X]
+  [FiniteDimensional ℝ Y]
+  [ProperSpace Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] [FiniteDimensional ℝ Y] [ProperSpace Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3035:0: automatically included section variable(s) unused in theorem `dual_gap_convex`:
+  [CompleteSpace X]
+  [FiniteDimensional ℝ X]
+  [ProperSpace X]
+  [FiniteDimensional ℝ Y]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace X] [FiniteDimensional ℝ X] [ProperSpace X] [FiniteDimensional ℝ Y] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3109:55: unused variable `hN`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:3123:0: automatically included section variable(s) unused in theorem `pdal_weight_sum`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3125:14: unused variable `h`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: PDAL/Definitions.lean:3210:0: automatically included section variable(s) unused in theorem `pdal_weight_vec`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3260:0: automatically included section variable(s) unused in theorem `pdal_weight_values`:
+  [FiniteDimensional ℝ X]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ X] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+warning: PDAL/Definitions.lean:3633:10: This simp argument is unused:
+  Nat.cast_mul
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵N̵a̵t̵.̵c̵a̵s̵t̵_̵m̵u̵l̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+✔ [7230/7233] Built PDAL (18s)
+ℹ [7232/7233] Built PDAL.AxiomCheck (23s)
+info: PDAL/AxiomCheck.lean:5:0: @mkPDAL : {X : Type u_1} →
+  [inst : NormedAddCommGroup X] →
+    [inst_1 : InnerProductSpace ℝ X] →
+      [inst_2 : CompleteSpace X] →
+        [FiniteDimensional ℝ X] →
+          [inst_4 : ProperSpace X] →
+            {Y : Type u_2} →
+              [inst_5 : NormedAddCommGroup Y] →
+                [inst_6 : InnerProductSpace ℝ Y] →
+                  [inst_7 : CompleteSpace Y] →
+                    [inst_8 : FiniteDimensional ℝ Y] →
+                      [inst_9 : ProperSpace Y] →
+                        (K : X →L[ℝ] Y) →
+                          (g : ProperConvex X) →
+                            (h : ProperConvex Y) →
+                              X →
+                                Y →
+                                  (tau0 : ℝ) →
+                                    0 < tau0 →
+                                      (mu delta beta : ℝ) →
+                                        0 < mu ∧ mu < 1 →
+                                          0 < delta ∧ delta < 1 →
+                                            0 < beta →
+                                              (sel : ℕ → ℝ → ℝ → ℝ) →
+                                                (∀ (j : ℕ) (τ : ℝ),
+                                                    0 < τ →
+                                                      ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)) →
+                                                  PDAL K g h
+info: PDAL/AxiomCheck.lean:6:0: @mkPDAL_spec : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  (∀ k ≥ 1,
+      prox_scale g (alg.tau (k - 1)) (alg.x (k - 1) - alg.tau (k - 1) • (ContinuousLinearMap.adjoint K) (alg.y k))
+        (alg.x k)) ∧
+    ∀ k ≥ 1, accept_cond K alg.beta alg.delta (alg.tau k) (alg.y k) (alg.y (k + 1))
+info: PDAL/AxiomCheck.lean:7:0: @mkPDAL_x0 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  (mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel).x 0 = x0
+info: PDAL/AxiomCheck.lean:8:0: @mkPDAL_y0 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  (mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel).y 0 = y1
+info: PDAL/AxiomCheck.lean:9:0: @pdal_main : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  Bornology.IsBounded (Set.range fun k ↦ (alg.x k, alg.y k)) ∧
+    (∀ (xstar : X) (ystar : Y),
+        IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) → IsSaddlePoint K g h xstar ystar) ∧
+      (∃ xstar ystar, IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) ∧ IsSaddlePoint K g h xstar ystar) ∧
+        ((ContinuousOn g.f g.dom ∧ ∃ M, ∀ (k : ℕ), alg.tau k ≤ M) →
+          ∃ xstar ystar,
+            IsSaddlePoint K g h xstar ystar ∧
+              Filter.Tendsto (fun k ↦ alg.x k) Filter.atTop (nhds xstar) ∧
+                Filter.Tendsto (fun k ↦ alg.y k) Filter.atTop (nhds ystar))
+info: PDAL/AxiomCheck.lean:10:0: @pdal_main_rate : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  x0 ∈ g.dom →
+    have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+    ∃ C,
+      0 ≤ C ∧
+        ∀ N ≥ 1,
+          have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+          have X_N :=
+            (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+              ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+          have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+          pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤ C / ↑N
+info: PDAL/AxiomCheck.lean:11:0: @pdal_main_ergodic : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  ∀ N ≥ 1,
+    have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+    have X_N :=
+      (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+        ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+    have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+    X_N ∈ g.dom ∧
+      Y_N ∈ h.dom ∧
+        0 ≤ pd_gap K g h X_N Y_N sp.xhat sp.yhat ∧
+          (x0 ∈ g.dom →
+            pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤
+              (‖alg.x 1 - sp.xhat‖ ^ 2 / 2 + ‖alg.y 1 - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+                  alg.tau 1 * alg.theta 1 * primal_gap K g (alg.x 0) sp.xhat sp.yhat) /
+                s_N)
+info: PDAL/AxiomCheck.lean:12:0: @pdal_bounded : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h), Bornology.IsBounded (Set.range fun k ↦ (alg.x k, alg.y k))
+info: PDAL/AxiomCheck.lean:13:0: @pdal_cluster_point_saddle : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h) (xstar : X) (ystar : Y),
+  IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) → IsSaddlePoint K g h xstar ystar
+info: PDAL/AxiomCheck.lean:14:0: @pdal_has_saddle_cluster_point : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ∃ xstar ystar, IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) ∧ IsSaddlePoint K g h xstar ystar
+info: PDAL/AxiomCheck.lean:15:0: @pdal_convergence : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ContinuousOn g.f g.dom →
+    (∃ M, ∀ (k : ℕ), alg.tau k ≤ M) →
+      ∃ xstar ystar,
+        IsSaddlePoint K g h xstar ystar ∧
+          Filter.Tendsto (fun k ↦ alg.x k) Filter.atTop (nhds xstar) ∧
+            Filter.Tendsto (fun k ↦ alg.y k) Filter.atTop (nhds ystar)
+info: PDAL/AxiomCheck.lean:16:0: @pdal_ergodic_dom : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (N : ℕ),
+  1 ≤ N →
+    (1 / (alg.tau 1 * alg.theta 1 + ∑ k ∈ Finset.range N, alg.tau (k + 1))) •
+          ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1)) ∈
+        g.dom ∧
+      (1 / ∑ k ∈ Finset.range N, alg.tau (k + 1)) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2) ∈ h.dom
+info: PDAL/AxiomCheck.lean:17:0: @pdal_ergodic_rate : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  alg.x 0 ∈ g.dom →
+    ∀ N ≥ 1,
+      have s_N := List.foldl (fun acc k ↦ acc + alg.tau (k + 1)) 0 (List.range N);
+      have X_N :=
+        (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+          ((alg.tau 1 * alg.theta 1) • alg.x 0 +
+            List.foldl (fun acc k ↦ acc + alg.tau (k + 1) • xbar alg (k + 1)) 0 (List.range N));
+      have Y_N := (1 / s_N) • List.foldl (fun acc k ↦ acc + alg.tau (k + 1) • alg.y (k + 2)) 0 (List.range N);
+      pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤
+        1 / s_N *
+          (‖alg.x 1 - sp.xhat‖ ^ 2 / 2 + ‖alg.y 1 - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+            alg.tau 1 * alg.theta 1 * primal_gap K g (alg.x 0) sp.xhat sp.yhat)
+info: PDAL/AxiomCheck.lean:18:0: @pdal_ergodic_rate_O1 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  alg.x 0 ∈ g.dom →
+    ∃ C,
+      0 ≤ C ∧
+        ∀ N ≥ 1,
+          have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+          have X_N :=
+            (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+              ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+          have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+          pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤ C / ↑N
+info: PDAL/AxiomCheck.lean:19:0: @tau_lower_bound : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h), ∃ τ_min, 0 < τ_min ∧ ∀ (k : ℕ), τ_min ≤ alg.tau k
+info: PDAL/AxiomCheck.lean:20:0: @theta_upper_bound : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (k : ℕ), alg.theta k ≤ theta_bound
+info: PDAL/AxiomCheck.lean:21:0: @energy_inequality : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ∀ k ≥ 1,
+    alg.x (k - 1) ∈ g.dom →
+      ‖alg.x (k + 1) - sp.xhat‖ ^ 2 / 2 + ‖alg.y (k + 1) - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+          alg.tau k * (1 + alg.theta k) * primal_gap K g (alg.x k) sp.xhat sp.yhat ≤
+        ‖alg.x k - sp.xhat‖ ^ 2 / 2 + ‖alg.y k - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+              alg.tau (k - 1) * (1 + alg.theta (k - 1)) * primal_gap K g (alg.x (k - 1)) sp.xhat sp.yhat -
+            ‖xbar alg k - alg.x k‖ ^ 2 / 2 -
+          (1 - alg.delta ^ 2) * ‖alg.y (k + 1) - alg.y k‖ ^ 2 / (2 * alg.beta)
+info: PDAL/AxiomCheck.lean:22:0: @linesearch_terminates : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x_k x_km1 : X) (y_k : Y) (tau_km1 tau_trial beta delta mu : ℝ),
+  0 < tau_km1 →
+    ∀ (h_tau_trial : 0 < tau_trial) (h_beta : 0 < beta),
+      0 < delta →
+        ∀ (h_mu : 0 < mu ∧ mu < 1),
+          ∃ i,
+            0 < tau_trial * mu ^ i ∧
+              accept_cond K beta delta (tau_trial * mu ^ i) y_k
+                (prox h (beta * (tau_trial * mu ^ i)) ⋯
+                  (y_k + (beta * (tau_trial * mu ^ i)) • K (x_k + (tau_trial * mu ^ i / tau_km1) • (x_k - x_km1))))
+info: PDAL/AxiomCheck.lean:23:0: @min_accept_index : {X : Type u_1} →
+  [inst : NormedAddCommGroup X] →
+    [inst_1 : InnerProductSpace ℝ X] →
+      [inst_2 : CompleteSpace X] →
+        [FiniteDimensional ℝ X] →
+          [inst_4 : ProperSpace X] →
+            {Y : Type u_2} →
+              [inst_5 : NormedAddCommGroup Y] →
+                [inst_6 : InnerProductSpace ℝ Y] →
+                  [inst_7 : CompleteSpace Y] →
+                    [FiniteDimensional ℝ Y] →
+                      [inst_9 : ProperSpace Y] →
+                        (X →L[ℝ] Y) →
+                          ProperConvex X →
+                            ProperConvex Y →
+                              X →
+                                X →
+                                  Y →
+                                    (tau_km1 tau_trial beta delta mu : ℝ) →
+                                      0 < tau_km1 → 0 < tau_trial → 0 < beta → 0 < delta → 0 < mu ∧ mu < 1 → ℕ
+info: PDAL/AxiomCheck.lean:24:0: @prox_scale_exists : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ → ∀ (x : E), ∃ z, prox_scale G τ x z
+info: PDAL/AxiomCheck.lean:25:0: @prox_scale_unique : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ → ∀ (x : E) {z₁ z₂ : E}, prox_scale G τ x z₁ → prox_scale G τ x z₂ → z₁ = z₂
+info: PDAL/AxiomCheck.lean:26:0: @prox_scale_optimality : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ →
+    ∀ (x : E) {zbar : E}, prox_scale G τ x zbar → ∀ y ∈ G.dom, inner ℝ (zbar - x) (y - zbar) ≥ τ * (G.f zbar - G.f y)
+info: PDAL/AxiomCheck.lean:30:0: 'pdal_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:31:0: 'pdal_main_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:32:0: 'pdal_main_ergodic' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:33:0: 'pdal_convergence' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:34:0: 'pdal_cluster_point_saddle' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:35:0: 'pdal_ergodic_dom' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:36:0: 'pdal_ergodic_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:37:0: 'pdal_ergodic_rate_O1' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/AxiomCheck.lean:38:0: 'mkPDAL_spec' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [7233/7233] Built PDAL.PrintAxioms (26s)
+info: PDAL/PrintAxioms.lean:5:0: @mkPDAL : {X : Type u_1} →
+  [inst : NormedAddCommGroup X] →
+    [inst_1 : InnerProductSpace ℝ X] →
+      [inst_2 : CompleteSpace X] →
+        [FiniteDimensional ℝ X] →
+          [inst_4 : ProperSpace X] →
+            {Y : Type u_2} →
+              [inst_5 : NormedAddCommGroup Y] →
+                [inst_6 : InnerProductSpace ℝ Y] →
+                  [inst_7 : CompleteSpace Y] →
+                    [inst_8 : FiniteDimensional ℝ Y] →
+                      [inst_9 : ProperSpace Y] →
+                        (K : X →L[ℝ] Y) →
+                          (g : ProperConvex X) →
+                            (h : ProperConvex Y) →
+                              X →
+                                Y →
+                                  (tau0 : ℝ) →
+                                    0 < tau0 →
+                                      (mu delta beta : ℝ) →
+                                        0 < mu ∧ mu < 1 →
+                                          0 < delta ∧ delta < 1 →
+                                            0 < beta →
+                                              (sel : ℕ → ℝ → ℝ → ℝ) →
+                                                (∀ (j : ℕ) (τ : ℝ),
+                                                    0 < τ →
+                                                      ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)) →
+                                                  PDAL K g h
+info: PDAL/PrintAxioms.lean:6:0: @mkPDAL_spec : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  (∀ k ≥ 1,
+      prox_scale g (alg.tau (k - 1)) (alg.x (k - 1) - alg.tau (k - 1) • (ContinuousLinearMap.adjoint K) (alg.y k))
+        (alg.x k)) ∧
+    ∀ k ≥ 1, accept_cond K alg.beta alg.delta (alg.tau k) (alg.y k) (alg.y (k + 1))
+info: PDAL/PrintAxioms.lean:7:0: @mkPDAL_x0 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  (mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel).x 0 = x0
+info: PDAL/PrintAxioms.lean:8:0: @mkPDAL_y0 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ)),
+  (mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel).y 0 = y1
+info: PDAL/PrintAxioms.lean:9:0: @pdal_main : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X] [inst_2 : CompleteSpace X]
+  [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2} [inst_5 : NormedAddCommGroup Y]
+  [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y] [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y]
+  (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y) (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0)
+  (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1) (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  Bornology.IsBounded (Set.range fun k ↦ (alg.x k, alg.y k)) ∧
+    (∀ (xstar : X) (ystar : Y),
+        IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) → IsSaddlePoint K g h xstar ystar) ∧
+      (∃ xstar ystar, IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) ∧ IsSaddlePoint K g h xstar ystar) ∧
+        ((ContinuousOn g.f g.dom ∧ ∃ M, ∀ (k : ℕ), alg.tau k ≤ M) →
+          ∃ xstar ystar,
+            IsSaddlePoint K g h xstar ystar ∧
+              Filter.Tendsto (fun k ↦ alg.x k) Filter.atTop (nhds xstar) ∧
+                Filter.Tendsto (fun k ↦ alg.y k) Filter.atTop (nhds ystar))
+info: PDAL/PrintAxioms.lean:10:0: @pdal_main_rate : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  x0 ∈ g.dom →
+    have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+    ∃ C,
+      0 ≤ C ∧
+        ∀ N ≥ 1,
+          have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+          have X_N :=
+            (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+              ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+          have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+          pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤ C / ↑N
+info: PDAL/PrintAxioms.lean:11:0: @pdal_main_ergodic : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [inst_3 : FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x0 : X) (y1 : Y) (tau0 : ℝ) (htau0 : 0 < tau0) (mu delta beta : ℝ) (hm : 0 < mu ∧ mu < 1)
+  (hd : 0 < delta ∧ delta < 1) (hb : 0 < beta) (sel : ℕ → ℝ → ℝ → ℝ)
+  (hsel : ∀ (j : ℕ) (τ : ℝ), 0 < τ → ∀ (θ : ℝ), 0 ≤ θ → sel j τ θ ≥ τ ∧ sel j τ θ ≤ τ * √(1 + θ))
+  (sp : SaddlePoint K g h),
+  have alg := mkPDAL K g h x0 y1 tau0 htau0 mu delta beta hm hd hb sel hsel;
+  ∀ N ≥ 1,
+    have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+    have X_N :=
+      (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+        ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+    have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+    X_N ∈ g.dom ∧
+      Y_N ∈ h.dom ∧
+        0 ≤ pd_gap K g h X_N Y_N sp.xhat sp.yhat ∧
+          (x0 ∈ g.dom →
+            pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤
+              (‖alg.x 1 - sp.xhat‖ ^ 2 / 2 + ‖alg.y 1 - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+                  alg.tau 1 * alg.theta 1 * primal_gap K g (alg.x 0) sp.xhat sp.yhat) /
+                s_N)
+info: PDAL/PrintAxioms.lean:12:0: @pdal_bounded : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h), Bornology.IsBounded (Set.range fun k ↦ (alg.x k, alg.y k))
+info: PDAL/PrintAxioms.lean:13:0: @pdal_cluster_point_saddle : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h) (xstar : X) (ystar : Y),
+  IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) → IsSaddlePoint K g h xstar ystar
+info: PDAL/PrintAxioms.lean:14:0: @pdal_has_saddle_cluster_point : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ∃ xstar ystar, IsClusterPoint (fun k ↦ (alg.x k, alg.y k)) (xstar, ystar) ∧ IsSaddlePoint K g h xstar ystar
+info: PDAL/PrintAxioms.lean:15:0: @pdal_convergence : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ContinuousOn g.f g.dom →
+    (∃ M, ∀ (k : ℕ), alg.tau k ≤ M) →
+      ∃ xstar ystar,
+        IsSaddlePoint K g h xstar ystar ∧
+          Filter.Tendsto (fun k ↦ alg.x k) Filter.atTop (nhds xstar) ∧
+            Filter.Tendsto (fun k ↦ alg.y k) Filter.atTop (nhds ystar)
+info: PDAL/PrintAxioms.lean:16:0: @pdal_ergodic_dom : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (N : ℕ),
+  1 ≤ N →
+    (1 / (alg.tau 1 * alg.theta 1 + ∑ k ∈ Finset.range N, alg.tau (k + 1))) •
+          ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1)) ∈
+        g.dom ∧
+      (1 / ∑ k ∈ Finset.range N, alg.tau (k + 1)) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2) ∈ h.dom
+info: PDAL/PrintAxioms.lean:17:0: @pdal_ergodic_rate : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  alg.x 0 ∈ g.dom →
+    ∀ N ≥ 1,
+      have s_N := List.foldl (fun acc k ↦ acc + alg.tau (k + 1)) 0 (List.range N);
+      have X_N :=
+        (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+          ((alg.tau 1 * alg.theta 1) • alg.x 0 +
+            List.foldl (fun acc k ↦ acc + alg.tau (k + 1) • xbar alg (k + 1)) 0 (List.range N));
+      have Y_N := (1 / s_N) • List.foldl (fun acc k ↦ acc + alg.tau (k + 1) • alg.y (k + 2)) 0 (List.range N);
+      pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤
+        1 / s_N *
+          (‖alg.x 1 - sp.xhat‖ ^ 2 / 2 + ‖alg.y 1 - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+            alg.tau 1 * alg.theta 1 * primal_gap K g (alg.x 0) sp.xhat sp.yhat)
+info: PDAL/PrintAxioms.lean:18:0: @pdal_ergodic_rate_O1 : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  alg.x 0 ∈ g.dom →
+    ∃ C,
+      0 ≤ C ∧
+        ∀ N ≥ 1,
+          have s_N := ∑ k ∈ Finset.range N, alg.tau (k + 1);
+          have X_N :=
+            (1 / (alg.tau 1 * alg.theta 1 + s_N)) •
+              ((alg.tau 1 * alg.theta 1) • alg.x 0 + ∑ k ∈ Finset.range N, alg.tau (k + 1) • xbar alg (k + 1));
+          have Y_N := (1 / s_N) • ∑ k ∈ Finset.range N, alg.tau (k + 1) • alg.y (k + 2);
+          pd_gap K g h X_N Y_N sp.xhat sp.yhat ≤ C / ↑N
+info: PDAL/PrintAxioms.lean:19:0: @tau_lower_bound : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h), ∃ τ_min, 0 < τ_min ∧ ∀ (k : ℕ), τ_min ≤ alg.tau k
+info: PDAL/PrintAxioms.lean:20:0: @theta_upper_bound : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (k : ℕ), alg.theta k ≤ theta_bound
+info: PDAL/PrintAxioms.lean:21:0: @energy_inequality : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] {K : X →L[ℝ] Y} {g : ProperConvex X} {h : ProperConvex Y}
+  (alg : PDAL K g h) (sp : SaddlePoint K g h),
+  ∀ k ≥ 1,
+    alg.x (k - 1) ∈ g.dom →
+      ‖alg.x (k + 1) - sp.xhat‖ ^ 2 / 2 + ‖alg.y (k + 1) - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+          alg.tau k * (1 + alg.theta k) * primal_gap K g (alg.x k) sp.xhat sp.yhat ≤
+        ‖alg.x k - sp.xhat‖ ^ 2 / 2 + ‖alg.y k - sp.yhat‖ ^ 2 / (2 * alg.beta) +
+              alg.tau (k - 1) * (1 + alg.theta (k - 1)) * primal_gap K g (alg.x (k - 1)) sp.xhat sp.yhat -
+            ‖xbar alg k - alg.x k‖ ^ 2 / 2 -
+          (1 - alg.delta ^ 2) * ‖alg.y (k + 1) - alg.y k‖ ^ 2 / (2 * alg.beta)
+info: PDAL/PrintAxioms.lean:22:0: @linesearch_terminates : ∀ {X : Type u_1} [inst : NormedAddCommGroup X] [inst_1 : InnerProductSpace ℝ X]
+  [inst_2 : CompleteSpace X] [FiniteDimensional ℝ X] [inst_4 : ProperSpace X] {Y : Type u_2}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : InnerProductSpace ℝ Y] [inst_7 : CompleteSpace Y]
+  [inst_8 : FiniteDimensional ℝ Y] [inst_9 : ProperSpace Y] (K : X →L[ℝ] Y) (g : ProperConvex X) (h : ProperConvex Y)
+  (x_k x_km1 : X) (y_k : Y) (tau_km1 tau_trial beta delta mu : ℝ),
+  0 < tau_km1 →
+    ∀ (h_tau_trial : 0 < tau_trial) (h_beta : 0 < beta),
+      0 < delta →
+        ∀ (h_mu : 0 < mu ∧ mu < 1),
+          ∃ i,
+            0 < tau_trial * mu ^ i ∧
+              accept_cond K beta delta (tau_trial * mu ^ i) y_k
+                (prox h (beta * (tau_trial * mu ^ i)) ⋯
+                  (y_k + (beta * (tau_trial * mu ^ i)) • K (x_k + (tau_trial * mu ^ i / tau_km1) • (x_k - x_km1))))
+info: PDAL/PrintAxioms.lean:23:0: @min_accept_index : {X : Type u_1} →
+  [inst : NormedAddCommGroup X] →
+    [inst_1 : InnerProductSpace ℝ X] →
+      [inst_2 : CompleteSpace X] →
+        [FiniteDimensional ℝ X] →
+          [inst_4 : ProperSpace X] →
+            {Y : Type u_2} →
+              [inst_5 : NormedAddCommGroup Y] →
+                [inst_6 : InnerProductSpace ℝ Y] →
+                  [inst_7 : CompleteSpace Y] →
+                    [FiniteDimensional ℝ Y] →
+                      [inst_9 : ProperSpace Y] →
+                        (X →L[ℝ] Y) →
+                          ProperConvex X →
+                            ProperConvex Y →
+                              X →
+                                X →
+                                  Y →
+                                    (tau_km1 tau_trial beta delta mu : ℝ) →
+                                      0 < tau_km1 → 0 < tau_trial → 0 < beta → 0 < delta → 0 < mu ∧ mu < 1 → ℕ
+info: PDAL/PrintAxioms.lean:24:0: @prox_scale_exists : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ → ∀ (x : E), ∃ z, prox_scale G τ x z
+info: PDAL/PrintAxioms.lean:25:0: @prox_scale_unique : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ → ∀ (x : E) {z₁ z₂ : E}, prox_scale G τ x z₁ → prox_scale G τ x z₂ → z₁ = z₂
+info: PDAL/PrintAxioms.lean:26:0: @prox_scale_optimality : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  [inst_2 : CompleteSpace E] [FiniteDimensional ℝ E] [inst_4 : ProperSpace E] (G : ProperConvex E) {τ : ℝ},
+  0 < τ →
+    ∀ (x : E) {zbar : E}, prox_scale G τ x zbar → ∀ y ∈ G.dom, inner ℝ (zbar - x) (y - zbar) ≥ τ * (G.f zbar - G.f y)
+info: PDAL/PrintAxioms.lean:31:0: 'pdal_main' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:32:0: 'pdal_main_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:33:0: 'pdal_main_ergodic' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:35:0: 'pdal_bounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:36:0: 'pdal_cluster_point_saddle' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:37:0: 'pdal_has_saddle_cluster_point' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:38:0: 'pdal_convergence' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:40:0: 'pdal_ergodic_dom' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:41:0: 'pdal_ergodic_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:42:0: 'pdal_ergodic_rate_O1' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:44:0: 'mkPDAL_spec' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:46:0: 'prox_scale_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:47:0: 'prox_scale_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:48:0: 'prox_scale_optimality' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:50:0: 'linesearch_terminates' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:51:0: 'min_accept_index' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:53:0: 'tau_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:54:0: 'theta_upper_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PDAL/PrintAxioms.lean:55:0: 'energy_inequality' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (7233 jobs).

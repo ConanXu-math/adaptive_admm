@@ -37,5 +37,10 @@ lean_lib ISTABt where
   srcDir := "."
   roots := #[`ISTABt]
 
+@[default_target]
+lean_lib PDAL where
+  srcDir := "."
+  roots := #[`PDAL]
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "v4.24.0-rc1"

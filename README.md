@@ -8,6 +8,8 @@
 
 仓库还提供 [ISTA with backtracking 的 Lean 形式化](docs/istabt.md)，包括近端点存在唯一性、回溯终止性、最小接受索引、递归迭代序列与函数值的 $O(1/k)$ 速率。证明入口为 `import ISTABt`，最终定理 `istabt_rate` 直接接收原始问题数据与假设。
 
+仓库还提供 [Malitsky–Pock PDAL 的 Lean 形式化](docs/pdal.md)，包括近端点性质、线搜索终止、最小接受索引、原始数据递归构造、步长与能量估计、有界性、全部聚点为鞍点、条件整列收敛及遍历间隙的 $O(1/N)$ 速率。证明入口为 `import PDAL`，三个最终主定理直接针对 `mkPDAL` 构造的序列。主证明由 GLM max 编写，Codex 提供辅助与诊断并完成独立验证。
+
 ## 仓库来源与依赖
 
 本项目使用以下开源仓库：
@@ -17,9 +19,9 @@
 | [optsuite/optlib](https://github.com/optsuite/optlib) | 优化数学基础源码的来源，包括凸分析、次梯度、光滑函数和近端算子。ISTABt 还参考其固定步长近端梯度证明 [`ProximalGradient.lean`](Optlib/Algorithm/ProximalGradient.lean)。 |
 | [leanprover-community/mathlib4](https://github.com/leanprover-community/mathlib4) | 提供实分析、内积空间、凸性、拓扑及证明策略等通用数学基础；通过 Lake 引入，固定为 `v4.24.0-rc1`。 |
 | [leanprover/lean4](https://github.com/leanprover/lean4) | 提供 Lean 语言、证明内核和 Lake 构建工具；工具链固定为 `v4.24.0-rc1`。 |
-| [anomalyco/opencode](https://github.com/anomalyco/opencode) | ISTABt 形式化任务使用的 coding agent，用于编写证明、修改文件和调用 Lean 检查。 |
+| [anomalyco/opencode](https://github.com/anomalyco/opencode) | ISTABt 和 PDAL 形式化任务使用的 coding agent，用于编写证明、修改文件和调用 Lean 检查。 |
 
-Optlib 源码保存在本仓库的 [`Optlib/`](Optlib/) 中，并保留上游作者说明及 Apache 2.0 许可证。本项目在这些数学基础上提供 Adaptive ADMM、AdGD 和 ISTABt 的证明。
+Optlib 源码保存在本仓库的 [`Optlib/`](Optlib/) 中，并保留上游作者说明及 Apache 2.0 许可证。本项目在这些数学基础上提供 Adaptive ADMM、AdGD、ISTABt 和 PDAL 的证明。
 
 OpenCode 属于开发工具，证明由 Lean 检查。mathlib 及其间接依赖的仓库地址和固定提交见 [`lake-manifest.json`](lake-manifest.json)；直接依赖配置见 [`lakefile.lean`](lakefile.lean)，Lean 版本见 [`lean-toolchain`](lean-toolchain)。
 
@@ -141,7 +143,7 @@ lake exe cache get
 lake build
 ```
 
-默认构建包含 Adaptive ADMM、AdGD 和 ISTABt 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
+默认构建包含 Adaptive ADMM、AdGD、ISTABt 和 PDAL 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
@@ -196,6 +198,8 @@ Strategy3.converges_from_policy
 | [`docs/adgd.md`](docs/adgd.md) | AdGD 数学条件、已证定理与验证方法 |
 | [`ISTABt.lean`](ISTABt.lean)、[`ISTABt/Definitions.lean`](ISTABt/Definitions.lean) | ISTA with backtracking 的定义、序列构造与速率 |
 | [`ISTABt/AxiomCheck.lean`](ISTABt/AxiomCheck.lean)、[`docs/istabt.md`](docs/istabt.md) | 公理检查与数学说明 |
+| [`PDAL.lean`](PDAL.lean)、[`PDAL/Definitions.lean`](PDAL/Definitions.lean) | PDAL 原始构造、收敛与遍历速率 |
+| [`PDAL/PrintAxioms.lean`](PDAL/PrintAxioms.lean)、[`docs/pdal.md`](docs/pdal.md) | 主要完整类型、19项公理检查与帮助来源 |
 
 ## 许可证
 
