@@ -42,5 +42,17 @@ lean_lib PDAL where
   srcDir := "."
   roots := #[`PDAL]
 
+@[default_target]
+lean_lib DRS
+
+@[default_target]
+lean_lib APDAL
+
+@[default_target]
+lean_lib AdaRES
+
+@[default_target]
+lean_lib UFGM
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @ "v4.24.0-rc1"
