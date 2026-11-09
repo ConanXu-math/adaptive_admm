@@ -35,6 +35,9 @@ jobs:
       - name: 构建 PDAL 并检查公理依赖
         run: lake build PDAL PDAL.AxiomCheck PDAL.PrintAxioms
 
+      - name: 核查四个自适应算法的定理与公理
+        run: lake build DRS.AxiomCheck APDAL.AxiomCheck AdaRES.AxiomCheck UFGM.AxiomCheck
+
       - name: Check the public facade with strict implicit settings
         run: >-
           lake env lean -DautoImplicit=false -DrelaxedAutoImplicit=false
@@ -50,7 +53,7 @@ jobs:
         shell: bash
         run: |
           if grep -R -n -E '(^|[^[:alnum:]_])(sorry|admit|axiom)([^[:alnum:]_]|$)' \
-            Optlib/Algorithm/AdaptiveADMM AdGD ISTABt PDAL examples --include='*.lean'; then
+            Optlib/Algorithm/AdaptiveADMM AdGD ISTABt PDAL DRS APDAL AdaRES UFGM examples --include='*.lean'; then
             echo "Proof placeholders are not allowed in the active formalization or examples."
             exit 1
           fi

@@ -10,6 +10,13 @@
 
 仓库还提供 [Malitsky–Pock PDAL 的 Lean 形式化](docs/pdal.md)，包括近端点性质、线搜索终止、最小接受索引、原始数据递归构造、步长与能量估计、有界性、全部聚点为鞍点、条件整列收敛及遍历间隙的 $O(1/N)$ 速率。证明入口为 `import PDAL`，三个最终主定理直接针对 `mkPDAL` 构造的序列。主证明由 GLM max 编写，Codex 提供辅助与诊断并完成独立验证。
 
+| 导入模块 | 已证结论 | 结果说明 |
+| --- | --- | --- |
+| `DRS` | 变步长 Douglas–Rachford 在一般实 Hilbert 空间中的整列弱收敛 | [DRS](DRS/RESULT.md) |
+| `APDAL` | 强凸加速 PDAL 的原始迭代点距离 $O(1/N)$ 与加权间隙 $O(1/N^2)$ | [APDAL](APDAL/RESULT.md) |
+| `AdaRES` | 加权 FISTA、自适应重启的最小停止索引、返回精度与调用数界 | [AdaRES](AdaRES/RESULT.md) |
+| `UFGM` | 通用加速梯度法的最小回溯索引、估计序列、函数值误差与轮数界 | [UFGM](UFGM/RESULT.md) |
+
 ## 仓库来源与依赖
 
 本项目使用以下开源仓库：
@@ -143,7 +150,7 @@ lake exe cache get
 lake build
 ```
 
-默认构建包含 Adaptive ADMM、AdGD、ISTABt 和 PDAL 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
+默认构建包含 Adaptive ADMM、AdGD、ISTABt、PDAL、DRS、APDAL、AdaRES 和 UFGM 的证明入口及其数学依赖。Adaptive ADMM 证明文件导入：
 
 ```lean
 import Optlib.Algorithm.AdaptiveADMM
